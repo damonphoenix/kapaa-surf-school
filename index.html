@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kapaʻa Surf School – Learn to Surf in Kapaʻa, Kauaʻi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kapaʻa Surf School offers beginner lessons, family sessions, and private coaching in Kapaʻa, Kauaʻi. Small groups, local instructors, and a focus on safety and fun." />
+
+  <!-- Optional Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-body: #f9f4ee;
+      --bg-card: #ffffff;
+      --bg-accent-soft: #e0f2f5;
+      --bg-hero-gradient: linear-gradient(135deg, #cde8ff 0%, #fdf6e9 35%, #f7e9ff 100%);
+      --text-main: #1f2933;
+      --text-muted: #6b7280;
+      --primary: #0f766e;
+      --primary-soft: #d1faf5;
+      --primary-deep: #0b4f48;
+      --secondary: #2563eb;
+      --sand: #f6e7cf;
+      --border-subtle: #e5e7eb;
+      --shadow-soft: 0 10px 30px rgba(15, 118, 110, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --nav-height: 72px;
+      --transition-fast: 150ms ease-out;
+      --transition-med: 220ms ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    section {
+      padding: 4rem 0;
+    }
+
+    @media (min-width: 768px) {
+      section {
+        padding: 5.5rem 0;
+      }
+    }
+
+    /* NAVIGATION */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(249, 244, 238, 0.92), rgba(249, 244, 238, 0.8));
+      border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--nav-height);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 40% 60% 55% 45%;
+      background: radial-gradient(circle at 25% 0%, #fcd34d, #fb923c 60%, #f97316 100%);
+      position: relative;
+      box-shadow: 0 8px 20px rgba(251, 146, 60, 0.35);
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 9px 6px 10px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.65);
+      border-bottom-width: 3px;
+      border-top: none;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-link {
+      position: relative;
+      color: var(--text-main);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.35rem;
+      width: 0;
+      height: 2px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, #0f766e, #14b8a6);
+      transition: width var(--transition-fast);
+    }
+
+    .nav-link:hover::after,
+    .nav-link:focus-visible::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 0.55rem 1.1rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(15, 118, 110, 0.18);
+      background: radial-gradient(circle at 0 0, rgba(209, 250, 229, 0.6), rgba(13, 148, 136, 0.06));
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      box-shadow: 0 7px 20px rgba(15, 118, 110, 0.18);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    .nav-cta span {
+      font-size: 1.1rem;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.24);
+      background: radial-gradient(circle at 0 0, rgba(190, 242, 100, 0.6), rgba(13, 148, 136, 0.1));
+      text-decoration: none;
+    }
+
+    .nav-cta:focus-visible,
+    .nav-link:focus-visible,
+    .hamburger:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    .hamburger {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      background: transparent;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+    }
+
+    .hamburger-line {
+      height: 2px;
+      width: 18px;
+      margin: 0 auto;
+      border-radius: 99px;
+      background-color: #0f172a;
+      transition: transform var(--transition-med), opacity var(--transition-med), width var(--transition-med);
+    }
+
+    .hamburger[aria-expanded="true"] .hamburger-line:nth-child(1) {
+      transform: translateY(3px) rotate(44deg);
+      width: 16px;
+    }
+
+    .hamburger[aria-expanded="true"] .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger[aria-expanded="true"] .hamburger-line:nth-child(3) {
+      transform: translateY(-3px) rotate(-44deg);
+      width: 16px;
+    }
+
+    .nav-desktop {
+      display: none;
+    }
+
+    .nav-mobile {
+      position: fixed;
+      inset: var(--nav-height) 0 auto;
+      background: radial-gradient(circle at 0 0, rgba(209, 250, 229, 0.95), rgba(249, 244, 238, 0.98));
+      border-bottom: 1px solid rgba(209, 213, 219, 0.7);
+      transform-origin: top;
+      transform: scaleY(0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-med), transform var(--transition-med);
+      z-index: 30;
+    }
+
+    .nav-mobile.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scaleY(1);
+    }
+
+    .nav-mobile-inner {
+      padding: 0.75rem 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .nav-mobile-link {
+      font-weight: 500;
+      color: var(--text-main);
+      padding: 0.4rem 0;
+    }
+
+    .nav-mobile-cta {
+      margin-top: 0.5rem;
+      width: fit-content;
+    }
+
+    @media (min-width: 768px) {
+      .hamburger,
+      .nav-mobile {
+        display: none;
+      }
+
+      .nav-desktop {
+        display: flex;
+        align-items: center;
+        gap: 1.8rem;
+      }
+    }
+
+    /* HERO */
+
+    .hero {
+      padding-top: 2.5rem;
+      background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.3), transparent 60%),
+                  radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.2), transparent 55%),
+                  var(--bg-hero-gradient);
+      border-bottom-left-radius: 2.5rem;
+      border-bottom-right-radius: 2.5rem;
+      box-shadow: 0 18px 55px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 2.75rem;
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        align-items: center;
+        gap: 3.5rem;
+      }
+    }
+
+    .hero-pre {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(15, 118, 110, 0.3);
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--primary-deep);
+      font-size: 0.8rem;
+      margin-bottom: 1.1rem;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.16);
+    }
+
+    .hero-pre-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0%, #a5b4fc, #2563eb);
+    }
+
+    .hero-heading {
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(120deg, #0f766e 0%, #22c55e 45%, #0ea5e9 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.02rem;
+      color: var(--text-muted);
+      max-width: 36rem;
+      margin-bottom: 1.7rem;
+    }
+
+    .hero-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: #0f172a;
+      padding: 0.4rem 0.7rem;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(209, 213, 219, 0.8);
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-location-badge {
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-pill);
+      background: #0f172a;
+      color: #fef9c3;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.7rem;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #22c55e 100%);
+      color: #ecfdf5;
+      box-shadow: 0 16px 40px rgba(15, 118, 110, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 45px rgba(15, 118, 110, 0.4);
+      text-decoration: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary-deep);
+      border-color: rgba(15, 118, 110, 0.2);
+      box-shadow: 0 8px 22px rgba(148, 163, 184, 0.24);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      font-size: 0.8rem;
+      color: #0f172a;
+    }
+
+    .hero-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(209, 213, 219, 0.9);
+    }
+
+    .hero-meta-pill {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0%, #38bdf8, #0369a1);
+    }
+
+    .hero-card {
+      position: relative;
+      padding: 1.5rem 1.6rem 1.7rem;
+      border-radius: 1.8rem;
+      background: transparent;
+      color: #e5e7eb;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.35), transparent 60%),
+                  radial-gradient(circle at 100% 100%, rgba(52, 211, 153, 0.32), transparent 55%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .hero-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.3rem;
+    }
+
+    .hero-card-badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(187, 247, 208, 0.9);
+      background: rgba(22, 163, 74, 0.18);
+      color: #bbf7d0;
+    }
+
+    .hero-card-sub {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+      margin-bottom: 1rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+    }
+
+    .hero-stat-label {
+      color: #9ca3af;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .hero-stat-value {
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-top: 0.25rem;
+    }
+
+    .hero-wave {
+      position: relative;
+      margin-top: 0.2rem;
+      border-radius: 1.4rem;
+      background: linear-gradient(135deg, #0ea5e9, #22c55e);
+      padding: 0.65rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.8rem;
+      box-shadow: 0 14px 35px rgba(14, 165, 233, 0.5);
+    }
+
+    .hero-wave-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e0f2fe;
+      font-size: 1.2rem;
+    }
+
+    .hero-wave-text {
+      color: #ecfeff;
+      line-height: 1.4;
+    }
+
+    .hero-wave-sub {
+      font-size: 0.7rem;
+      opacity: 0.9;
+    }
+
+    .hero-media {
+      position: relative;
+      border-radius: 1.8rem;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
+      background-image: url("./assets/images/kapaa-surf-school-kauai-surf-lesson-hero.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        145deg,
+        rgba(15, 23, 42, 0.8),
+        rgba(15, 23, 42, 0.3)
+      );
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding-bottom: 3rem;
+      }
+
+      .hero-card {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    /* SECTION HEADINGS */
+
+    .section-header {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .section-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--primary-deep);
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      max-width: 32rem;
+      font-size: 0.95rem;
+    }
+
+    /* ABOUT */
+
+    .about-grid {
+      display: grid;
+      gap: 1.8rem;
+    }
+
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
+        gap: 3rem;
+        align-items: center;
+      }
+    }
+
+    .about-text p + p {
+      margin-top: 0.9rem;
+    }
+
+    .about-highlights {
+      display: grid;
+      gap: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .about-highlight {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .about-bullet {
+      margin-top: 0.25rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 0 0, #22c55e, #0f766e);
+    }
+
+    .about-card {
+      padding: 1.4rem 1.5rem;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      box-shadow: var(--shadow-soft);
+      font-size: 0.9rem;
+    }
+
+    .about-image-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: #000;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(15, 23, 42, 0.25);
+    }
+
+    .about-image-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .about-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+    }
+
+    .about-chip {
+      padding: 0.2rem 0.65rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      font-size: 0.75rem;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    /* LESSON PACKAGES */
+
+    .cards-grid {
+      display: grid;
+      gap: 1.4rem;
+    }
+
+    @media (min-width: 768px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .package-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.45rem 1.35rem;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .package-thumb {
+      width: 100%;
+      height: 170px;
+      border-radius: 1.1rem;
+      overflow: hidden;
+      margin-bottom: 0.9rem;
+    }
+
+    .package-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .package-card:nth-child(2) {
+      border: 1px solid rgba(15, 118, 110, 0.35);
+      box-shadow: 0 16px 40px rgba(15, 118, 110, 0.23);
+      transform: translateY(-2px);
+    }
+
+    .package-badge {
+      position: absolute;
+      top: 1.1rem;
+      right: 1.1rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: var(--primary-soft);
+      border: 1px solid rgba(45, 212, 191, 0.9);
+      color: #065f46;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .package-title {
+      font-size: 1rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .package-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .package-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+    }
+
+    .package-tag {
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .package-duration {
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      background: #ecfeff;
+      color: #0e7490;
+    }
+
+    .package-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      gap: 0.7rem;
+    }
+
+    .package-price {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary-deep);
+    }
+
+    .package-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--primary-deep);
+      border: 1px solid rgba(15, 118, 110, 0.4);
+      padding-inline: 1.1rem;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 22px rgba(15, 118, 110, 0.15);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(240, 253, 250, 0.8);
+      text-decoration: none;
+    }
+
+    /* SCHEDULE */
+
+    .schedule-wrapper {
+      padding: 1.4rem 1.5rem;
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.07), transparent 60%),
+                  radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.1), transparent 60%),
+                  #ecfeff;
+      border: 1px solid rgba(191, 219, 254, 0.8);
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    @media (min-width: 768px) {
+      .schedule-wrapper {
+        grid-template-columns: 1.3fr 1.4fr;
+        align-items: center;
+      }
+    }
+
+    .schedule-times {
+      display: grid;
+      gap: 0.65rem;
+      font-size: 0.9rem;
+    }
+
+    .schedule-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 0.9rem;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .schedule-label {
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .schedule-slot {
+      color: #0f766e;
+      font-weight: 500;
+    }
+
+    .schedule-note {
+      font-size: 0.8rem;
+      color: #0f172a;
+    }
+
+    .schedule-media {
+      position: relative;
+      border-radius: 1.4rem;
+      overflow: hidden;
+      min-height: 180px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
+    }
+
+    .schedule-media video,
+    .schedule-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .schedule-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        145deg,
+        rgba(15, 23, 42, 0.75),
+        rgba(8, 47, 73, 0.3)
+      );
+    }
+
+    /* TESTIMONIALS */
+
+    .testimonials-grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    @media (min-width: 768px) {
+      .testimonials-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .testimonial-card {
+      padding: 1.3rem 1.4rem;
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      border: 1px solid rgba(209, 213, 219, 0.95);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonial-quote {
+      font-size: 0.9rem;
+    }
+
+    .testimonial-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      color: var(--primary-deep);
+    }
+
+    .testimonial-tag {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      background: #eff6ff;
+      color: #1d4ed8;
+      width: fit-content;
+    }
+
+    .testimonial-icon {
+      position: absolute;
+      top: 0.8rem;
+      right: 1rem;
+      font-size: 2rem;
+      color: rgba(59, 130, 246, 0.12);
+    }
+
+    .testimonials-banner {
+      border-radius: 1.7rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      max-height: 220px;
+    }
+
+    .testimonials-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.1);
+    }
+
+    /* FAQ */
+
+    .faq-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .faq-item {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 0.8rem 1rem;
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #0f172a;
+    }
+
+    .faq-question-text {
+      text-align: left;
+    }
+
+    .faq-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #0f172a;
+      flex-shrink: 0;
+      transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: max-height 220ms ease-out, padding-bottom 220ms ease-out;
+    }
+
+    .faq-item.open .faq-answer {
+      padding-bottom: 0.9rem;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(90deg);
+      background: #0f172a;
+      color: #f9fafb;
+    }
+
+    /* BOOKING FORM */
+
+    .booking-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    @media (min-width: 900px) {
+      .booking-grid {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+        align-items: flex-start;
+      }
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border-radius: 1.7rem;
+      padding: 1.6rem 1.6rem 1.4rem;
+      border: 1px solid rgba(209, 213, 219, 0.95);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .form-row--two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.9rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .form-label span {
+      color: #b91c1c;
+      margin-left: 0.1rem;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(209, 213, 219, 0.95);
+      padding: 0.6rem 0.7rem;
+      font: inherit;
+      color: var(--text-main);
+      background: #f9fafb;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .form-input:focus-visible,
+    .form-select:focus-visible,
+    .form-textarea:focus-visible {
+      outline: none;
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.6), 0 12px 30px rgba(59, 130, 246, 0.2);
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .form-textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-error {
+      font-size: 0.78rem;
+      color: #b91c1c;
+      min-height: 0.9rem;
+    }
+
+    .form-error.hidden {
+      display: none;
+    }
+
+    .form-field.error .form-input,
+    .form-field.error .form-select,
+    .form-field.error .form-textarea {
+      border-color: #f97373;
+      background: #fef2f2;
+    }
+
+    .form-field.error .form-label {
+      color: #b91c1c;
+    }
+
+    .form-footnote {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.85rem;
+    }
+
+    .form-success {
+      margin-top: 1rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      background: rgba(220, 252, 231, 0.9);
+      color: #166534;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .form-success.hidden {
+      display: none;
+    }
+
+    .form-success-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .booking-aside {
+      font-size: 0.9rem;
+    }
+
+    .booking-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: var(--primary-soft);
+      color: #064e3b;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    .booking-list {
+      margin: 0.8rem 0 0;
+      padding-left: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    .booking-list li + li {
+      margin-top: 0.4rem;
+    }
+
+    .booking-photo-card {
+      border-radius: 1.3rem;
+      overflow: hidden;
+      margin-top: 1.4rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+    }
+
+    .booking-photo-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* LOCATION & CONTACT */
+
+    .location-grid {
+      display: grid;
+      gap: 1.7rem;
+    }
+
+    @media (min-width: 900px) {
+      .location-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+        align-items: center;
+      }
+    }
+
+    .contact-details {
+      font-size: 0.9rem;
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .contact-group {
+      display: grid;
+      gap: 0.15rem;
+    }
+
+    .contact-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    .contact-value a {
+      color: var(--primary-deep);
+      font-weight: 500;
+    }
+
+    .map-card {
+      border-radius: 1.7rem;
+      padding: 1.3rem 1.4rem;
+      background: conic-gradient(from 170deg at 0 0, #bfdbfe, #a5f3fc, #fef3c7, #bfdbfe);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+    }
+
+    .map-inner {
+      position: relative;
+      border-radius: 1.4rem;
+      background: rgba(15, 23, 42, 0.96);
+      padding: 1.1rem 1.2rem;
+      color: #e5e7eb;
+      font-size: 0.9rem;
+      overflow: hidden;
+    }
+
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.7rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    .map-pill {
+      padding: 0.15rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+    }
+
+    .map-body {
+      height: 150px;
+      border-radius: 1rem;
+      border: 1px dashed rgba(156, 163, 175, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      text-align: center;
+      padding: 0.8rem;
+      background: radial-gradient(circle at 15% 0, rgba(37, 99, 235, 0.3), transparent 55%),
+                  radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.32), transparent 55%);
+    }
+
+    .map-pin {
+      position: absolute;
+      left: 58%;
+      top: 53%;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 0%, #f97316, #ea580c 70%, #9a3412 100%);
+      box-shadow: 0 14px 30px rgba(248, 113, 113, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fef9c3;
+      font-size: 0.95rem;
+      border: 2px solid rgba(15, 23, 42, 0.9);
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid rgba(209, 213, 219, 0.8);
+      margin-top: 3rem;
+      padding: 1.8rem 0 2.1rem;
+      font-size: 0.85rem;
+      background: radial-gradient(circle at top center, rgba(59, 130, 246, 0.08), transparent 60%);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .footer-name {
+      font-weight: 600;
+    }
+
+    .footer-links,
+    .footer-social {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+    }
+
+    .footer-link,
+    .footer-social a {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+
+    .footer-link:hover,
+    .footer-social a:hover {
+      color: var(--primary-deep);
+      text-decoration: none;
+    }
+
+    /* UTILITIES */
+
+    .mt-1 {
+      margin-top: 0.25rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .mt-3 {
+      margin-top: 0.75rem;
+    }
+
+    .badge-soft {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: var(--radius-pill);
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    /* RESPONSIVE TWEAKS */
+
+    @media (max-width: 480px) {
+      .nav-inner {
+        gap: 0.65rem;
+      }
+
+      .brand-name {
+        font-size: 0.95rem;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#hero" class="brand" aria-label="Back to top">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-text">
+          <span class="brand-name">Kapaʻa Surf School</span>
+          <span class="brand-sub">Kauaʻi · Since 2012</span>
+        </div>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Primary">
+        <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#packages">Packages</a>
+        <a class="nav-link" href="#schedule">Schedule</a>
+        <a class="nav-link" href="#testimonials">Testimonials</a>
+        <a class="nav-link" href="#faq">FAQ</a>
+        <a class="nav-link" href="#location">Location</a>
+        <a href="#booking" class="nav-cta">
+          <span>●</span>
+          Book a Lesson
+        </a>
+      </nav>
+
+      <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+
+    <nav id="mobile-nav" class="nav-mobile" aria-label="Mobile navigation">
+      <div class="nav-mobile-inner">
+        <a class="nav-mobile-link" href="#about">About</a>
+        <a class="nav-mobile-link" href="#packages">Lesson Packages</a>
+        <a class="nav-mobile-link" href="#schedule">When We Surf</a>
+        <a class="nav-mobile-link" href="#testimonials">Happy Surfers</a>
+        <a class="nav-mobile-link" href="#faq">FAQ</a>
+        <a class="nav-mobile-link" href="#location">Location & Contact</a>
+        <a href="#booking" class="nav-cta nav-mobile-cta">Book a Lesson</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="hero">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-pre">
+              <span class="hero-pre-dot"></span>
+              <span>Gentle waves. Local guides. Zero pressure.</span>
+            </div>
+            <h1 id="hero-heading" class="hero-heading">
+              Learn to surf in
+              <span class="hero-highlight">warm Kauaʻi waters.</span>
+            </h1>
+            <p class="hero-subtitle">
+              Kapaʻa Surf School is a small, local crew of patient instructors helping beginners, families, and small groups stand up for the very first time on the east shore of Kauaʻi.
+            </p>
+
+            <div class="hero-location">
+              <span class="hero-location-badge">Kapaʻa · Kauaʻi</span>
+              Easy beach access · Reef‑safe sunscreen · All gear included
+            </div>
+
+            <div class="hero-actions">
+              <a href="#booking" class="btn btn-primary">
+                Book a Lesson
+              </a>
+              <a href="#packages" class="btn btn-secondary">
+                View Packages
+              </a>
+            </div>
+
+            <div class="hero-meta">
+              <div class="hero-meta-item">
+                <span class="hero-meta-pill" aria-hidden="true"></span>
+                <span>Beginner‑friendly, from “never tried” and up</span>
+              </div>
+              <div class="hero-meta-item">
+                <span class="hero-meta-pill" aria-hidden="true" style="background: radial-gradient(circle at 20% 0%, #fbbf24, #ea580c);"></span>
+                <span>Small groups · Max 4 students per instructor</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-media" aria-hidden="true">
+            <aside class="hero-card" aria-label="Lesson snapshot">
+              <div class="hero-card-inner">
+                <div class="hero-card-title">
+                  First‑timer Beach Lesson
+                  <span class="hero-card-badge">Most Loved</span>
+                </div>
+                <p class="hero-card-sub">
+                  Gentle waist‑high waves, soft‑top boards, and an easy beach start so you can focus on having fun—not being perfect.
+                </p>
+                <div class="hero-stats">
+                  <div>
+                    <div class="hero-stat-label">Avg. first‑day stand‑ups</div>
+                    <div class="hero-stat-value">3–6 waves ridden</div>
+                  </div>
+                  <div>
+                    <div class="hero-stat-label">Comfort level</div>
+                    <div class="hero-stat-value">“Can’t swim” → “Ocean okay”</div>
+                  </div>
+                </div>
+                <div class="hero-wave">
+                  <div class="hero-wave-icon" aria-hidden="true">🌊</div>
+                  <div class="hero-wave-text">
+                    <div>“I went from nervous to stoked in one session.”</div>
+                    <div class="hero-wave-sub">– Jess, Beginner, 1st lesson</div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">About</div>
+          <h2 id="about-heading" class="section-title">About Kapaʻa Surf School</h2>
+          <p class="section-subtitle">
+            We’re a small, locally owned surf school based right in Kapaʻa—rooted in respect for the ocean, safety, and the joy of catching your first wave.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text">
+            <p>
+              Kapaʻa Surf School is run by lifelong Kauaʻi surfers who grew up in these waters. We keep things friendly, relaxed, and personal so you never feel like you’re just another spot in a crowded lineup.
+            </p>
+            <p>
+              We specialize in beginners, families, and small groups. Whether you’ve never touched a surfboard, are traveling with kids, or just want an easy, confidence‑building session, we pace everything to your comfort level.
+            </p>
+            <p>
+              Safety is at the heart of every lesson. We choose mellow, beginner‑friendly breaks; keep class sizes small; and pair you with local instructors who understand the tides, winds, and reef. Our goal is simple: you feel safe, supported, and stoked.
+            </p>
+
+            <div class="about-highlights mt-3" aria-label="What you can expect">
+              <div class="about-highlight">
+                <span class="about-bullet" aria-hidden="true"></span>
+                <span>Small class sizes—most sessions are 2–4 surfers per instructor.</span>
+              </div>
+              <div class="about-highlight">
+                <span class="about-bullet" aria-hidden="true"></span>
+                <span>All gear included: soft‑top boards, rash guards, and reef‑safe sunscreen.</span>
+              </div>
+              <div class="about-highlight">
+                <span class="about-bullet" aria-hidden="true"></span>
+                <span>Patient instructors who love teaching first‑timers as much as they love surfing.</span>
+              </div>
+            </div>
+          </div>
+
+          <aside aria-label="Kauaʻi coastline near Kapaʻa">
+            <figure class="about-image-card">
+              <img
+                src="./assets/images/kapaa-surf-school-kauai-coastline-about.jpg"
+                alt="Sunlit Kauaʻi coastline with tropical plants and ocean near Kapaʻa"
+              />
+            </figure>
+
+            <div class="about-card mt-3">
+              <strong>What makes us different</strong>
+              <p class="mt-2">
+                We keep our feet in the sand with you—literally. We start with a clear, on‑beach safety talk, dry‑land practice, and ocean reading basics before you paddle out.
+              </p>
+              <p class="mt-2">
+                Your lesson is never rushed, and there’s always time for questions, feedback, and a few “just one more wave!” tries at the end.
+              </p>
+              <div class="about-chip-row">
+                <span class="about-chip">Local instructors</span>
+                <span class="about-chip">Beginner‑first approach</span>
+                <span class="about-chip">Gentle east‑side breaks</span>
+                <span class="about-chip">Photo add‑ons available</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lesson Packages -->
+    <section id="packages" aria-labelledby="packages-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Lessons</div>
+          <h2 id="packages-heading" class="section-title">Lesson Packages</h2>
+          <p class="section-subtitle">
+            Choose a package that matches your crew and comfort level. Every lesson includes a safety briefing, land practice, and plenty of in‑water coaching.
+          </p>
+        </div>
+
+        <div class="cards-grid" aria-label="Lesson packages">
+          <!-- Beginner Beach Lesson -->
+          <article class="package-card">
+            <div class="package-thumb">
+              <img
+                src="./assets/images/kapaa-surf-school-kauai-surf-lesson-hero.jpg"
+                alt="Beginner surfers catching a small wave on a Kauaʻi beach"
+              />
+            </div>
+            <h3 class="package-title">Beginner Beach Lesson</h3>
+            <p class="package-desc">
+              A gentle, confidence‑building intro for first‑time surfers. Perfect if you’ve always wanted to try surfing but weren’t sure where to start.
+            </p>
+            <div class="package-meta">
+              <span class="package-duration">2 hours</span>
+              <span class="package-tag">Beginner · Ages 10+</span>
+            </div>
+            <div class="package-footer">
+              <div>
+                <div class="package-price">$110 / surfer</div>
+                <div class="package-note">Small group · Max 4</div>
+              </div>
+              <button class="btn btn-ghost js-book-from-package" data-lesson="Beginner Beach Lesson">
+                Book this
+              </button>
+            </div>
+          </article>
+
+          <!-- Family Group Session -->
+          <article class="package-card">
+            <div class="package-badge">Most Popular</div>
+            <div class="package-thumb">
+              <img
+                src="./assets/images/kapaa-surf-school-family-surf-lesson-kauai.jpg"
+                alt="Family enjoying a surf lesson together on a sunny Kauaʻi beach"
+              />
+            </div>
+            <h3 class="package-title">Family Group Session</h3>
+            <p class="package-desc">
+              Learn together as a family with a pace that suits everyone. Lots of on‑beach support, gentle waves, and patient coaches who love working with kids.
+            </p>
+            <div class="package-meta">
+              <span class="package-duration">2.5 hours</span>
+              <span class="package-tag">Families · Ages 7+</span>
+            </div>
+            <div class="package-footer">
+              <div>
+                <div class="package-price">$360 / up to 4</div>
+                <div class="package-note">+$75 each additional surfer</div>
+              </div>
+              <button class="btn btn-ghost js-book-from-package" data-lesson="Family Group Session">
+                Book this
+              </button>
+            </div>
+          </article>
+
+          <!-- Private Coaching -->
+          <article class="package-card">
+            <div class="package-thumb">
+              <img
+                src="./assets/images/kapaa-surf-school-private-surf-coaching.jpg"
+                alt="Surf coach guiding a student paddling on a longboard in calm water"
+              />
+            </div>
+            <h3 class="package-title">Private Coaching</h3>
+            <p class="package-desc">
+              One‑on‑one coaching tailored to you—whether it’s your first time or you’re fine‑tuning your timing, turning, and wave selection.
+            </p>
+            <div class="package-meta">
+              <span class="package-duration">1.5–2 hours</span>
+              <span class="package-tag">Solo · Ages 13+</span>
+            </div>
+            <div class="package-footer">
+              <div>
+                <div class="package-price">$185 / person</div>
+                <div class="package-note">Includes video feedback (when conditions allow)</div>
+              </div>
+              <button class="btn btn-ghost js-book-from-package" data-lesson="Private Coaching">
+                Book this
+              </button>
+            </div>
+          </article>
+
+          <!-- Sunrise Session -->
+          <article class="package-card">
+            <div class="package-thumb">
+              <img
+                src="./assets/images/kapaa-surf-school-sunrise-surf-session.jpg"
+                alt="Surfer paddling into a turquoise wave at sunrise"
+              />
+            </div>
+            <h3 class="package-title">Sunrise Session</h3>
+            <p class="package-desc">
+              Catch first light over the ocean with a mellow dawn patrol lesson. Quieter lineups, soft colors, and a calm way to start the day.
+            </p>
+            <div class="package-meta">
+              <span class="package-duration">2 hours</span>
+              <span class="package-tag">Early risers · Limited spots</span>
+            </div>
+            <div class="package-footer">
+              <div>
+                <div class="package-price">$145 / surfer</div>
+                <div class="package-note">Seasonal · 3–5 days/week</div>
+              </div>
+              <button class="btn btn-ghost js-book-from-package" data-lesson="Sunrise Session">
+                Book this
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule preview -->
+    <section id="schedule" aria-labelledby="schedule-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Schedule</div>
+          <h2 id="schedule-heading" class="section-title">When we surf</h2>
+          <p class="section-subtitle">
+            We plan around tides, winds, and swell to keep conditions friendly for new surfers. These are our most common start times.
+          </p>
+        </div>
+
+        <div class="schedule-wrapper">
+          <div class="schedule-times" aria-label="Weekly lesson times">
+            <div class="schedule-item">
+              <div class="schedule-label">Mon–Fri</div>
+              <div class="schedule-slot">8:00am · 11:00am · 2:00pm</div>
+            </div>
+            <div class="schedule-item">
+              <div class="schedule-label">Sat–Sun</div>
+              <div class="schedule-slot">9:00am · 1:00pm</div>
+            </div>
+            <div class="schedule-item">
+              <div class="schedule-label">Sunrise</div>
+              <div class="schedule-slot">Seasonal · 6:00–6:30am starts</div>
+            </div>
+          </div>
+          <div>
+            <p class="schedule-note">
+              Times are flexible and may shift slightly based on tides, swell, and wind. Once you send a booking request, we’ll confirm the best time for your crew by email or text, along with meeting point and parking tips.
+            </p>
+            <p class="schedule-note mt-2">
+              Want a custom time for your group or celebration? Let us know in the notes section of your booking and we’ll see what we can do.
+            </p>
+          </div>
+          <div class="schedule-media" aria-label="Kauaʻi palms and coastline at sunset">
+            <video
+              src="./assets/video/kapaa-surf-school-kauai-location-coastline.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              poster="./assets/images/kapaa-surf-school-kauai-sunset-palms-schedule.jpg"
+            ></video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Stories</div>
+          <h2 id="testimonials-heading" class="section-title">Happy surfers</h2>
+          <p class="section-subtitle">
+            A few words from first‑timers and families who started their surf story with us here in Kapaʻa.
+          </p>
+        </div>
+
+        <div class="testimonials-banner" aria-hidden="true">
+          <img
+            src="./assets/images/kapaa-surf-school-happy-surfers-testimonials.jpg"
+            alt="Happy surfers relaxing on their boards at golden hour"
+          />
+        </div>
+
+        <div class="testimonials-grid" aria-label="Testimonials">
+          <figure class="testimonial-card">
+            <div class="testimonial-icon" aria-hidden="true">❝</div>
+            <blockquote class="testimonial-quote">
+              “I was genuinely nervous about the ocean, but they walked me through every step and never rushed me. By the end of the lesson I was laughing and actually asking for ‘one more wave.’”
+            </blockquote>
+            <figcaption class="testimonial-meta">
+              <div class="testimonial-name">Jess · Seattle</div>
+              <div>Beginner, 1st lesson</div>
+              <span class="testimonial-tag mt-1">Beginner Beach Lesson</span>
+            </figcaption>
+          </figure>
+
+          <figure class="testimonial-card">
+            <div class="testimonial-icon" aria-hidden="true">❝</div>
+            <blockquote class="testimonial-quote">
+              “Our kids are 8 and 11 and the instructors somehow kept them both engaged and safe. The shore briefing made me feel really comfortable as a parent. Favorite family memory from our trip.”
+            </blockquote>
+            <figcaption class="testimonial-meta">
+              <div class="testimonial-name">The Ramos Family</div>
+              <div>Family of 4</div>
+              <span class="testimonial-tag mt-1">Family Group Session</span>
+            </figcaption>
+          </figure>
+
+          <figure class="testimonial-card">
+            <div class="testimonial-icon" aria-hidden="true">❝</div>
+            <blockquote class="testimonial-quote">
+              “I’d surfed a handful of times before, but never really ‘got it.’ The private coaching helped me fix my stance and where I looked on the wave. Huge difference in just one morning.”
+            </blockquote>
+            <figcaption class="testimonial-meta">
+              <div class="testimonial-name">Lena · San Diego</div>
+              <div>Returning surfer</div>
+              <span class="testimonial-tag mt-1">Private Coaching</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" aria-labelledby="faq-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">FAQ</div>
+          <h2 id="faq-heading" class="section-title">Frequently asked questions</h2>
+          <p class="section-subtitle">
+            A few of the things we’re asked most often before booking. If you don’t see your question here, just add it to the notes in the booking form.
+          </p>
+        </div>
+
+        <div class="faq-list" aria-label="Frequently asked questions">
+          <!-- FAQ Item 1 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">Do I need prior experience?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Not at all. Most of our surfers are complete beginners. We start on the sand with basics like stance, paddling, and how to fall safely, then move into calm, waist‑high water where you can take your time getting comfortable.
+              </p>
+            </div>
+          </article>
+
+          <!-- FAQ Item 2 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">What do I need to bring?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Bring a swimsuit, towel, water, and any personal sun protection you like (hat, sunglasses for the beach, etc.). We provide rash guards and reef‑safe sunscreen, but you’re always welcome to bring your own if you prefer.
+              </p>
+            </div>
+          </article>
+
+          <!-- FAQ Item 3 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">Do you provide surfboards and rash guards?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Yes. Every lesson includes a soft‑top surfboard that matches your size and ability, plus a long‑sleeve rash guard. If you have your own board, let us know in the booking notes and we’ll help you decide what’s best for the conditions.
+              </p>
+            </div>
+          </article>
+
+          <!-- FAQ Item 4 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">Can kids take lessons?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Yes. We teach kids starting around age 7 for group lessons, and can sometimes accommodate younger surfers in a private or family session depending on comfort and swim ability. We keep a very close instructor‑to‑student ratio with kids.
+              </p>
+            </div>
+          </article>
+
+          <!-- FAQ Item 5 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">What happens if the waves are flat or the weather is bad?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                If conditions are unsafe (strong winds, storms, or heavy surf) we’ll contact you as early as possible to reschedule or cancel at no charge. If it’s simply smaller or a bit overcast, we’ll usually still surf—it can actually make for ideal beginner waves.
+              </p>
+            </div>
+          </article>
+
+          <!-- FAQ Item 6 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">I’m not a strong swimmer. Is that okay?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Many of our guests are not strong swimmers. We stay in waist‑to‑chest‑high water, use large, buoyant boards, and keep instructors close by at all times. You should be comfortable floating with assistance and being in the ocean; we’ll handle the rest.
+              </p>
+            </div>
+          </article>
+
+          <!-- FAQ Item 7 -->
+          <article class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">Can we book a private group or special event?</span>
+              <span class="faq-icon" aria-hidden="true">›</span>
+            </button>
+            <div class="faq-answer">
+              <p>
+                Absolutely. We regularly host small wedding parties, birthday sessions, and team outings. Add details in the booking notes or send us an email, and we’ll help design a session that fits your group and schedule.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking form -->
+    <section id="booking" aria-labelledby="booking-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Booking</div>
+          <h2 id="booking-heading" class="section-title">Book a lesson</h2>
+          <p class="section-subtitle">
+            Tell us a little about your crew and preferred date. We’ll follow up by email to confirm your time, conditions, and meeting spot.
+          </p>
+        </div>
+
+        <div class="booking-grid">
+          <form id="booking-form" class="form-card" novalidate aria-describedby="booking-note">
+            <div class="form-row form-row--two">
+              <div class="form-field" data-field="name">
+                <label class="form-label" for="name">Name<span aria-hidden="true">*</span></label>
+                <input class="form-input" type="text" id="name" name="name" autocomplete="name" required />
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+
+              <div class="form-field" data-field="email">
+                <label class="form-label" for="email">Email<span aria-hidden="true">*</span></label>
+                <input class="form-input" type="email" id="email" name="email" autocomplete="email" required />
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="form-row form-row--two mt-2">
+              <div class="form-field" data-field="phone">
+                <label class="form-label" for="phone">Phone (optional)</label>
+                <input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel" />
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+
+              <div class="form-field" data-field="groupSize">
+                <label class="form-label" for="groupSize">Group size<span aria-hidden="true">*</span></label>
+                <input class="form-input" type="number" id="groupSize" name="groupSize" min="1" max="12" required />
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="form-row form-row--two mt-2">
+              <div class="form-field" data-field="date">
+                <label class="form-label" for="date">Preferred date<span aria-hidden="true">*</span></label>
+                <input class="form-input" type="date" id="date" name="date" required />
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+
+              <div class="form-field" data-field="time">
+                <label class="form-label" for="time">Preferred time</label>
+                <select class="form-select" id="time" name="time">
+                  <option value="">Choose a time (flexible)</option>
+                  <option value="8:00am">Morning · 8:00am</option>
+                  <option value="9:00am">Weekend · 9:00am</option>
+                  <option value="11:00am">Late morning · 11:00am</option>
+                  <option value="1:00pm">Weekend · 1:00pm</option>
+                  <option value="2:00pm">Afternoon · 2:00pm</option>
+                  <option value="Sunrise">Sunrise session</option>
+                </select>
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="form-row mt-2">
+              <div class="form-field" data-field="lessonType">
+                <label class="form-label" for="lessonType">Lesson type<span aria-hidden="true">*</span></label>
+                <select class="form-select" id="lessonType" name="lessonType" required>
+                  <option value="">Select a package</option>
+                  <option value="Beginner Beach Lesson">Beginner Beach Lesson</option>
+                  <option value="Family Group Session">Family Group Session</option>
+                  <option value="Private Coaching">Private Coaching</option>
+                  <option value="Sunrise Session">Sunrise Session</option>
+                  <option value="Not sure yet">Not sure yet</option>
+                </select>
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="form-row mt-2">
+              <div class="form-field" data-field="message">
+                <label class="form-label" for="message">Message / notes</label>
+                <textarea class="form-textarea" id="message" name="message" placeholder="Tell us about your group, ocean comfort level, and anything we should know (ages, celebration, etc.)."></textarea>
+                <div class="form-error hidden" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div class="form-row mt-3">
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                Send booking request
+              </button>
+            </div>
+
+            <p id="booking-note" class="form-footnote">
+              We’ll reply within 24 hours to confirm availability, conditions, and your final lesson time. No payment is taken on this form.
+            </p>
+
+            <div id="form-success" class="form-success hidden" role="status" aria-live="polite">
+              <div class="form-success-icon" aria-hidden="true">✓</div>
+              <div>
+                <strong>Thanks! Your booking request has been received.</strong><br />
+                We’ll review tides and conditions, then email you with a confirmed time, meeting point, and what to expect on the day of your lesson.
+              </div>
+            </div>
+          </form>
+
+          <aside class="booking-aside">
+            <div class="booking-badge">
+              <span aria-hidden="true">🌈</span>
+              Ocean conditions first
+            </div>
+            <p>
+              Every lesson is planned around the ocean instead of the clock. After you submit your request, our team checks tides, winds, and swell to make sure you’re surfing in the friendliest window for that day.
+            </p>
+            <ul class="booking-list">
+              <li>We’ll suggest the best time if your requested slot doesn’t line up with conditions.</li>
+              <li>Need a photographer or have a special celebration? Add it to your notes.</li>
+              <li>Questions before you book? Email us any time—we’re happy to help.</li>
+            </ul>
+            <p class="mt-2" style="font-size: 0.85rem; color: var(--text-muted);">
+              If you prefer to chat before booking, you can always call or text us using the number below.
+            </p>
+            <div class="booking-photo-card" aria-hidden="true">
+              <img
+                src="./assets/images/kapaa-surf-school-surfboard-alley-hawaii.jpg"
+                alt="Colorful longboards lined up in an alley leading to the ocean in Hawaii"
+              />
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Location & contact -->
+    <section id="location" aria-labelledby="location-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Visit</div>
+          <h2 id="location-heading" class="section-title">Location & contact</h2>
+          <p class="section-subtitle">
+            We’re based right in Kapaʻa, on Kauaʻi’s east side, with easy access to mellow, beginner‑friendly surf breaks and plenty of parking.
+          </p>
+        </div>
+
+        <div class="location-grid">
+          <div class="contact-details">
+            <div class="contact-group">
+              <div class="contact-label">Where we meet</div>
+              <div class="contact-value">
+                Kapaʻa Surf School<br />
+                456 Keala Beachfront Rd<br />
+                Kapaʻa, HI 96746
+              </div>
+            </div>
+
+            <div class="contact-group">
+              <div class="contact-label">Hours of operation</div>
+              <div class="contact-value">
+                Daily · 7:00am – 4:00pm<br />
+                Sunrise sessions by reservation only
+              </div>
+            </div>
+
+            <div class="contact-group">
+              <div class="contact-label">Contact</div>
+              <div class="contact-value">
+                Email:
+                <a href="mailto:aloha@kapaasurfschool.com">aloha@kapaasurfschool.com</a><br />
+                Phone:
+                <a href="tel:+18085551234">(808) 555‑1234</a>
+              </div>
+            </div>
+
+            <div class="contact-group">
+              <div class="contact-label">Parking & meeting spot</div>
+              <div class="contact-value">
+                We’ll send detailed directions and a pin to our beach meeting spot in your confirmation email, including parking options and where to look for your instructor.
+              </div>
+            </div>
+          </div>
+
+          <div class="map-card" aria-hidden="true">
+            <div class="map-inner">
+              <div class="map-header">
+                <span>East Shore, Kauaʻi</span>
+                <span class="map-pill">Map coming soon</span>
+              </div>
+              <div class="map-body">
+                Placeholder map area. A simple, embedded map will go here soon so you can preview our beach meeting spot in Kapaʻa.
+              </div>
+              <div class="map-pin">
+                <span>KS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <span class="footer-name">Kapaʻa Surf School</span>
+        <span class="footer-meta">Small, local, and stoked to share our home break with you.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start;">
+        <div class="footer-links" aria-label="Quick links">
+          <a class="footer-link" href="#about">About</a>
+          <a class="footer-link" href="#packages">Packages</a>
+          <a class="footer-link" href="#booking">Book</a>
+          <a class="footer-link" href="#location">Location</a>
+        </div>
+        <div class="footer-social" aria-label="Social links">
+          <a href="#" class="footer-link">Instagram</a>
+          <a href="#" class="footer-link">Facebook</a>
+        </div>
+      </div>
+
+      <div style="color: var(--text-muted);">
+        © <span id="year"></span> Kapaʻa Surf School. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Utility: smooth scroll to element by id
+      function smoothScrollToId(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // Update current year in footer
+      var yearSpan = document.getElementById("year");
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+
+      // Mobile navigation toggle
+      var hamburger = document.querySelector(".hamburger");
+      var mobileNav = document.getElementById("mobile-nav");
+
+      if (hamburger && mobileNav) {
+        hamburger.addEventListener("click", function () {
+          var isOpen = hamburger.getAttribute("aria-expanded") === "true";
+          hamburger.setAttribute("aria-expanded", String(!isOpen));
+          mobileNav.classList.toggle("open");
+        });
+
+        // Close mobile nav when clicking a link
+        mobileNav.addEventListener("click", function (e) {
+          if (e.target.tagName.toLowerCase() === "a") {
+            hamburger.setAttribute("aria-expanded", "false");
+            mobileNav.classList.remove("open");
+          }
+        });
+      }
+
+      // Smooth scrolling for in-page links
+      var scrollLinks = document.querySelectorAll('a[href^="#"]');
+      scrollLinks.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          var href = link.getAttribute("href");
+          if (!href || href === "#") return;
+          var id = href.substring(1);
+          var target = document.getElementById(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      // "Book this" buttons from packages prefill lesson type and scroll to booking
+      var packageButtons = document.querySelectorAll(".js-book-from-package");
+      var lessonSelect = document.getElementById("lessonType");
+      packageButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var lessonName = btn.getAttribute("data-lesson");
+          if (lessonSelect && lessonName) {
+            lessonSelect.value = lessonName;
+            lessonSelect.focus();
+          }
+          smoothScrollToId("booking");
+        });
+      });
+
+      // FAQ accordion
+      var faqItems = document.querySelectorAll(".faq-item");
+      faqItems.forEach(function (item) {
+        var button = item.querySelector(".faq-question");
+        var answer = item.querySelector(".faq-answer");
+
+        if (!button || !answer) return;
+
+        // Set a default max-height for animation when opening
+        function setAnswerHeight(open) {
+          if (open) {
+            var height = answer.scrollHeight;
+            answer.style.maxHeight = height + "px";
+          } else {
+            answer.style.maxHeight = "0px";
+          }
+        }
+
+        // Initialize closed
+        setAnswerHeight(false);
+
+        button.addEventListener("click", function () {
+          var isOpen = item.classList.contains("open");
+          // Close all others
+          faqItems.forEach(function (other) {
+            if (other !== item) {
+              other.classList.remove("open");
+              var ans = other.querySelector(".faq-answer");
+              var btn = other.querySelector(".faq-question");
+              if (ans) ans.style.maxHeight = "0px";
+              if (btn) btn.setAttribute("aria-expanded", "false");
+            }
+          });
+
+          if (isOpen) {
+            item.classList.remove("open");
+            setAnswerHeight(false);
+            button.setAttribute("aria-expanded", "false");
+          } else {
+            item.classList.add("open");
+            setAnswerHeight(true);
+            button.setAttribute("aria-expanded", "true");
+          }
+        });
+      });
+
+      // Booking form validation and submission
+      var bookingForm = document.getElementById("booking-form");
+      var successBox = document.getElementById("form-success");
+
+      function showError(fieldName, message) {
+        var fieldWrapper = bookingForm.querySelector('[data-field="' + fieldName + '"]');
+        if (!fieldWrapper) return;
+        var errorEl = fieldWrapper.querySelector(".form-error");
+        fieldWrapper.classList.add("error");
+        if (errorEl) {
+          errorEl.textContent = message || "";
+          errorEl.classList.remove("hidden");
+        }
+      }
+
+      function clearError(fieldName) {
+        var fieldWrapper = bookingForm.querySelector('[data-field="' + fieldName + '"]');
+        if (!fieldWrapper) return;
+        var errorEl = fieldWrapper.querySelector(".form-error");
+        fieldWrapper.classList.remove("error");
+        if (errorEl) {
+          errorEl.textContent = "";
+          errorEl.classList.add("hidden");
+        }
+      }
+
+      function validateEmail(value) {
+        // Basic email pattern check
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(value).toLowerCase());
+      }
+
+      if (bookingForm) {
+        bookingForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (successBox) {
+            successBox.classList.add("hidden");
+          }
+
+          // Clear previous errors
+          ["name", "email", "phone", "groupSize", "date", "time", "lessonType", "message"].forEach(clearError);
+
+          var formData = new FormData(bookingForm);
+          var name = (formData.get("name") || "").toString().trim();
+          var email = (formData.get("email") || "").toString().trim();
+          var phone = (formData.get("phone") || "").toString().trim();
+          var groupSizeStr = (formData.get("groupSize") || "").toString().trim();
+          var date = (formData.get("date") || "").toString().trim();
+          var time = (formData.get("time") || "").toString().trim();
+          var lessonType = (formData.get("lessonType") || "").toString().trim();
+          var message = (formData.get("message") || "").toString().trim();
+
+          var hasError = false;
+
+          // Name required
+          if (!name) {
+            showError("name", "Please share the name we can put on your booking.");
+            hasError = true;
+          }
+
+          // Email required + pattern
+          if (!email) {
+            showError("email", "We use your email to send confirmation details.");
+            hasError = true;
+          } else if (!validateEmail(email)) {
+            showError("email", "That doesn’t look like a valid email address.");
+            hasError = true;
+          }
+
+          // Optional phone: no strict validation, but we can give gentle feedback if too short and not empty
+          if (phone && phone.length < 7) {
+            showError("phone", "If you’d like us to text you, please include a full phone number.");
+            hasError = true;
+          }
+
+          // Group size required
+          var groupSize = parseInt(groupSizeStr, 10);
+          if (!groupSizeStr) {
+            showError("groupSize", "Let us know how many surfers will join.");
+            hasError = true;
+          } else if (isNaN(groupSize) || groupSize < 1) {
+            showError("groupSize", "Group size must be at least 1 surfer.");
+            hasError = true;
+          } else if (groupSize > 12) {
+            showError("groupSize", "For groups larger than 12, please contact us for a custom plan.");
+            hasError = true;
+          }
+
+          // Date required and not in the past (simple check)
+          if (!date) {
+            showError("date", "Please choose a preferred date.");
+            hasError = true;
+          } else {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var chosen = new Date(date + "T00:00:00");
+            if (chosen < today) {
+              showError("date", "Please choose a date that hasn’t passed yet.");
+              hasError = true;
+            }
+          }
+
+          // Lesson type required
+          if (!lessonType) {
+            showError("lessonType", "Select the lesson that sounds closest to what you’d like.");
+            hasError = true;
+          }
+
+          // Message optional but nice hint if empty
+          if (!message) {
+            // no error; we keep this optional
+          }
+
+          if (hasError) {
+            // Focus first error
+            var firstError = bookingForm.querySelector(".form-field.error .form-input, .form-field.error .form-select, .form-field.error .form-textarea");
+            if (firstError && typeof firstError.focus === "function") {
+              firstError.focus();
+            }
+            return;
+          }
+
+          // Simulate successful submission
+          bookingForm.reset();
+          if (lessonSelect) {
+            lessonSelect.value = ""; // reset from any pre-fill
+          }
+          if (successBox) {
+            successBox.classList.remove("hidden");
+          }
+
+          // Scroll success message into view on small screens
+          successBox && successBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
