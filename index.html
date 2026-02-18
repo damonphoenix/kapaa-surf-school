@@ -3848,6 +3848,13 @@
       }
 
       function renderWeather(data) {
+        if (!data || !data.current || !data.daily) {
+          var errEl = document.getElementById("weather-error");
+          var loadEl = document.getElementById("weather-loading");
+          if (loadEl) loadEl.hidden = true;
+          if (errEl) { errEl.hidden = false; errEl.innerHTML = "<span aria-hidden=\"true\">⚠</span> " + ((data && data.reason) ? data.reason : "Couldn't load conditions — please try refreshing."); }
+          return;
+        }
         var cur = data.current;
         var daily = data.daily;
         var code = cur.weather_code;
@@ -3881,6 +3888,7 @@
         }
 
         var content = document.getElementById("weather-content");
+        if (!content) return;
         content.innerHTML =
           '<div class="weather-current">' +
             '<span class="weather-icon" aria-hidden="true">' + (WMO_ICONS[code] || "🌤️") + '</span>' +
@@ -3930,15 +3938,35 @@
           "&forecast_days=5";
 
         fetch(url)
-          .then(function (r) { if (!r.ok) throw new Error("Network error"); return r.json(); })
-          .then(function (data) { renderWeather(data); })
-          .catch(function () {
-            document.getElementById("weather-loading").hidden = true;
-            document.getElementById("weather-error").hidden = false;
+          .then(function (r) { if (!r.ok) throw new Error("Network " + r.status); return r.json(); })
+          .then(function (data) {
+            if (data && data.error) {
+              renderWeather({ current: null, daily: null, reason: (data.reason || "API error") });
+              return;
+            }
+            renderWeather(data);
+          })
+          .catch(function (err) {
+            var loadEl = document.getElementById("weather-loading");
+            var errEl = document.getElementById("weather-error");
+            if (loadEl) loadEl.hidden = true;
+            if (errEl) { errEl.hidden = false; errEl.innerHTML = "<span aria-hidden=\"true\">⚠</span> Couldn't load conditions. If you're opening this file from your computer (file://), try using a local server or hosting the site online — browsers block cross-origin requests from file://."; }
           });
       }
 
-      document.addEventListener("DOMContentLoaded", fetchWeather);
+      function runWeather() {
+        try { fetchWeather(); } catch (e) {
+          var loadEl = document.getElementById("weather-loading");
+          var errEl = document.getElementById("weather-error");
+          if (loadEl) loadEl.hidden = true;
+          if (errEl) { errEl.hidden = false; }
+        }
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", runWeather);
+      } else {
+        runWeather();
+      }
     })();
 
     /* Sticky booking bar: show after hero, hide when booking in view */
