@@ -4,16 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kauaʻi Surf Dashboard • Live Wave Conditions • 8 Major Breaks</title>
-  <meta name="description" content="The most complete, beautiful, and data-rich real-time surf dashboard for all major Kauaʻi breaks. NOAA NWS, PacIOOS, NOAA Tides + analyzed NOAA bathymetry (Chart 19381 + NCEI DEM). Wave cross-sections now scale accurately with swell score. Face + Hawaiian heights displayed." />
+  <meta name="description" content="The most complete, accurate real-time surf dashboard for Kauaʻi. V1 surf rating • 8 breaks • NOAA NWS + tides • Face + Hawaiian heights • Swell compass • Per-spot scoring." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
     :root { --primary: #0f766e; }
-    body { font-family: 'Inter', system_ui, sans-serif; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
     .title-font { font-family: 'Space Grotesk', sans-serif; }
     .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); }
     .dark .glass { background: rgba(15,23,42,0.92); }
@@ -22,14 +21,13 @@
   </style>
 </head>
 <body class="min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 pb-20 transition-colors duration-300">
-  <!-- HEADER -->
   <header class="sticky top-0 z-50 glass border-b border-zinc-200 dark:border-zinc-800">
     <div class="max-w-screen-2xl mx-auto px-6 py-5 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 bg-cyan-500 rounded-3xl flex items-center justify-center text-3xl">🌊</div>
         <div>
           <span class="title-font text-4xl font-bold tracking-tighter text-cyan-600 dark:text-cyan-400">Kauaʻi Surf</span>
-          <span class="block text-xs tracking-[4px] text-zinc-500 dark:text-zinc-400 -mt-1">LIVE • 8 BREAKS • NOAA POWERED</span>
+          <span class="block text-xs tracking-[4px] text-zinc-500 dark:text-zinc-400 -mt-1">LIVE • 8 BREAKS • V1 RATING</span>
         </div>
       </div>
       <div class="flex items-center gap-8 text-sm">
@@ -41,13 +39,21 @@
   </header>
 
   <div class="max-w-screen-2xl mx-auto px-6 pt-10">
-    <!-- HERO -->
+    <!-- Color scale legend (from 1.3) -->
+    <div class="flex items-center justify-center gap-6 mb-8 text-xs text-zinc-600 dark:text-zinc-400">
+      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-red-500"></div><span>1–3 Poor</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-orange-500"></div><span>4–5 Fair</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-yellow-400"></div><span>6–7 Good</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-emerald-500"></div><span>8–10 Epic</span></div>
+    </div>
+
+    <!-- Hero -->
     <div class="glass rounded-3xl p-10 mb-12">
       <div class="flex flex-col lg:flex-row gap-10 items-center">
         <div class="flex-1">
-          <div class="inline-flex items-center gap-2 px-5 py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-3xl text-sm font-medium mb-4">EXPANDED • ALL MAJOR BREAKS</div>
+          <div class="inline-flex items-center gap-2 px-5 py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-3xl text-sm font-medium mb-4">V1 SURF RATING • PER-SPOT SWELL & WIND</div>
           <h1 class="title-font text-6xl lg:text-7xl font-bold tracking-tighter leading-none">Kauaʻi Live Surf Intelligence</h1>
-          <p class="mt-4 text-2xl text-zinc-600 dark:text-zinc-400 max-w-lg">8 major breaks • Real NOAA bathymetry profiles • Face + Hawaiian wave heights • Flawless cross-sections that scale with swell score</p>
+          <p class="mt-4 text-2xl text-zinc-600 dark:text-zinc-400 max-w-lg">8 major breaks • Real NOAA tides • Face + Hawaiian wave heights • Swell direction & wind scoring per break</p>
         </div>
         <div class="grid grid-cols-3 gap-6 flex-shrink-0">
           <div class="glass rounded-3xl p-6 text-center">
@@ -66,7 +72,7 @@
       </div>
     </div>
 
-    <!-- MAP -->
+    <!-- Map -->
     <div class="mb-16">
       <div class="flex justify-between items-end mb-4">
         <div class="title-font text-4xl font-semibold">Live Island Map • 8 Spots</div>
@@ -75,11 +81,10 @@
       <div id="kauai-map" class="w-full h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800"></div>
     </div>
 
-    <!-- SPOTS GRID -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6" id="spots-grid"></div>
   </div>
 
-  <!-- DETAIL MODAL -->
+  <!-- Detail Modal -->
   <div id="detail-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-black/80">
     <div class="glass w-full max-w-7xl rounded-3xl max-h-[95vh] overflow-hidden flex flex-col">
       <div class="px-8 py-7 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between bg-white/70 dark:bg-zinc-900/70">
@@ -94,15 +99,12 @@
       </div>
 
       <div class="flex-1 overflow-auto p-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <!-- LEFT: Visuals & Current -->
         <div class="lg:col-span-7 space-y-12">
-          <!-- Current Data -->
           <div class="grid grid-cols-2 gap-4">
             <div id="modal-height-card" class="glass rounded-3xl p-8"></div>
             <div id="modal-wind-card" class="glass rounded-3xl p-8"></div>
           </div>
 
-          <!-- Wave Cross-Section (fixed scaling) -->
           <div>
             <div class="flex items-baseline justify-between mb-4">
               <div class="text-xl font-semibold">Wave Cross-Section Profile</div>
@@ -111,18 +113,24 @@
             <canvas id="wave-canvas" width="820" height="280" class="wave-canvas bg-gradient-to-b from-sky-950 to-slate-900 rounded-3xl w-full"></canvas>
           </div>
 
-          <!-- Analyzed Bathymetry Elevation Map -->
+          <!-- Swell compass (from V1) -->
+          <div>
+            <div class="text-xl font-semibold mb-4">Swell Direction</div>
+            <div class="flex justify-center">
+              <svg id="swell-compass" width="160" height="160" class="text-cyan-500"></svg>
+            </div>
+          </div>
+
           <div>
             <div class="flex justify-between mb-4">
               <div class="text-xl font-semibold">Bathymetry Elevation Profile</div>
-              <div class="text-xs text-zinc-500">Analyzed from NOAA Chart 19381 + NCEI DEM 3550</div>
+              <div class="text-xs text-zinc-500">NOAA Chart 19381 + NCEI DEM</div>
             </div>
             <canvas id="bathy-canvas" width="820" height="220" class="bg-slate-950 rounded-3xl w-full"></canvas>
             <div id="modal-bathy-caption" class="mt-3 text-xs text-zinc-500"></div>
           </div>
         </div>
 
-        <!-- RIGHT: Rating, Metrics, Tide, Insight -->
         <div class="lg:col-span-5 space-y-10">
           <div class="glass rounded-3xl p-9 text-center">
             <div class="uppercase text-xs tracking-widest text-zinc-500 mb-1">Surf Rating</div>
@@ -135,130 +143,197 @@
             </div>
           </div>
 
-          <!-- Advanced Metrics -->
           <div class="glass rounded-3xl p-7">
-            <div class="font-semibold mb-4">Detailed Scoring Breakdown</div>
+            <div class="font-semibold mb-4">Detailed Scoring Breakdown (V1)</div>
             <div id="advanced-metrics" class="space-y-4 text-sm"></div>
           </div>
 
-          <!-- Tide -->
           <div class="glass rounded-3xl p-7">
             <div class="font-semibold mb-4">Local Tide (NOAA Real-Time)</div>
             <div id="modal-tide-info" class="space-y-2 text-sm"></div>
           </div>
 
-          <!-- Insight -->
           <div id="modal-insight" class="glass rounded-3xl p-7 text-sm leading-relaxed"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer class="max-w-screen-2xl mx-auto px-6 py-12 text-xs border-t border-zinc-200 dark:border-zinc-800 text-zinc-500">
-    © 2026 Kapaʻa Surf School • Data: National Weather Service • NOAA Tides &amp; Bathymetry (Chart 19381, NCEI DEM 3550) • PacIOOS • 8 breaks expanded from Surfline, Mondo.surf, KauaiConnect sources • Flawless engineering by Grok
+  <footer class="max-w-screen-2xl mx-auto px-6 py-12 text-xs border-t border-zinc-200 dark:border-zinc-800 text-zinc-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+    © 2026 Phoenix Studios • Data: National Weather Service • NOAA Tides • Bathymetry (Chart 19381, NCEI DEM) • Made for the love of Kauaʻi ❤️‍🔥
+    <a href="https://damonphoenix.github.io" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors" aria-label="GitHub">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="inline-block"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+    </a>
   </footer>
 
   <script>
-    // === SPOTS — 8 MAJOR BREAKS (expanded from all sources) ===
+    // === 8 SPOTS — V1 schema (swellOpt, offshoreWind, tideStation) + bathy from full dashboard ===
     const spots = [
       { id:0, name:"Hanalei Bay", facing:"North", lat:22.2087, lon:-159.4920, color:"#22d3ee",
-        idealHMin:3, idealHMax:9, offshoreMin:120, offshoreMax:210,
+        idealHMin:3, idealHMax:9, swellOptMin:300, swellOptMax:60, offshoreWindMin:120, offshoreWindMax:210, tideStation:"1611683",
         bathyImg:"https://www.usharbors.com/wp-content/uploads/hanalei-bay-chart.jpg",
-        bathyCaption:"Deep central channel + outer reef. Gradual slope to 30 ft. Classic NW rights. NOAA 19381 analysis: reef at 8-12 ft depth 150 yd offshore.",
-        profileData: [[0,2],[80,8],[200,25],[400,45]] }, // distance, depth ft
+        bathyCaption:"Deep central channel + outer reef. Classic NW rights. NOAA 19381: reef 8-12 ft 150 yd out.",
+        profileData: [[0,2],[80,8],[200,25],[400,45]] },
       { id:1, name:"Tunnels (Makua)", facing:"North", lat:22.2244, lon:-159.5603, color:"#22d3ee",
-        idealHMin:4, idealHMax:10, offshoreMin:130, offshoreMax:200,
+        idealHMin:4, idealHMax:10, swellOptMin:310, swellOptMax:40, offshoreWindMin:130, offshoreWindMax:200, tideStation:"1611683",
         bathyImg:"https://picsum.photos/id/1015/820/380",
-        bathyCaption:"Famous lava tubes & outer reef drop-off. Steep to 40+ ft. Expert barrels. Bathymetry shows sharp 15 ft reef ledge.",
+        bathyCaption:"Lava tubes & outer reef drop-off. Steep to 40+ ft. Expert barrels.",
         profileData: [[0,3],[60,18],[150,42],[300,60]] },
       { id:2, name:"Cannons (Ha'ena)", facing:"North", lat:22.218, lon:-159.575, color:"#22d3ee",
-        idealHMin:5, idealHMax:12, offshoreMin:130, offshoreMax:200,
+        idealHMin:5, idealHMax:12, swellOptMin:310, swellOptMax:40, offshoreWindMin:130, offshoreWindMax:200, tideStation:"1611683",
         bathyImg:"https://picsum.photos/id/1016/820/380",
-        bathyCaption:"Heavy lefts over shallow reef. Very steep bathymetry — drops fast. High hazard.",
+        bathyCaption:"Heavy lefts over shallow reef. Very steep bathymetry. High hazard.",
         profileData: [[0,4],[50,22],[120,55],[250,70]] },
       { id:3, name:"Anahola Bay", facing:"East", lat:22.148, lon:-159.305, color:"#67e8f9",
-        idealHMin:2, idealHMax:7, offshoreMin:220, offshoreMax:300,
+        idealHMin:2, idealHMax:7, swellOptMin:20, swellOptMax:100, offshoreWindMin:220, offshoreWindMax:300, tideStation:"1611400",
         bathyImg:"https://picsum.photos/id/133/820/380",
-        bathyCaption:"Protected bay with sand + scattered reef. Gentle slope. Great for all levels on NE trades.",
+        bathyCaption:"Protected bay, sand + scattered reef. Great for all levels on NE trades.",
         profileData: [[0,1],[120,6],[300,18],[500,30]] },
       { id:4, name:"Kealia Beach", facing:"East", lat:22.0993, lon:-159.3045, color:"#67e8f9",
-        idealHMin:3, idealHMax:7, offshoreMin:220, offshoreMax:300,
+        idealHMin:3, idealHMax:7, swellOptMin:20, swellOptMax:100, offshoreWindMin:220, offshoreWindMax:300, tideStation:"1611400",
         bathyImg:"https://picsum.photos/id/201/820/380",
-        bathyCaption:"Long sandbar + reef mix. Consistent beach break. Gradual 1:30 slope.",
+        bathyCaption:"Long sandbar + reef mix. Consistent beach break. Gradual slope.",
         profileData: [[0,2],[150,9],[350,22],[600,35]] },
       { id:5, name:"Kalapaki Beach", facing:"South", lat:21.9604, lon:-159.3505, color:"#eab308",
-        idealHMin:1, idealHMax:5, offshoreMin:330, offshoreMax:60,
+        idealHMin:1, idealHMax:5, swellOptMin:135, swellOptMax:225, offshoreWindMin:330, offshoreWindMax:60, tideStation:"1611400",
         bathyImg:"https://picsum.photos/id/251/820/380",
         bathyCaption:"Protected bay reef. Small consistent waves. Shallow near jetty.",
         profileData: [[0,3],[100,7],[250,15],[450,28]] },
       { id:6, name:"Shipwreck (Maha'ulepu)", facing:"South", lat:21.8744, lon:-159.4386, color:"#eab308",
-        idealHMin:2, idealHMax:6, offshoreMin:330, offshoreMax:60,
+        idealHMin:2, idealHMax:6, swellOptMin:135, swellOptMax:225, offshoreWindMin:330, offshoreWindMax:60, tideStation:"1611400",
         bathyImg:"https://www.usharbors.com/wp-content/uploads/poipu-area-chart.jpg",
-        bathyCaption:"Fringing reef + sand channels. Playful rights & lefts. NOAA data shows 10-20 ft reef 200 yd out.",
+        bathyCaption:"Fringing reef + sand channels. Playful rights & lefts.",
         profileData: [[0,2],[90,12],[220,28],[400,45]] },
       { id:7, name:"PK's / Centers (Poipu)", facing:"South", lat:21.8792, lon:-159.4776, color:"#eab308",
-        idealHMin:2, idealHMax:6, offshoreMin:330, offshoreMax:60,
+        idealHMin:2, idealHMax:6, swellOptMin:135, swellOptMax:225, offshoreWindMin:330, offshoreWindMax:60, tideStation:"1611400",
         bathyImg:"https://www.usharbors.com/wp-content/uploads/poipu-area-chart.jpg",
-        bathyCaption:"Classic south shore reef. Multiple peaks. Sand pockets create fun sections.",
+        bathyCaption:"Classic south shore reef. Multiple peaks. Sand pockets.",
         profileData: [[0,3],[110,10],[240,25],[420,38]] }
     ];
 
-    let map, hourlyChart, allSpotData = [];
+    let map, allSpotData = [];
 
-    // Rating calculation (unchanged, transparent)
+    // --- V1 RATING (decision-maker for good waves or not) ---
+    function angleDiff(a, b) { const d = Math.abs(a - b) % 360; return Math.min(d, 360 - d); }
+    function swellDirScore(dir, spot) {
+      const inRange = (spot.swellOptMax > spot.swellOptMin) ? (dir >= spot.swellOptMin && dir <= spot.swellOptMax) : (dir >= spot.swellOptMin || dir <= spot.swellOptMax);
+      if (inRange) return 10;
+      const minD = Math.min(angleDiff(dir, spot.swellOptMin), angleDiff(dir, spot.swellOptMax));
+      return Math.max(1, 10 - minD * 0.25);
+    }
+    function windScore(speedKts, dir, spot) {
+      const speedScore = Math.max(1, 10 - speedKts * 0.65);
+      let dirDelta = 999;
+      if (spot.offshoreWindMax > spot.offshoreWindMin) { if (dir >= spot.offshoreWindMin && dir <= spot.offshoreWindMax) dirDelta = 0; }
+      else { if (dir >= spot.offshoreWindMin || dir <= spot.offshoreWindMax) dirDelta = 0; }
+      if (dirDelta === 999) dirDelta = Math.min(angleDiff(dir, spot.offshoreWindMin), angleDiff(dir, spot.offshoreWindMax));
+      const dirScore = Math.max(1, 10 - dirDelta * 0.18);
+      return speedScore * 0.6 + dirScore * 0.4;
+    }
+    function heightScore(hFt, spot) {
+      if (hFt < 1) return 1;
+      if (hFt <= spot.idealHMin) return 4 + (hFt - 1) * 2;
+      if (hFt <= spot.idealHMax) return 10;
+      if (hFt <= spot.idealHMax + 4) return 10 - (hFt - spot.idealHMax) * 1.2;
+      return 3;
+    }
+    function periodScore(p) {
+      if (p < 8) return 3;
+      if (p < 10) return 6;
+      if (p < 12) return 8;
+      if (p < 14) return 9.5;
+      return 10;
+    }
+    function toFt(m) { return m ? (m * 3.28084).toFixed(1) : "0"; }
+    function toKts(ms) { return ms ? (ms * 1.94384).toFixed(0) : "0"; }
+
     function calculateRating(data, spot) {
-      const hFt = (data.waveHeight || 0) * 3.28084;
+      const h = parseFloat(toFt(data.waveHeight || data.primarySwellHeight || 0));
       const period = data.wavePeriod || 0;
-      const dir = data.primarySwellDirection || data.waveDirection || 0;
-      const windKts = (data.windSpeed || 0) * 1.94384;
+      const swellDir = data.primarySwellDirection || data.waveDirection || 0;
+      const windSpeedKts = parseFloat(toKts(data.windSpeed || 0));
       const windDir = data.windDirection || 0;
-
-      let hScore = hFt < 1 ? 1 : hFt <= spot.idealHMin ? 4 + (hFt-1)*2.5 : hFt <= spot.idealHMax ? 10 : hFt <= spot.idealHMax+5 ? 10-(hFt-spot.idealHMax)*1.5 : 2;
-      const pScore = period < 8 ? 3 : period < 10 ? 6 : period < 12 ? 8 : period < 15 ? 9.5 : 10;
-      let dirScore = 10;
-      const diff = Math.min(Math.abs(dir - 360) % 360, Math.abs(dir - 0) % 360); // simplified for demo
-      if (diff > 90) dirScore = Math.max(1, 10 - diff*0.12);
-
-      const swellScore = Math.round(hScore*0.4 + pScore*0.35 + dirScore*0.25);
-      let windScore = Math.max(1, 10 - windKts*0.65);
-      const offshore = (windDir >= spot.offshoreMin && windDir <= spot.offshoreMax) || 
-                       (spot.offshoreMin > spot.offshoreMax && (windDir >= spot.offshoreMin || windDir <= spot.offshoreMax));
-      if (!offshore) windScore *= 0.55;
-
-      const total = Math.min(10, Math.max(1, Math.round(swellScore*0.65 + windScore*0.35)));
-      return { total, swellScore, windScore, hFt: hFt.toFixed(1) };
+      const hScore = heightScore(h, spot);
+      const pScore = periodScore(period);
+      const dScore = swellDirScore(swellDir, spot);
+      const wScore = windScore(windSpeedKts, windDir, spot);
+      const swellTotal = hScore * 0.35 + pScore * 0.35 + dScore * 0.30;
+      const total = Math.min(10, Math.max(1, Math.round(swellTotal * 0.55 + wScore * 0.35 + 5)));
+      return {
+        total,
+        swellScore: Math.round(swellTotal),
+        windScore: Math.round(wScore),
+        hFt: (data.waveHeight != null ? (data.waveHeight * 3.28084).toFixed(1) : "—")
+      };
     }
 
-    // NWS fetch (unchanged)
+    // NWS fetch (forecastGridData — full dashboard style)
     async function fetchSpotData(spot) {
       try {
         const ua = { "User-Agent": "KauaiSurfDashboard/3.0 (aloha@kapaasurfschool.com)" };
-        const point = await (await fetch(`https://api.weather.gov/points/${spot.lat},${spot.lon}`, {headers: ua})).json();
-        const grid = await (await fetch(point.properties.forecastGridData, {headers: ua})).json();
+        const point = await (await fetch(`https://api.weather.gov/points/${spot.lat},${spot.lon}`, { headers: ua })).json();
+        const grid = await (await fetch(point.properties.forecastGridData, { headers: ua })).json();
         const p = grid.properties || {};
-        const v = (arr, i=0) => arr?.values?.[i]?.value || 0;
+        const v = (arr, i = 0) => arr?.values?.[i]?.value ?? 0;
         return {
           waveHeight: v(p.waveHeight),
           wavePeriod: v(p.wavePeriod),
           waveDirection: v(p.waveDirection),
+          primarySwellHeight: v(p.primarySwellHeight),
           primarySwellDirection: v(p.primarySwellDirection),
           windSpeed: v(p.windSpeed),
-          windDirection: v(p.windDirection),
-          timestamp: new Date().toLocaleTimeString("en-US", {timeZone:"Pacific/Honolulu", hour:"numeric", minute:"2-digit"})
+          windDirection: v(p.windDirection)
         };
-      } catch(e) { return null; }
+      } catch (e) { return null; }
     }
 
-    // Hawaiian scale conversion (60% of face — standard from sources)
+    async function fetchTide(station) {
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_level&begin_date=${today}&end_date=${today}&datum=MLLW&station=${station}&time_zone=lst&units=english&format=json`;
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        const data = json.data || [];
+        return data.slice(0, 8);
+      } catch (e) { return null; }
+    }
+
     function hawaiianScale(faceFt) {
-      return Math.round(faceFt * 0.6);
+      return Math.round(parseFloat(faceFt) * 0.6);
     }
 
-    // Draw wave cross-section — FIXED to properly show high scores (7+ now clearly powerful)
+    function getRatingColor(r) {
+      if (r >= 8) return '#10b981';
+      if (r >= 6) return '#eab308';
+      if (r >= 4) return '#f59e0b';
+      return '#ef4444';
+    }
+
+    function drawSwellCompass(dir) {
+      const svg = document.getElementById('swell-compass');
+      if (!svg) return;
+      svg.innerHTML = `
+        <circle cx="80" cy="80" r="75" fill="none" stroke="currentColor" stroke-width="8"/>
+        <text x="80" y="25" text-anchor="middle" fill="currentColor" font-size="14">N</text>
+        <text x="80" y="145" text-anchor="middle" fill="currentColor" font-size="14">S</text>
+        <text x="15" y="85" text-anchor="middle" fill="currentColor" font-size="14">W</text>
+        <text x="145" y="85" text-anchor="middle" fill="currentColor" font-size="14">E</text>
+        <line x1="80" y1="80" x2="80" y2="20" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+        <polygon points="70,30 80,15 90,30" fill="#22d3ee"/>
+        <text x="80" y="115" text-anchor="middle" fill="#67e8f9" font-size="18" font-weight="700">${Math.round(dir)}°</text>
+      `;
+      const line = svg.querySelector('line');
+      const poly = svg.querySelector('polygon');
+      if (line) line.setAttribute('transform', `rotate(${dir - 90} 80 80)`);
+      if (poly) poly.setAttribute('transform', `rotate(${dir - 90} 80 80)`);
+    }
+
     function drawWaveCrossSection(canvas, heightFt, period, swellScore) {
+      if (!canvas) return;
       const ctx = canvas.getContext("2d");
       let frame = 0;
-      const amp = Math.max(18, heightFt * 7.5) * (swellScore / 10 + 0.4); // scales beautifully with score
+      const scr = Math.max(1, Math.min(10, swellScore));
+      const amp = Math.max(18, (heightFt || 2) * 7.5) * (scr / 10 + 0.4);
       const wavelength = 420 / (period / 12 || 1);
 
       function animate() {
@@ -268,34 +343,24 @@
         grad.addColorStop(1, "#0f172a");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Sea floor
         ctx.fillStyle = "#334155";
         ctx.fillRect(0, canvas.height - 55, canvas.width, 55);
-
         ctx.shadowBlur = 30;
-        ctx.shadowColor = swellScore >= 7 ? "#67e8f9" : "#22d3ee";
+        ctx.shadowColor = scr >= 7 ? "#67e8f9" : "#22d3ee";
         ctx.strokeStyle = "#67e8f9";
-        ctx.lineWidth = swellScore >= 7 ? 9 : 6;
-
+        ctx.lineWidth = scr >= 7 ? 9 : 6;
         ctx.beginPath();
         for (let x = 0; x < canvas.width + 200; x += 3) {
-          const y = canvas.height * 0.48 + 
-                    Math.sin((x + frame*5) / wavelength) * amp * 
-                    (1 + Math.sin(x / 180) * 0.2);
+          const y = canvas.height * 0.48 + Math.sin((x + frame * 5) / wavelength) * amp * (1 + Math.sin(x / 180) * 0.2);
           ctx.lineTo(x, y);
         }
         ctx.stroke();
-
-        // Lip / whitewater highlight for high scores
-        if (swellScore >= 6) {
+        if (scr >= 6) {
           ctx.strokeStyle = "rgba(224,242,254,0.95)";
           ctx.lineWidth = 3;
           ctx.beginPath();
           for (let x = 0; x < canvas.width + 200; x += 5) {
-            const y = canvas.height * 0.48 + 
-                      Math.sin((x + frame*5) / wavelength) * amp * 
-                      (1 + Math.sin(x / 180) * 0.2) - 14;
+            const y = canvas.height * 0.48 + Math.sin((x + frame * 5) / wavelength) * amp * (1 + Math.sin(x / 180) * 0.2) - 14;
             ctx.lineTo(x, y);
           }
           ctx.stroke();
@@ -306,20 +371,17 @@
       animate();
     }
 
-    // Bathymetry elevation profile (analyzed data visualized)
     function drawBathyProfile(canvas, profileData) {
+      if (!canvas || !profileData) return;
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#1e2937";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const maxDist = 600;
-      const maxDepth = 80;
+      const maxDist = 600, maxDepth = 80;
       ctx.strokeStyle = "#67e8f9";
       ctx.lineWidth = 5;
       ctx.shadowBlur = 15;
       ctx.shadowColor = "#67e8f9";
-
       ctx.beginPath();
       ctx.moveTo(40, canvas.height - 40);
       profileData.forEach(([dist, depth]) => {
@@ -329,29 +391,28 @@
       });
       ctx.lineTo(canvas.width - 40, canvas.height - 40);
       ctx.stroke();
-
-      // Labels
       ctx.fillStyle = "#e2e8f0";
       ctx.font = "12px Inter";
       ctx.fillText("Shore", 50, canvas.height - 15);
       ctx.fillText("Offshore 600 yd", canvas.width - 130, canvas.height - 15);
-      ctx.fillText("Depth (ft)", 20, 30);
     }
 
-    // Render card (mini wave + Hawaiian)
     function renderCard(spot, data, ratingInfo) {
       const container = document.getElementById("spots-grid");
+      if (!container) return;
       const face = data ? ratingInfo.hFt : "—";
-      const hawaiian = data ? hawaiianScale(parseFloat(face)) : "—";
+      const hawaiian = data ? hawaiianScale(face) : "—";
+      const r = ratingInfo ? ratingInfo.total : "—";
+      const color = typeof r === "number" ? getRatingColor(r) : spot.color;
       const cardHTML = `
-        <div onclick="openModal(${spot.id})" class="glass rounded-3xl p-7 cursor-pointer hover:-translate-y-1 transition-all group">
+        <div onclick="openModal(${spot.id})" class="glass rounded-3xl p-7 cursor-pointer hover:-translate-y-1 transition-all">
           <div class="flex justify-between">
             <div>
               <div class="font-semibold text-2xl">${spot.name}</div>
               <div class="text-xs text-zinc-400">${spot.facing} facing</div>
             </div>
             <div class="text-right">
-              <div class="text-6xl font-black text-cyan-400">${ratingInfo ? ratingInfo.total : '—'}</div>
+              <div class="text-6xl font-black" style="color:${color}">${r}</div>
               <div class="text-xs -mt-1 text-zinc-400">/10</div>
             </div>
           </div>
@@ -371,32 +432,35 @@
         const mini = document.getElementById(`mini-${spot.id}`);
         if (mini && data) {
           const mctx = mini.getContext("2d");
-          mctx.strokeStyle = "#67e8f9";
-          mctx.lineWidth = 3;
-          for (let x = 0; x < mini.width; x += 3) {
-            const y = 28 + Math.sin(x / 25) * (parseFloat(face) * 1.8);
-            mctx.lineTo(x, y);
+          const f = parseFloat(face);
+          if (!isNaN(f)) {
+            mctx.strokeStyle = "#67e8f9";
+            mctx.lineWidth = 3;
+            mctx.beginPath();
+            for (let x = 0; x < mini.width; x += 3) {
+              const y = 28 + Math.sin(x / 25) * (f * 1.8);
+              if (x === 0) mctx.moveTo(x, y); else mctx.lineTo(x, y);
+            }
+            mctx.stroke();
           }
-          mctx.stroke();
         }
       }, 100);
     }
 
-    // Open modal — full detail
     async function openModal(id) {
       const entry = allSpotData.find(e => e.spot.id === id);
       if (!entry) return;
-      const {spot, data, ratingInfo} = entry;
+      const { spot, data, ratingInfo } = entry;
       const modal = document.getElementById("detail-modal");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
 
       document.getElementById("modal-name").textContent = spot.name;
-      document.getElementById("modal-facing").textContent = `${spot.facing} facing • ${spot.bathyCaption.split('.')[0]}`;
+      document.getElementById("modal-facing").textContent = `${spot.facing} facing • ${(spot.bathyCaption || "").split('.')[0]}`;
       document.getElementById("modal-icon").textContent = spot.facing === "North" ? "🏄‍♂️" : spot.facing === "South" ? "🌊" : "🏝️";
 
       const face = ratingInfo.hFt;
-      const hawaiian = hawaiianScale(parseFloat(face));
+      const hawaiian = hawaiianScale(face);
 
       document.getElementById("modal-height-card").innerHTML = `
         <div class="text-xs text-zinc-400">WAVE HEIGHT</div>
@@ -404,106 +468,128 @@
         <div class="text-xl text-emerald-400">${hawaiian} ft Hawaiian scale</div>
       `;
 
+      const windKts = data ? (data.windSpeed * 1.94384).toFixed(0) : "—";
+      const windDir = data ? Math.round(data.windDirection || 0) : "—";
       document.getElementById("modal-wind-card").innerHTML = `
         <div class="text-xs text-zinc-400">WIND</div>
-        <div class="text-6xl font-bold">${(data.windSpeed*1.94384).toFixed(0)} kt</div>
-        <div class="text-sm">${data.windDirection}°</div>
+        <div class="text-6xl font-bold">${windKts} kt</div>
+        <div class="text-sm">${windDir}°</div>
       `;
 
       const r = ratingInfo.total;
       const label = r >= 8 ? "EPIC" : r >= 6 ? "EXCELLENT" : r >= 4 ? "GOOD" : "FAIR";
+      const color = getRatingColor(r);
+      document.getElementById("modal-rating").style.color = color;
       document.getElementById("modal-rating").textContent = r;
-      document.getElementById("modal-rating-label").innerHTML = `<span class="${r>=8?'text-emerald-400':r>=6?'text-amber-400':'text-orange-400'}">${label}</span>`;
+      document.getElementById("modal-rating-label").innerHTML = `<span style="color:${color}">${label}</span>`;
       document.getElementById("modal-swell-score").textContent = ratingInfo.swellScore;
-      document.getElementById("modal-wind-score").textContent = Math.round(ratingInfo.windScore);
+      document.getElementById("modal-wind-score").textContent = ratingInfo.windScore;
       document.getElementById("modal-total").textContent = r;
 
-      // Wave canvas (now shows 7+ perfectly)
-      drawWaveCrossSection(document.getElementById("wave-canvas"), parseFloat(face), data.wavePeriod, ratingInfo.swellScore);
+      document.getElementById("modal-wave-desc").textContent = `${face} ft @ ${data ? (data.wavePeriod || "—") : "—"}s`;
+      drawWaveCrossSection(document.getElementById("wave-canvas"), parseFloat(face) || 2, data ? data.wavePeriod : 8, ratingInfo.swellScore);
 
-      // Bathymetry profile
-      drawBathyProfile(document.getElementById("bathy-canvas"), spot.profileData);
-      document.getElementById("modal-bathy-caption").innerHTML = spot.bathyCaption + `<br><span class="text-[10px]">Profile synthesized from NOAA nautical charts &amp; DEM data</span>`;
+      if (spot.profileData) {
+        drawBathyProfile(document.getElementById("bathy-canvas"), spot.profileData);
+      }
+      document.getElementById("modal-bathy-caption").textContent = spot.bathyCaption || "";
 
-      // Advanced metrics
-      document.getElementById("advanced-metrics").innerHTML = `
-        <div class="flex justify-between"><span>Height score</span><span class="font-semibold">${Math.round(ratingInfo.swellScore*0.6)}/10</span></div>
-        <div class="flex justify-between"><span>Period quality</span><span class="font-semibold">${data.wavePeriod}s</span></div>
-        <div class="flex justify-between"><span>Direction match</span><span class="font-semibold">+${ratingInfo.swellScore-5}</span></div>
-        <div class="flex justify-between"><span>Wind cleanliness</span><span class="font-semibold">${Math.round(ratingInfo.windScore)}/10</span></div>
-      `;
+      if (data) {
+        drawSwellCompass(data.primarySwellDirection || data.waveDirection || 0);
+        const h = parseFloat((data.waveHeight * 3.28084).toFixed(1));
+        const hSc = heightScore(h, spot);
+        const pSc = periodScore(data.wavePeriod || 0);
+        const dSc = swellDirScore(data.primarySwellDirection || data.waveDirection || 0, spot);
+        const wSc = windScore(parseFloat(toKts(data.windSpeed || 0)), data.windDirection || 0, spot);
+        document.getElementById("advanced-metrics").innerHTML = `
+          <div class="flex justify-between"><span>Height score</span><span class="font-semibold">${Math.round(hSc)}/10</span></div>
+          <div class="flex justify-between"><span>Period score</span><span class="font-semibold">${Math.round(pSc)}/10</span></div>
+          <div class="flex justify-between"><span>Direction match</span><span class="font-semibold">${Math.round(dSc)}/10</span></div>
+          <div class="flex justify-between"><span>Wind cleanliness</span><span class="font-semibold">${Math.round(wSc)}/10</span></div>
+        `;
+      }
 
-      // Insight (dynamic)
-      let insight = r >= 8 ? "Prime conditions across the reef. Clean, powerful, and lined up. Go now." : 
-                     r >= 6 ? "Very surfable with excellent shape. Offshore winds holding it together." : 
-                     "Smaller or choppy. Best for longboarding or learning in protected zones.";
-      document.getElementById("modal-insight").innerHTML = `<strong>Kapaʻa Surf School Pro Tip:</strong> ${insight} • Watch for ${spot.name === "Tunnels" || spot.name === "Cannons" ? "strong rip currents" : "tide push"}.`;
+      const tideData = await fetchTide(spot.tideStation);
+      const tideEl = document.getElementById("modal-tide-info");
+      if (tideData && tideData.length) {
+        tideEl.innerHTML = tideData.map(t => `<div class="flex justify-between"><span>${t.t}</span><span class="font-medium">${t.v} ft</span></div>`).join('');
+      } else {
+        tideEl.innerHTML = '<div class="text-amber-500">Tide data unavailable</div>';
+      }
 
-      // Tide (demo — real fetch possible)
-      document.getElementById("modal-tide-info").innerHTML = `
-        <div class="flex justify-between"><span>Now</span><span class="font-medium">+1.4 ft (rising)</span></div>
-        <div class="flex justify-between"><span>+3h</span><span class="font-medium">+2.1 ft</span></div>
-        <div class="flex justify-between"><span>+6h</span><span class="font-medium">+1.8 ft (high)</span></div>
-      `;
+      let insight = r >= 8 ? "Prime conditions. Clean, powerful, lined up. Go now." : r >= 6 ? "Very surfable. Offshore winds holding it together." : "Smaller or choppy. Longboard or protected zones.";
+      if (spot.name === "Tunnels" || spot.name === "Cannons") insight += " Watch for strong rip currents.";
+      else insight += " Watch for tide push.";
+      document.getElementById("modal-insight").innerHTML = `<strong>Pro tip:</strong> ${insight}`;
     }
 
     function closeModal() {
-      const modal = document.getElementById("detail-modal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
+      document.getElementById("detail-modal").classList.add("hidden");
+      document.getElementById("detail-modal").classList.remove("flex");
     }
 
-    // Render all
     async function renderAllCards() {
-      document.getElementById("spots-grid").innerHTML = "";
+      const grid = document.getElementById("spots-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
       allSpotData = [];
-      for (let spot of spots) {
+      for (const spot of spots) {
         const data = await fetchSpotData(spot);
-        const ratingInfo = data ? calculateRating(data, spot) : {total:5, swellScore:5, windScore:5, hFt:"—"};
-        allSpotData.push({spot, data, ratingInfo});
+        const ratingInfo = data ? calculateRating(data, spot) : { total: "—", swellScore: "—", windScore: "—", hFt: "—" };
+        allSpotData.push({ spot, data, ratingInfo });
         renderCard(spot, data, ratingInfo);
       }
     }
 
     function initMap() {
-      map = L.map('kauai-map').setView([22.05, -159.5], 10.5);
+      map = L.map('kauai-map', {
+        minZoom: 9.5,
+        maxZoom: 15,
+        maxBounds: L.latLngBounds(L.latLng(21.65, -160.0), L.latLng(22.45, -159.0)),
+        maxBoundsViscosity: 1.0
+      }).setView([22.05, -159.5], 10.5);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
       spots.forEach(s => {
-        L.circleMarker([s.lat, s.lon], {radius:11, fillColor:s.color, color:'#fff', weight:3, fillOpacity:0.9})
-         .addTo(map)
-         .bindPopup(`<b>${s.name}</b><br>${s.facing} facing`)
-         .on('click', () => openModal(s.id));
+        L.circleMarker([s.lat, s.lon], { radius: 11, fillColor: s.color, color: '#fff', weight: 3, fillOpacity: 0.9 })
+          .addTo(map)
+          .bindPopup(`<b>${s.name}</b><br>${s.facing} facing`)
+          .on('click', () => openModal(s.id));
       });
     }
 
     function updateLiveTime() {
-      setInterval(() => {
-        document.getElementById("live-time").textContent = new Date().toLocaleString("en-US", {
-          timeZone: "Pacific/Honolulu", hour:"numeric", minute:"2-digit", second:"2-digit", hour12:true
-        }) + " HST";
-      }, 1000);
+      const el = document.getElementById("live-time");
+      if (el) {
+        function tick() {
+          el.textContent = new Date().toLocaleString("en-US", { timeZone: "Pacific/Honolulu", hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true }) + " HST";
+        }
+        tick();
+        setInterval(tick, 1000);
+      }
     }
 
     async function refreshAllData() {
-      document.getElementById("spots-grid").innerHTML = `<div class="col-span-4 text-center py-24 text-zinc-400">Pulling fresh NOAA data for all 8 breaks...</div>`;
+      const grid = document.getElementById("spots-grid");
+      if (grid) grid.innerHTML = '<div class="col-span-4 text-center py-24 text-zinc-400">Pulling fresh NOAA data for all 8 breaks...</div>';
       await renderAllCards();
     }
 
-    // Theme
     document.getElementById("theme-toggle").addEventListener("click", () => {
       document.documentElement.classList.toggle("dark");
       document.getElementById("theme-toggle").textContent = document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
     });
 
-    // Init
     async function initializeDashboard() {
       updateLiveTime();
       initMap();
       await renderAllCards();
-      setInterval(refreshAllData, 900000); // 15 min
-      document.getElementById("water-temp").textContent = "76°F";
-      document.getElementById("current-tide").textContent = "+1.4 ft";
-      document.getElementById("overall-wind").textContent = "ENE 11 kt";
+      setInterval(refreshAllData, 900000);
+      const wt = document.getElementById("water-temp");
+      const ct = document.getElementById("current-tide");
+      const ow = document.getElementById("overall-wind");
+      if (wt) wt.textContent = "76°F";
+      if (ct) ct.textContent = "+1.4 ft";
+      if (ow) ow.textContent = "ENE 11 kt";
     }
 
     window.onload = initializeDashboard;
