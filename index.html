@@ -1679,87 +1679,129 @@
     }
     .weather-attribution a { color: rgba(125, 211, 252, 0.45); }
 
-    /* Today's Kauai Ocean Surf Ratings (teaser) */
+    /* Today's Kauai Ocean Surf Ratings (teaser) — redesigned */
     .teaser-ocean {
-      padding: 4rem 0;
-      background: #18181b;
-      color: #fafafa;
+      padding: 4.5rem 0;
+      background: linear-gradient(165deg, #e8f6f4 0%, #f0f9ff 35%, #fdf8f2 100%);
+      color: var(--text-main);
+      position: relative;
+      overflow: hidden;
+    }
+    .teaser-ocean::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(15, 118, 110, 0.2), transparent);
+      pointer-events: none;
     }
     .teaser-ocean-inner {
       width: 100%;
       max-width: 80rem;
       margin: 0 auto;
       padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
     }
     .teaser-ocean-header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: baseline;
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.25rem;
     }
     .teaser-ocean-title {
-      font-size: 1.75rem;
+      font-size: 1.65rem;
       font-weight: 700;
       margin: 0;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
     }
     .teaser-ocean-link {
-      color: #34d399;
+      color: var(--primary);
       font-weight: 500;
+      font-size: 0.9rem;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.35rem;
+      transition: color var(--transition-fast);
     }
-    .teaser-ocean-link:hover { color: #6ee7b7; text-decoration: underline; }
+    .teaser-ocean-link:hover { color: var(--primary-deep); text-decoration: underline; }
     .teaser-ocean-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
     @media (min-width: 768px) {
-      .teaser-ocean-grid { grid-template-columns: repeat(4, 1fr); }
+      .teaser-ocean-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
     }
     .teaser-ocean-card {
-      background: #27272a;
-      border-radius: 1rem;
-      padding: 1.5rem;
-      text-align: center;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem 1.25rem;
+      text-align: left;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-med), box-shadow var(--transition-med);
+    }
+    .teaser-ocean-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(15, 118, 110, 0.12);
     }
     .teaser-ocean-card-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      margin: 0 0 1rem;
+      margin: 0 0 0.85rem;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+    .teaser-ocean-rating-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.6rem;
     }
     .teaser-ocean-rating {
-      font-size: 3rem;
+      font-size: 1.85rem;
       font-weight: 800;
       line-height: 1;
-      margin: 1rem 0;
+      min-width: 2.25rem;
     }
-    .teaser-ocean-rating-high { color: #34d399; }
-    .teaser-ocean-rating-mid { color: #facc15; }
-    .teaser-ocean-rating-low { color: #fb923c; }
+    .teaser-ocean-rating-high { color: #059669; }
+    .teaser-ocean-rating-mid { color: #b45309; }
+    .teaser-ocean-rating-low { color: #c2410c; }
+    .teaser-ocean-rating-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
     .teaser-ocean-meta {
-      font-size: 0.75rem;
-      color: #a1a1aa;
+      font-size: 0.8rem;
+      color: var(--text-muted);
       margin: 0;
+      font-weight: 500;
     }
+    .teaser-ocean-meta strong { color: var(--text-main); }
     .teaser-ocean-cta {
-      display: block;
-      margin-top: 1.5rem;
-      padding: 0.75rem 1rem;
-      font-size: 0.75rem;
-      background: #3f3f46;
-      color: #fafafa;
-      text-align: center;
-      border-radius: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 1.1rem;
+      padding: 0.5rem 0;
+      font-size: 0.8rem;
+      color: var(--primary);
       text-decoration: none;
-      transition: background 0.15s ease;
+      font-weight: 500;
+      transition: color var(--transition-fast), gap var(--transition-fast);
     }
-    .teaser-ocean-cta:hover { background: #52525b; text-decoration: none; color: #fafafa; }
+    .teaser-ocean-cta:hover { color: var(--primary-deep); text-decoration: none; gap: 0.5rem; }
+    .teaser-ocean-cta::after { content: "→"; }
 
     /* SECTION HEADINGS */
 
@@ -2976,6 +3018,13 @@
       color: var(--primary-deep);
       text-decoration: underline;
     }
+    .footer-github {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 0.25rem;
+    }
+    .footer-github:hover { text-decoration: none; }
+    .footer-github svg { flex-shrink: 0; }
 
     /* UTILITIES */
 
@@ -3269,8 +3318,11 @@
               var card = document.createElement("div");
               card.className = "teaser-ocean-card";
               card.innerHTML = "<h3 class=\"teaser-ocean-card-title\">" + spot.name + "</h3>" +
-                "<div class=\"teaser-ocean-rating " + ratingClass + "\">" + rating + "</div>" +
-                "<p class=\"teaser-ocean-meta\">" + toFt(data.waveHeight) + " ft @ " + (data.wavePeriod || "—") + "s</p>" +
+                "<div class=\"teaser-ocean-rating-wrap\">" +
+                "<span class=\"teaser-ocean-rating " + ratingClass + "\">" + rating + "</span>" +
+                "<span class=\"teaser-ocean-rating-label\">/ 10</span>" +
+                "</div>" +
+                "<p class=\"teaser-ocean-meta\"><strong>" + toFt(data.waveHeight) + " ft</strong> @ " + (data.wavePeriod || "—") + "s</p>" +
                 "<a href=\"./live-kauai-conditions.html\" class=\"teaser-ocean-cta\">See details</a>";
               container.appendChild(card);
             })
@@ -3974,7 +4026,9 @@
             <a class="footer-link" href="#weather">Conditions</a>
             <a class="footer-link" href="#booking">Book</a>
             <a class="footer-link" href="#location">Location</a>
-            <a href="/live-kauai-conditions.html" class="nav-link">🌊 Live Kauai Surf Ratings</a>
+            <a href="/kauai-surf-live-dashboard.html
+            
+            " class="nav-link">🌊 Live Kauai Surf Ratings</a>
           </div>
           <div class="footer-social" aria-label="Social links">
             <a href="#" class="footer-link" rel="noopener noreferrer">Instagram</a>
@@ -3986,8 +4040,8 @@
       <div class="footer-divider" aria-hidden="true"></div>
 
       <div class="footer-bottom">
-        <span class="footer-copyright">© <span id="year"></span> Kapaʻa Surf School. All rights reserved.</span>
-        <span class="footer-credit">Created by <a href="https://phx.cx" target="_blank" rel="noopener noreferrer" class="footer-credit-link">Phoenix Studios</a></span>
+        <span class="footer-copyright">© 2026 Phoenix Studios</span>
+        <span class="footer-credit">Made for the love of Kauaʻi ❤️‍🔥 <a href="https://damonphoenix.github.io" target="_blank" rel="noopener noreferrer" class="footer-credit-link footer-github" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a></span>
       </div>
     </div>
   </footer>
