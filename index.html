@@ -58,6 +58,10 @@
       display: block;
     }
 
+    figure {
+      margin: 0;
+    }
+
     a {
       color: var(--primary);
       text-decoration: none;
@@ -88,13 +92,21 @@
     }
 
     section {
-      padding: 4rem 0;
+      padding: 3.5rem 0;
     }
 
     @media (min-width: 768px) {
       section {
-        padding: 5.5rem 0;
+        padding: 4.75rem 0;
       }
+    }
+
+    #about {
+      padding-bottom: 3.5rem;
+    }
+
+    #packages {
+      padding-top: 3.5rem;
     }
 
     /* NAVIGATION */
@@ -122,22 +134,9 @@
     }
 
     .brand-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: 40% 60% 55% 45%;
-      background: radial-gradient(circle at 25% 0%, #fcd34d, #fb923c 60%, #f97316 100%);
-      position: relative;
-      box-shadow: 0 8px 20px rgba(251, 146, 60, 0.35);
-    }
-
-    .brand-mark::after {
-      content: "";
-      position: absolute;
-      inset: 9px 6px 10px;
-      border-radius: 999px;
-      border: 2px solid rgba(255, 255, 255, 0.65);
-      border-bottom-width: 3px;
-      border-top: none;
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
     }
 
     .brand-text {
@@ -148,18 +147,16 @@
     .brand-name {
       font-size: 1.05rem;
       font-weight: 700;
+      background: linear-gradient(135deg, #0f766e 0%, #0d9488 45%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .brand-sub {
       font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      font-size: 0.9rem;
+      color: #0f766e;
+      opacity: 0.75;
     }
 
     .nav-link {
@@ -186,31 +183,91 @@
       width: 100%;
     }
 
-    .nav-cta {
-      padding: 0.55rem 1.1rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(15, 118, 110, 0.18);
-      background: radial-gradient(circle at 0 0, rgba(209, 250, 229, 0.6), rgba(13, 148, 136, 0.06));
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--primary-deep);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      box-shadow: 0 7px 20px rgba(15, 118, 110, 0.18);
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    @keyframes nav-cta-peel {
+      0%   { transform: perspective(420px) rotateY(0deg)   translateX(0);      }
+      16%  { transform: perspective(420px) rotateY(-9deg)  translateX(-1.8px); }
+      32%  { transform: perspective(420px) rotateY(-3.5deg) translateX(1.2px); }
+      52%  { transform: perspective(420px) rotateY(-6deg)  translateX(-0.7px); }
+      72%  { transform: perspective(420px) rotateY(-4.5deg) translateX(0.3px); }
+      100% { transform: perspective(420px) rotateY(-4deg)  translateX(0);      }
     }
 
-    .nav-cta span {
-      font-size: 1.1rem;
+    .nav-cta {
+      padding: 0.52rem 1.2rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: linear-gradient(135deg, #229e93 0%, #14b8a6 50%, #22c55e 100%);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ecfdf5;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(15, 118, 110, 0.38);
+      transition: transform 320ms ease, box-shadow 180ms ease;
+      position: relative;
+      overflow: hidden;
+      transform-origin: right center;
+    }
+
+    .nav-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent 75%
+      );
+      transform: translateX(-140%);
+      transition: transform 520ms ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .nav-cta::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 22px;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.14), transparent);
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 200ms ease 80ms;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .nav-cta-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      background: radial-gradient(circle at center,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(187, 247, 208, 0.55) 50%,
+        transparent 100%);
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.35), 0 0 3px 1px rgba(187, 247, 208, 0.4);
+      position: relative;
+      z-index: 3;
     }
 
     .nav-cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 25px rgba(15, 118, 110, 0.24);
-      background: radial-gradient(circle at 0 0, rgba(190, 242, 100, 0.6), rgba(13, 148, 136, 0.1));
+      animation: nav-cta-peel 480ms cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+      box-shadow: 0 14px 30px rgba(15, 118, 110, 0.5);
       text-decoration: none;
+    }
+
+    .nav-cta:hover::before {
+      transform: translateX(140%);
+    }
+
+    .nav-cta:hover::after {
+      opacity: 1;
     }
 
     .nav-cta:focus-visible,
@@ -315,6 +372,7 @@
 
     .hero {
       padding-top: 2.5rem;
+      padding-bottom: 3.5rem;
       background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.3), transparent 60%),
                   radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.2), transparent 55%),
                   var(--bg-hero-gradient);
@@ -322,6 +380,12 @@
       border-bottom-right-radius: 2.5rem;
       box-shadow: 0 18px 55px rgba(15, 23, 42, 0.12);
       overflow: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .hero {
+        padding-bottom: 4rem;
+      }
     }
 
     .hero-grid {
@@ -332,7 +396,7 @@
     @media (min-width: 900px) {
       .hero-grid {
         grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-        align-items: center;
+        align-items: start;
         gap: 3.5rem;
       }
     }
@@ -340,22 +404,24 @@
     .hero-pre {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.65rem;
       padding: 0.3rem 0.75rem;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(15, 118, 110, 0.3);
+      border: 1px solid rgba(14, 165, 233, 0.35);
       background: rgba(255, 255, 255, 0.8);
-      color: var(--primary-deep);
+      color: #0369a1;
       font-size: 0.8rem;
       margin-bottom: 1.1rem;
-      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.16);
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.10);
     }
 
     .hero-pre-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: radial-gradient(circle at 20% 0%, #a5b4fc, #2563eb);
+      background: radial-gradient(circle at center, rgba(14, 165, 233, 0.65) 0%, rgba(14, 165, 233, 0.15) 55%, transparent 100%);
+      box-shadow: 0 0 6px 2px rgba(14, 165, 233, 0.25);
+      flex-shrink: 0;
     }
 
     .hero-heading {
@@ -374,30 +440,7 @@
       font-size: 1.02rem;
       color: var(--text-muted);
       max-width: 36rem;
-      margin-bottom: 1.7rem;
-    }
-
-    .hero-location {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.85rem;
-      color: #0f172a;
-      padding: 0.4rem 0.7rem;
-      border-radius: var(--radius-pill);
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(209, 213, 219, 0.8);
-      margin-bottom: 1.4rem;
-    }
-
-    .hero-location-badge {
-      padding: 0.15rem 0.5rem;
-      border-radius: var(--radius-pill);
-      background: #0f172a;
-      color: #fef9c3;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      margin-bottom: 1.8rem;
     }
 
     .hero-actions {
@@ -405,7 +448,7 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 1.7rem;
+      margin-bottom: 2.75rem;
     }
 
     .btn {
@@ -425,9 +468,28 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #22c55e 100%);
+      background: linear-gradient(135deg, #229e93 0%, #14b8a6 50%, #22c55e 100%);
       color: #ecfdf5;
       box-shadow: 0 16px 40px rgba(15, 118, 110, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      position: relative;
+      overflow: hidden;
+      gap: 0.65rem;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent 75%
+      );
+      transform: translateX(-140%);
+      transition: transform 520ms ease;
+      pointer-events: none;
     }
 
     .btn-primary:hover {
@@ -436,11 +498,15 @@
       text-decoration: none;
     }
 
+    .btn-primary:hover::after {
+      transform: translateX(140%);
+    }
+
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       color: var(--primary-deep);
-      border-color: rgba(15, 118, 110, 0.2);
-      box-shadow: 0 8px 22px rgba(148, 163, 184, 0.24);
+      border: 1.5px solid rgba(15, 118, 110, 0.32);
+      box-shadow: 0 3px 8px rgba(148, 163, 184, 0.12);
     }
 
     .btn-secondary:hover {
@@ -460,28 +526,57 @@
     .hero-meta-item {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.65rem;
       padding: 0.4rem 0.7rem;
       border-radius: var(--radius-pill);
       background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(209, 213, 219, 0.9);
+      border: 1px solid rgba(14, 165, 233, 0.28);
+    }
+
+    .hero-meta-item--warm {
+      border-color: rgba(251, 113, 22, 0.28);
     }
 
     .hero-meta-pill {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       border-radius: 999px;
-      background: radial-gradient(circle at 20% 0%, #38bdf8, #0369a1);
+      flex-shrink: 0;
+      background: radial-gradient(circle at center,
+        rgba(14, 165, 233, 0.85) 0%,
+        rgba(34, 197, 94, 0.45) 40%,
+        rgba(15, 118, 110, 0.12) 70%,
+        transparent 100%);
+      box-shadow: 0 0 7px 2px rgba(14, 165, 233, 0.22), 0 0 3px 1px rgba(34, 197, 94, 0.18);
+    }
+
+    .hero-meta-pill--warm {
+      background: radial-gradient(circle at center,
+        rgba(251, 113, 22, 0.85) 0%,
+        rgba(251, 191, 36, 0.4) 45%,
+        rgba(251, 113, 22, 0.08) 70%,
+        transparent 100%);
+      box-shadow: 0 0 7px 2px rgba(251, 113, 22, 0.22), 0 0 3px 1px rgba(251, 191, 36, 0.18);
     }
 
     .hero-card {
       position: relative;
-      padding: 1.5rem 1.6rem 1.7rem;
+      padding: 2.4rem 2.2rem;
       border-radius: 1.8rem;
       background: transparent;
-      color: #e5e7eb;
+      color: #f8fafc;
       box-shadow: none;
       overflow: hidden;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 900px) {
+      .hero-card {
+        padding: 2.8rem 2.6rem;
+      }
     }
 
     .hero-card::before {
@@ -497,89 +592,163 @@
     .hero-card-inner {
       position: relative;
       z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+
+    .hero-card-header {
+      display: flex;
+      flex-direction: column;
     }
 
     .hero-card-title {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.3rem;
+      margin-bottom: 0.55rem;
+      color: #ffffff;
     }
 
     .hero-card-badge {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.25rem 0.6rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(187, 247, 208, 0.9);
-      background: rgba(22, 163, 74, 0.18);
-      color: #bbf7d0;
+      position: absolute;
+      top: 1.1rem;
+      right: 1.2rem;
+      padding: 0.35rem 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fecdd3;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 180, 190, 0.35);
+      background: rgba(244, 63, 94, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 2;
+    }
+
+    @media (min-width: 900px) {
+      .hero-card-badge {
+        top: 1.4rem;
+        right: 1.6rem;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+      }
     }
 
     .hero-card-sub {
-      font-size: 0.78rem;
-      color: #cbd5f5;
-      margin-bottom: 1rem;
+      font-size: 0.82rem;
+      color: #f1f5f9;
+      margin: 0;
+      line-height: 1.55;
     }
 
     .hero-stats {
       display: flex;
       justify-content: space-between;
       gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.8rem;
+      margin: 0;
+      font-size: 0.82rem;
     }
 
     .hero-stat-label {
-      color: #9ca3af;
+      color: #edf4fa;
       font-size: 0.7rem;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
 
     .hero-stat-value {
       font-weight: 600;
-      color: #e5e7eb;
+      color: #ffffff;
       margin-top: 0.25rem;
+    }
+
+    @keyframes hero-wave-pulse {
+      0%, 100% {
+        box-shadow: 0 14px 35px rgba(14, 165, 233, 0.38);
+      }
+      50% {
+        box-shadow: 0 14px 38px rgba(14, 165, 233, 0.55), 0 0 20px rgba(24, 184, 87, 0.13);
+      }
+    }
+
+    @keyframes hero-wave-shimmer {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 0.85; }
     }
 
     .hero-wave {
       position: relative;
-      margin-top: 0.2rem;
+      margin-top: auto;
       border-radius: 1.4rem;
-      background: linear-gradient(135deg, #0ea5e9, #22c55e);
-      padding: 0.65rem 0.9rem;
+      background: linear-gradient(135deg, #0280be, #0c9082 52%, #14954a);
+      padding: 0.75rem 1.1rem;
       display: flex;
       align-items: center;
-      gap: 0.7rem;
       font-size: 0.8rem;
-      box-shadow: 0 14px 35px rgba(14, 165, 233, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      overflow: hidden;
+      gap: 1rem;
+      animation: hero-wave-pulse 7s ease-in-out infinite;
     }
 
-    .hero-wave-icon {
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #e0f2fe;
-      font-size: 1.2rem;
+    .hero-wave::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 42%;
+      background: radial-gradient(ellipse at 30% 50%,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0.05) 55%,
+        transparent 100%);
+      pointer-events: none;
+      animation: hero-wave-shimmer 7s ease-in-out infinite;
     }
 
     .hero-wave-text {
-      color: #ecfeff;
+      position: relative;
+      z-index: 1;
+      color: #ffffff;
       line-height: 1.4;
     }
 
     .hero-wave-sub {
       font-size: 0.7rem;
-      opacity: 0.9;
+      color: #d1fae5;
+      opacity: 1;
+    }
+
+    @keyframes hero-wave-dot-pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.3), 0 0 3px 1px rgba(187, 247, 208, 0.35);
+      }
+      50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 9px 3px rgba(255, 255, 255, 0.38), 0 0 16px 4px rgba(14, 165, 233, 0.18);
+      }
+    }
+
+    .hero-wave-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      background: radial-gradient(circle at center,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(187, 247, 208, 0.55) 50%,
+        transparent 100%);
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.3), 0 0 3px 1px rgba(187, 247, 208, 0.35);
+      animation: hero-wave-dot-pulse 7s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
     }
 
     .hero-media {
@@ -590,6 +759,10 @@
       background-image: url("./assets/images/kapaa-surf-school-kauai-surf-lesson-hero.jpg");
       background-size: cover;
       background-position: center;
+      height: 462px;
+      margin-top: 2.6rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .hero-media::before {
@@ -623,6 +796,7 @@
     }
 
     .section-kicker {
+      width: fit-content;
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
@@ -630,28 +804,43 @@
     }
 
     .section-title {
+      width: fit-content;
       font-size: 1.6rem;
     }
 
     .section-subtitle {
+      width: fit-content;
       color: var(--text-muted);
       max-width: 32rem;
       font-size: 0.95rem;
+      margin-bottom: 0.5rem;
     }
 
     /* ABOUT */
 
     .about-grid {
       display: grid;
-      gap: 1.8rem;
+      gap: 2rem;
     }
 
     @media (min-width: 768px) {
       .about-grid {
-        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
-        gap: 3rem;
-        align-items: center;
+        grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+        gap: 5rem;
+        align-items: start;
       }
+
+      .about-grid > aside {
+        margin-top: 0;
+      }
+
+      .about-image-wrap {
+        height: 340px;
+      }
+    }
+
+    .about-grid .section-header {
+      display: none;
     }
 
     .about-text p + p {
@@ -682,24 +871,133 @@
       padding: 1.4rem 1.5rem;
       border-radius: var(--radius-lg);
       background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(209, 213, 219, 0.9);
+      border: 1px solid rgba(15, 118, 110, 0.35);
       box-shadow: var(--shadow-soft);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .about-story-card {
+      background:
+        radial-gradient(ellipse at 15% 12%,  rgba(34, 197, 94, 0.22)  0%, transparent 62%),
+        radial-gradient(ellipse at 88% 82%,  rgba(14, 165, 233, 0.2)  0%, transparent 58%),
+        radial-gradient(ellipse at 72% 18%,  rgba(20, 184, 166, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 8%  88%,  rgba(103, 232, 249, 0.15) 0%, transparent 50%),
+        #f4fdfb;
+      border: 1px solid rgba(167, 243, 208, 0.7);
+      border-radius: 1.7rem;
+      padding: 1.5rem 1.6rem 1.4rem;
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
       font-size: 0.9rem;
     }
 
-    .about-image-card {
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      background: #000;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(15, 23, 42, 0.25);
+    .about-story-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0;
     }
 
-    .about-image-card img {
+    .about-story-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .about-story-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0b4f48;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .about-story-body {
+      color: #374151;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .about-story-divider {
+      height: 1px;
+      background: rgba(167, 243, 208, 0.6);
+      margin: 0.15rem 0;
+    }
+
+    .about-story-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .about-story-highlight {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    .about-story-bullet {
+      color: var(--primary);
+      font-size: 0.65rem;
+      margin-top: 0.28rem;
+      flex-shrink: 0;
+    }
+
+    .about-image-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(15, 23, 42, 0.25);
+      margin-bottom: 1.25rem;
+      position: relative;
+      height: 240px;
+    }
+
+    .about-image-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -35%;
+      background:
+        radial-gradient(circle at 5% 5%,   rgba(56, 189, 248, 0.28), transparent 55%),
+        radial-gradient(circle at 95% 95%,  rgba(52, 211, 153, 0.25), transparent 50%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .about-image-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.2) 100%);
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .about-image-inner {
+      display: block;
+      line-height: 0;
+      height: calc(100% + 64px);
+      margin-top: -32px;
+      animation: kenburns-banner 26s ease-in-out infinite;
+      transform-origin: center center;
+      will-change: transform;
+    }
+
+    img.about-image-card {
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
+      object-position: center bottom;
+      will-change: transform;
     }
 
     .about-chip-row {
@@ -710,12 +1008,19 @@
     }
 
     .about-chip {
-      padding: 0.2rem 0.65rem;
+      display: inline-block;
+      padding: 0.22rem 0.7rem;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.8);
+      border: 1.5px solid transparent;
       font-size: 0.75rem;
-      background: #f1f5f9;
-      color: #0f172a;
+      font-weight: 500;
+      background:
+        linear-gradient(#ffffff, #ffffff) padding-box,
+        linear-gradient(120deg, #0f766e 0%, #22c55e 45%, #0ea5e9 100%) border-box;
+    }
+
+    .about-chip-text {
+      color: #0a6b60;
     }
 
     /* LESSON PACKAGES */
@@ -749,7 +1054,16 @@
       height: 170px;
       border-radius: 1.1rem;
       overflow: hidden;
-      margin-bottom: 0.9rem;
+      position: relative;
+    }
+
+    .package-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.2) 100%);
+      border-radius: inherit;
+      pointer-events: none;
     }
 
     .package-thumb img {
@@ -757,6 +1071,16 @@
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    .package-card--sunrise {
+      display: block;
+    }
+
+    @media (min-width: 768px) {
+      .package-card--sunrise {
+        display: none;
+      }
     }
 
     .package-card:nth-child(2) {
@@ -777,6 +1101,7 @@
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      z-index: 10;
     }
 
     .package-title {
@@ -815,7 +1140,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 1rem;
+      margin-top: auto;
+      padding-top: 0.75rem;
       gap: 0.7rem;
     }
 
@@ -837,6 +1163,37 @@
       padding-inline: 1.1rem;
       font-size: 0.85rem;
       box-shadow: 0 8px 22px rgba(15, 118, 110, 0.15);
+      position: relative;
+      overflow: hidden;
+      gap: 0.65rem;
+    }
+
+    .btn-ghost::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 25%,
+        rgba(14, 165, 233, 0.12) 50%,
+        transparent 75%
+      );
+      transform: translateX(-140%);
+      transition: transform 520ms ease;
+      pointer-events: none;
+    }
+
+    .btn-ghost-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      background: radial-gradient(circle at center,
+        rgba(14, 165, 233, 0.9) 0%,
+        rgba(34, 197, 94, 0.5) 45%,
+        rgba(15, 118, 110, 0.1) 70%,
+        transparent 100%);
+      box-shadow: 0 0 7px 2px rgba(14, 165, 233, 0.28), 0 0 3px 1px rgba(34, 197, 94, 0.2);
     }
 
     .btn-ghost:hover {
@@ -844,24 +1201,35 @@
       text-decoration: none;
     }
 
+    .btn-ghost:hover::before {
+      transform: translateX(140%);
+    }
+
     /* SCHEDULE */
 
     .schedule-wrapper {
-      padding: 1.4rem 1.5rem;
+      padding: 1.5rem;
       border-radius: var(--radius-lg);
-      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.07), transparent 60%),
-                  radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.1), transparent 60%),
-                  #ecfeff;
-      border: 1px solid rgba(191, 219, 254, 0.8);
-      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 15% 20%,  rgba(167, 243, 208, 0.45) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 75%,  rgba(186, 230, 253, 0.4)  0%, transparent 50%),
+        radial-gradient(ellipse at 60% 10%,  rgba(103, 232, 249, 0.22) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 15%,  rgba(251, 191, 36, 0.1)   0%, transparent 35%),
+        #f4fdfb;
+      border: 1px solid rgba(167, 243, 208, 0.7);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
       display: grid;
-      gap: 1.2rem;
+      gap: 1.4rem;
     }
 
     @media (min-width: 768px) {
       .schedule-wrapper {
-        grid-template-columns: 1.3fr 1.4fr;
-        align-items: center;
+        padding: 1.6rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: stretch;
+        column-gap: 1.8rem;
+        border: none;
       }
     }
 
@@ -878,6 +1246,7 @@
       padding: 0.55rem 0.75rem;
       border-radius: 0.9rem;
       background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(251, 113, 22, 0.28);
     }
 
     .schedule-label {
@@ -890,9 +1259,16 @@
       font-weight: 500;
     }
 
+    .schedule-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
     .schedule-note {
       font-size: 0.8rem;
       color: #0f172a;
+      line-height: 1.55;
     }
 
     .schedule-media {
@@ -900,7 +1276,16 @@
       border-radius: 1.4rem;
       overflow: hidden;
       min-height: 180px;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.4);
+      max-height: 240px;
+    }
+
+    @media (min-width: 768px) {
+      .schedule-media {
+        max-height: none;
+        align-self: stretch;
+        margin: calc(-1.6rem - 1px) 0 calc(-1.6rem - 1px) calc(-1.6rem - 1px);
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      }
     }
 
     .schedule-media video,
@@ -908,18 +1293,12 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center 60%;
       display: block;
     }
 
     .schedule-media::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        145deg,
-        rgba(15, 23, 42, 0.75),
-        rgba(8, 47, 73, 0.3)
-      );
+      display: none;
     }
 
     /* TESTIMONIALS */
@@ -927,19 +1306,28 @@
     .testimonials-grid {
       display: grid;
       gap: 1.2rem;
+      margin-top: 0.5rem;
     }
 
     @media (min-width: 768px) {
       .testimonials-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.6rem;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .testimonials-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.8rem;
       }
     }
 
     .testimonial-card {
-      padding: 1.3rem 1.4rem;
+      padding: 1.3rem 1.6rem;
       border-radius: var(--radius-lg);
       background: var(--bg-card);
-      border: 1px solid rgba(209, 213, 219, 0.95);
+      border: 1px solid rgba(15, 118, 110, 0.35);
       box-shadow: var(--shadow-soft);
       display: flex;
       flex-direction: column;
@@ -952,9 +1340,12 @@
       font-size: 0.9rem;
     }
 
-    .testimonial-meta {
-      font-size: 0.8rem;
-      color: var(--text-muted);
+    .testimonial-footer {
+      margin-top: auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 0.75rem;
     }
 
     .testimonial-name {
@@ -962,13 +1353,26 @@
       color: var(--primary-deep);
     }
 
-    .testimonial-tag {
+    .testimonial-meta {
       font-size: 0.8rem;
-      padding: 0.2rem 0.55rem;
+      color: var(--text-muted);
+    }
+
+    .testimonial-pill {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
       border-radius: var(--radius-pill);
-      background: #eff6ff;
+      background: #eef2ff;
       color: #1d4ed8;
-      width: fit-content;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .testimonial-pill:hover {
+      background: #e0e7ff;
+      text-decoration: none;
     }
 
     .testimonial-icon {
@@ -982,23 +1386,57 @@
     .testimonials-banner {
       border-radius: 1.7rem;
       overflow: hidden;
-      margin-bottom: 1.5rem;
-      max-height: 220px;
+      margin-top: 1.5rem;
+      position: relative;
+      height: 344px;
+    }
+
+    .testimonials-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.22) 100%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    @keyframes kenburns-banner {
+      0%   { transform: scale(1)    translateX(0);      }
+      50%  { transform: scale(1.04) translateX(-0.5%);  }
+      100% { transform: scale(1)    translateX(0);      }
+    }
+
+    .testimonials-banner-inner {
+      display: block;
+      line-height: 0;
+      height: calc(100% + 68px);
+      margin-top: -34px;
+      animation: kenburns-banner 24s ease-in-out infinite;
+      transform-origin: center center;
+      will-change: transform;
     }
 
     .testimonials-banner img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center bottom;
       display: block;
-      filter: saturate(1.1);
+      filter: saturate(1.05);
+      will-change: transform;
+    }
+
+    @media (min-width: 1024px) {
+      .testimonials-banner {
+        height: 423px;
+      }
     }
 
     /* FAQ */
 
     .faq-list {
       display: grid;
-      gap: 0.7rem;
+      gap: 0.85rem;
     }
 
     .faq-item {
@@ -1011,7 +1449,7 @@
     .faq-question {
       width: 100%;
       text-align: left;
-      padding: 0.8rem 1rem;
+      padding: 1.1rem 1.2rem;
       background: none;
       border: none;
       display: flex;
@@ -1021,6 +1459,7 @@
       cursor: pointer;
       font-size: 0.95rem;
       color: #0f172a;
+      line-height: 1.4;
     }
 
     .faq-question-text {
@@ -1028,8 +1467,8 @@
     }
 
     .faq-icon {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.9);
       display: flex;
@@ -1044,14 +1483,20 @@
     .faq-answer {
       max-height: 0;
       overflow: hidden;
-      padding: 0 1rem;
+      padding: 0 1.2rem;
       font-size: 0.9rem;
       color: var(--text-muted);
-      transition: max-height 220ms ease-out, padding-bottom 220ms ease-out;
+      line-height: 1.7;
+      transition: max-height 320ms ease, padding 320ms ease;
     }
 
     .faq-item.open .faq-answer {
-      padding-bottom: 0.9rem;
+      padding-top: 0.2rem;
+      padding-bottom: 1.8rem;
+    }
+
+    .faq-answer p + p {
+      margin-top: 0.7rem;
     }
 
     .faq-item.open .faq-icon {
@@ -1077,9 +1522,9 @@
     .form-card {
       background: var(--bg-card);
       border-radius: 1.7rem;
-      padding: 1.6rem 1.6rem 1.4rem;
-      border: 1px solid rgba(209, 213, 219, 0.95);
-      box-shadow: var(--shadow-soft);
+      padding: 1.76rem 1.6rem 1.54rem;
+      border: 1px solid rgba(15, 118, 110, 0.35);
+      box-shadow: 0 16px 40px rgba(15, 118, 110, 0.23);
     }
 
     .form-row {
@@ -1097,7 +1542,7 @@
     .form-field {
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.39rem;
       font-size: 0.9rem;
     }
 
@@ -1116,7 +1561,7 @@
     .form-textarea {
       border-radius: 0.9rem;
       border: 1px solid rgba(209, 213, 219, 0.95);
-      padding: 0.6rem 0.7rem;
+      padding: 0.66rem 0.7rem;
       font: inherit;
       color: var(--text-main);
       background: #f9fafb;
@@ -1134,7 +1579,7 @@
     }
 
     .form-textarea {
-      min-height: 90px;
+      min-height: 99px;
       resize: vertical;
     }
 
@@ -1162,7 +1607,15 @@
     .form-footnote {
       font-size: 0.8rem;
       color: var(--text-muted);
-      margin-top: 0.85rem;
+      margin-top: 0.94rem;
+    }
+
+    #booking-form .mt-2 {
+      margin-top: 0.55rem;
+    }
+
+    #booking-form .mt-3 {
+      margin-top: 0.83rem;
     }
 
     .form-success {
@@ -1215,121 +1668,192 @@
       margin-top: 0.4rem;
     }
 
+    .booking-info-card {
+      background: linear-gradient(145deg, #f0fdf9 0%, #ecfeff 60%, #f0f9ff 100%);
+      border: 1px solid rgba(167, 243, 208, 0.7);
+      border-radius: 1.4rem;
+      padding: 1.4rem 1.5rem 1.3rem;
+      box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .booking-info-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .booking-info-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .booking-info-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0b4f48;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .booking-info-body {
+      font-size: 0.85rem;
+      color: #374151;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .booking-info-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .booking-info-list li {
+      display: flex;
+      gap: 0.55rem;
+      font-size: 0.83rem;
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    .booking-info-bullet {
+      color: var(--primary);
+      font-size: 0.65rem;
+      margin-top: 0.28rem;
+      flex-shrink: 0;
+    }
+
+    .booking-info-footer {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(167, 243, 208, 0.6);
+    }
+
     .booking-photo-card {
       border-radius: 1.3rem;
       overflow: hidden;
-      margin-top: 1.4rem;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+      margin-bottom: 1.4rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .booking-photo-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.2) 100%);
+      border-radius: inherit;
+      pointer-events: none;
     }
 
     .booking-photo-card img {
       width: 100%;
-      height: 170px;
+      height: 248px;
       object-fit: cover;
       display: block;
     }
 
     /* LOCATION & CONTACT */
 
-    .location-grid {
-      display: grid;
-      gap: 1.7rem;
+    .location-map-wrap {
+      border-radius: 1.7rem;
+      overflow: hidden;
+      box-shadow: 0 14px 38px rgba(15, 23, 42, 0.22);
+      margin-bottom: 2.2rem;
     }
 
-    @media (min-width: 900px) {
-      .location-grid {
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
-        align-items: center;
+    .location-map-body {
+      height: 420px;
+      display: block;
+      background: #0b1120;
+    }
+
+    .location-info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 600px) {
+      .location-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    .contact-details {
-      font-size: 0.9rem;
-      display: grid;
-      gap: 0.7rem;
+    @media (min-width: 1024px) {
+      .location-info-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
     }
 
-    .contact-group {
-      display: grid;
-      gap: 0.15rem;
+    .location-tile {
+      background: var(--bg-card);
+      border-radius: 1.7rem;
+      border: 1px solid rgba(209, 213, 219, 0.95);
+      padding: 1.2rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-soft);
     }
 
-    .contact-label {
-      font-size: 0.8rem;
+    .location-tile-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .location-tile-label {
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       color: var(--text-muted);
+      font-weight: 500;
     }
 
-    .contact-value a {
+    .location-tile-value {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .location-tile-value a {
       color: var(--primary-deep);
       font-weight: 500;
     }
 
-    .map-card {
-      border-radius: 1.7rem;
-      padding: 1.3rem 1.4rem;
-      background: conic-gradient(from 170deg at 0 0, #bfdbfe, #a5f3fc, #fef3c7, #bfdbfe);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
-    }
-
-    .map-inner {
-      position: relative;
-      border-radius: 1.4rem;
-      background: rgba(15, 23, 42, 0.96);
-      padding: 1.1rem 1.2rem;
-      color: #e5e7eb;
-      font-size: 0.9rem;
-      overflow: hidden;
-    }
-
-    .map-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.7rem;
-      margin-bottom: 0.9rem;
+    .location-tile-cta {
+      display: inline-block;
+      margin-top: 0.5rem;
       font-size: 0.8rem;
-      color: #9ca3af;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: 0.01em;
     }
 
-    .map-pill {
-      padding: 0.15rem 0.6rem;
-      border-radius: var(--radius-pill);
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.9);
+    .location-tile-cta:hover {
+      color: var(--primary-deep);
+      text-decoration: underline;
     }
 
-    .map-body {
-      height: 150px;
-      border-radius: 1rem;
-      border: 1px dashed rgba(156, 163, 175, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #9ca3af;
-      text-align: center;
-      padding: 0.8rem;
-      background: radial-gradient(circle at 15% 0, rgba(37, 99, 235, 0.3), transparent 55%),
-                  radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.32), transparent 55%);
-    }
+    /* MAPBOX UI SUPPRESSION */
 
-    .map-pin {
-      position: absolute;
-      left: 58%;
-      top: 53%;
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 25% 0%, #f97316, #ea580c 70%, #9a3412 100%);
-      box-shadow: 0 14px 30px rgba(248, 113, 113, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fef9c3;
-      font-size: 0.95rem;
-      border: 2px solid rgba(15, 23, 42, 0.9);
+    .mapboxgl-ctrl-logo,
+    .mapboxgl-ctrl-attrib,
+    .mapboxgl-ctrl-bottom-left,
+    .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib {
+      display: none !important;
     }
 
     /* FOOTER */
@@ -1400,17 +1924,6 @@
       margin-top: 0.75rem;
     }
 
-    .badge-soft {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      border-radius: var(--radius-pill);
-      padding: 0.2rem 0.6rem;
-      font-size: 0.8rem;
-      background: #ecfdf5;
-      color: #047857;
-    }
-
     /* RESPONSIVE TWEAKS */
 
     @media (max-width: 480px) {
@@ -1427,13 +1940,18 @@
       }
     }
   </style>
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css"
+    rel="stylesheet"
+  />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
 </head>
 <body>
   <!-- Navigation -->
   <header>
     <div class="container nav-inner">
-      <a href="#hero" class="brand" aria-label="Back to top">
-        <div class="brand-mark" aria-hidden="true"></div>
+        <a href="#hero" class="brand" aria-label="Back to top">
+        <img class="brand-mark" src="./assets/images/kapaa-surf-school-logo-wave.png" alt="Kapaʻa Surf School logo" />
         <div class="brand-text">
           <span class="brand-name">Kapaʻa Surf School</span>
           <span class="brand-sub">Kauaʻi · Since 2012</span>
@@ -1448,7 +1966,7 @@
         <a class="nav-link" href="#faq">FAQ</a>
         <a class="nav-link" href="#location">Location</a>
         <a href="#booking" class="nav-cta">
-          <span>●</span>
+          <span class="nav-cta-dot" aria-hidden="true"></span>
           Book a Lesson
         </a>
       </nav>
@@ -1468,7 +1986,10 @@
         <a class="nav-mobile-link" href="#testimonials">Happy Surfers</a>
         <a class="nav-mobile-link" href="#faq">FAQ</a>
         <a class="nav-mobile-link" href="#location">Location & Contact</a>
-        <a href="#booking" class="nav-cta nav-mobile-cta">Book a Lesson</a>
+        <a href="#booking" class="nav-cta nav-mobile-cta">
+          <span class="nav-cta-dot" aria-hidden="true"></span>
+          Book a Lesson
+        </a>
       </div>
     </nav>
   </header>
@@ -1484,24 +2005,20 @@
               <span>Gentle waves. Local guides. Zero pressure.</span>
             </div>
             <h1 id="hero-heading" class="hero-heading">
-              Learn to surf in
-              <span class="hero-highlight">warm Kauaʻi waters.</span>
+              Learn to surf in the
+              <span class="hero-highlight">Magic of Kauaʻi Waters.</span>
             </h1>
             <p class="hero-subtitle">
               Kapaʻa Surf School is a small, local crew of patient instructors helping beginners, families, and small groups stand up for the very first time on the east shore of Kauaʻi.
             </p>
 
-            <div class="hero-location">
-              <span class="hero-location-badge">Kapaʻa · Kauaʻi</span>
-              Easy beach access · Reef‑safe sunscreen · All gear included
-            </div>
-
             <div class="hero-actions">
-              <a href="#booking" class="btn btn-primary">
-                Book a Lesson
-              </a>
               <a href="#packages" class="btn btn-secondary">
                 View Packages
+              </a>
+              <a href="#booking" class="btn btn-primary">
+                <span class="nav-cta-dot" aria-hidden="true"></span>
+                Book a Lesson
               </a>
             </div>
 
@@ -1510,8 +2027,8 @@
                 <span class="hero-meta-pill" aria-hidden="true"></span>
                 <span>Beginner‑friendly, from “never tried” and up</span>
               </div>
-              <div class="hero-meta-item">
-                <span class="hero-meta-pill" aria-hidden="true" style="background: radial-gradient(circle at 20% 0%, #fbbf24, #ea580c);"></span>
+              <div class="hero-meta-item hero-meta-item--warm">
+                <span class="hero-meta-pill hero-meta-pill--warm" aria-hidden="true"></span>
                 <span>Small groups · Max 4 students per instructor</span>
               </div>
             </div>
@@ -1519,14 +2036,16 @@
 
           <div class="hero-media" aria-hidden="true">
             <aside class="hero-card" aria-label="Lesson snapshot">
+              <span class="hero-card-badge">Most Loved</span>
               <div class="hero-card-inner">
-                <div class="hero-card-title">
-                  First‑timer Beach Lesson
-                  <span class="hero-card-badge">Most Loved</span>
+                <div class="hero-card-header">
+                  <div class="hero-card-title">
+                    First Surf Lesson
+                  </div>
+                  <p class="hero-card-sub">
+                    Gentle waist‑high waves, soft‑top boards, and an easy beach start so you can focus on having fun - not being perfect.
+                  </p>
                 </div>
-                <p class="hero-card-sub">
-                  Gentle waist‑high waves, soft‑top boards, and an easy beach start so you can focus on having fun—not being perfect.
-                </p>
                 <div class="hero-stats">
                   <div>
                     <div class="hero-stat-label">Avg. first‑day stand‑ups</div>
@@ -1534,13 +2053,13 @@
                   </div>
                   <div>
                     <div class="hero-stat-label">Comfort level</div>
-                    <div class="hero-stat-value">“Can’t swim” → “Ocean okay”</div>
+                    <div class="hero-stat-value">“Can’t swim” → “Send it”</div>
                   </div>
                 </div>
                 <div class="hero-wave">
-                  <div class="hero-wave-icon" aria-hidden="true">🌊</div>
+                  <span class="hero-wave-dot" aria-hidden="true"></span>
                   <div class="hero-wave-text">
-                    <div>“I went from nervous to stoked in one session.”</div>
+                    <div>“I went from nervous to stoked in one session!”</div>
                     <div class="hero-wave-sub">– Jess, Beginner, 1st lesson</div>
                   </div>
                 </div>
@@ -1558,62 +2077,75 @@
           <div class="section-kicker">About</div>
           <h2 id="about-heading" class="section-title">About Kapaʻa Surf School</h2>
           <p class="section-subtitle">
-            We’re a small, locally owned surf school based right in Kapaʻa—rooted in respect for the ocean, safety, and the joy of catching your first wave.
+            We’re a small, locally owned surf school based right in Kapaʻa - rooted in respect for the ocean, safety, and the joy of catching your first wave.
           </p>
         </div>
 
         <div class="about-grid">
-          <div class="about-text">
-            <p>
-              Kapaʻa Surf School is run by lifelong Kauaʻi surfers who grew up in these waters. We keep things friendly, relaxed, and personal so you never feel like you’re just another spot in a crowded lineup.
-            </p>
-            <p>
-              We specialize in beginners, families, and small groups. Whether you’ve never touched a surfboard, are traveling with kids, or just want an easy, confidence‑building session, we pace everything to your comfort level.
-            </p>
-            <p>
-              Safety is at the heart of every lesson. We choose mellow, beginner‑friendly breaks; keep class sizes small; and pair you with local instructors who understand the tides, winds, and reef. Our goal is simple: you feel safe, supported, and stoked.
-            </p>
-
-            <div class="about-highlights mt-3" aria-label="What you can expect">
-              <div class="about-highlight">
-                <span class="about-bullet" aria-hidden="true"></span>
-                <span>Small class sizes—most sessions are 2–4 surfers per instructor.</span>
-              </div>
-              <div class="about-highlight">
-                <span class="about-bullet" aria-hidden="true"></span>
-                <span>All gear included: soft‑top boards, rash guards, and reef‑safe sunscreen.</span>
-              </div>
-              <div class="about-highlight">
-                <span class="about-bullet" aria-hidden="true"></span>
-                <span>Patient instructors who love teaching first‑timers as much as they love surfing.</span>
+          <aside aria-label="Kauaʻi coastline near Kapaʻa">
+            <div class="about-image-wrap">
+              <div class="about-image-inner">
+                <img
+                  class="about-image-card"
+                  src="./assets/images/kapaa-surf-school-kauai-coastline-about.jpg"
+                  alt="Sunlit Kauaʻi coastline with tropical plants and ocean near Kapaʻa"
+                />
               </div>
             </div>
-          </div>
 
-          <aside aria-label="Kauaʻi coastline near Kapaʻa">
-            <figure class="about-image-card">
-              <img
-                src="./assets/images/kapaa-surf-school-kauai-coastline-about.jpg"
-                alt="Sunlit Kauaʻi coastline with tropical plants and ocean near Kapaʻa"
-              />
-            </figure>
-
-            <div class="about-card mt-3">
-              <strong>What makes us different</strong>
-              <p class="mt-2">
-                We keep our feet in the sand with you—literally. We start with a clear, on‑beach safety talk, dry‑land practice, and ocean reading basics before you paddle out.
+            <div class="about-story-card mt-3">
+              <div class="about-story-header">
+                <h3 class="about-story-heading">What makes us different</h3>
+              </div>
+              <p class="about-story-body">
+                We keep our feet in the sand with you - literally. We start with a clear, on‑beach safety talk, dry‑land practice, and ocean reading basics before you paddle out.
               </p>
-              <p class="mt-2">
+              <p class="about-story-body">
                 Your lesson is never rushed, and there’s always time for questions, feedback, and a few “just one more wave!” tries at the end.
               </p>
               <div class="about-chip-row">
-                <span class="about-chip">Local instructors</span>
-                <span class="about-chip">Beginner‑first approach</span>
-                <span class="about-chip">Gentle east‑side breaks</span>
-                <span class="about-chip">Photo add‑ons available</span>
+                <span class="about-chip"><span class="about-chip-text">Local instructors</span></span>
+                <span class="about-chip"><span class="about-chip-text">Beginner‑first approach</span></span>
+                <span class="about-chip"><span class="about-chip-text">Gentle east‑side breaks</span></span>
+                <span class="about-chip"><span class="about-chip-text">Photo add‑ons available</span></span>
               </div>
             </div>
           </aside>
+
+          <div class="about-text">
+            <div class="about-card">
+              <div class="about-story-header">
+                <h3 class="about-story-heading" style="color: #0b4f48;">Rooted in Kauaʻi, built for you</h3>
+              </div>
+
+              <p class="about-story-body">
+                Kapaʻа Surf School is run by lifelong Kauaʼi surfers who grew up in these waters. We keep things friendly, relaxed, and personal so you never feel like you’re just another spot in a crowded lineup.
+              </p>
+              <p class="about-story-body">
+                We specialize in beginners, families, and small groups. Whether you’ve never touched a surfboard, are traveling with kids, or just want an easy, confidence‑building session, we pace everything to your comfort level.
+              </p>
+              <p class="about-story-body">
+                Safety is at the heart of every lesson. We choose mellow, beginner‑friendly breaks; keep class sizes small; and pair you with local instructors who understand the tides, winds, and reef. Our goal is simple: you feel safe, supported, and stoked.
+              </p>
+
+              <div class="about-story-divider" style="background: rgba(209,213,219,0.6);"></div>
+
+              <div class="about-story-highlights" aria-label="What you can expect">
+                <div class="about-story-highlight">
+                  <span class="about-story-bullet" aria-hidden="true">✶</span>
+                  <span>Small class sizes - most sessions are 2–4 surfers per instructor.</span>
+                </div>
+                <div class="about-story-highlight">
+                  <span class="about-story-bullet" aria-hidden="true">✶</span>
+                  <span>All gear included: soft‑top boards, rash guards, and reef‑safe sunscreen.</span>
+                </div>
+                <div class="about-story-highlight">
+                  <span class="about-story-bullet" aria-hidden="true">✶</span>
+                  <span>Patient instructors who love teaching first‑timers as much as they love surfing.</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1630,15 +2162,16 @@
         </div>
 
         <div class="cards-grid" aria-label="Lesson packages">
-          <!-- Beginner Beach Lesson -->
+          <!-- Beginner Lesson -->
           <article class="package-card">
             <div class="package-thumb">
               <img
-                src="./assets/images/kapaa-surf-school-kauai-surf-lesson-hero.jpg"
+                src="./assets/images/kapaa-surf-school-beginner-surf-lesson.jpg"
                 alt="Beginner surfers catching a small wave on a Kauaʻi beach"
+                style="object-position: center 38%;"
               />
             </div>
-            <h3 class="package-title">Beginner Beach Lesson</h3>
+            <h3 class="package-title">Beginner Lesson</h3>
             <p class="package-desc">
               A gentle, confidence‑building intro for first‑time surfers. Perfect if you’ve always wanted to try surfing but weren’t sure where to start.
             </p>
@@ -1651,13 +2184,14 @@
                 <div class="package-price">$110 / surfer</div>
                 <div class="package-note">Small group · Max 4</div>
               </div>
-              <button class="btn btn-ghost js-book-from-package" data-lesson="Beginner Beach Lesson">
+              <button class="btn btn-ghost js-book-from-package" data-lesson="Beginner Lesson">
+                <span class="btn-ghost-dot" aria-hidden="true"></span>
                 Book this
               </button>
             </div>
           </article>
 
-          <!-- Family Group Session -->
+          <!-- Ohana Session -->
           <article class="package-card">
             <div class="package-badge">Most Popular</div>
             <div class="package-thumb">
@@ -1666,7 +2200,7 @@
                 alt="Family enjoying a surf lesson together on a sunny Kauaʻi beach"
               />
             </div>
-            <h3 class="package-title">Family Group Session</h3>
+            <h3 class="package-title">Ohana Session</h3>
             <p class="package-desc">
               Learn together as a family with a pace that suits everyone. Lots of on‑beach support, gentle waves, and patient coaches who love working with kids.
             </p>
@@ -1679,7 +2213,8 @@
                 <div class="package-price">$360 / up to 4</div>
                 <div class="package-note">+$75 each additional surfer</div>
               </div>
-              <button class="btn btn-ghost js-book-from-package" data-lesson="Family Group Session">
+              <button class="btn btn-primary js-book-from-package" data-lesson="Ohana Session">
+                <span class="nav-cta-dot" aria-hidden="true"></span>
                 Book this
               </button>
             </div>
@@ -1695,7 +2230,7 @@
             </div>
             <h3 class="package-title">Private Coaching</h3>
             <p class="package-desc">
-              One‑on‑one coaching tailored to you—whether it’s your first time or you’re fine‑tuning your timing, turning, and wave selection.
+              One‑on‑one coaching tailored to you - whether it’s your first time or you’re fine‑tuning your timing, turning, and wave selection.
             </p>
             <div class="package-meta">
               <span class="package-duration">1.5–2 hours</span>
@@ -1704,16 +2239,17 @@
             <div class="package-footer">
               <div>
                 <div class="package-price">$185 / person</div>
-                <div class="package-note">Includes video feedback (when conditions allow)</div>
+                <div class="package-note">Includes video feedback<br>(when conditions allow)</div>
               </div>
               <button class="btn btn-ghost js-book-from-package" data-lesson="Private Coaching">
+                <span class="btn-ghost-dot" aria-hidden="true"></span>
                 Book this
               </button>
             </div>
           </article>
 
           <!-- Sunrise Session -->
-          <article class="package-card">
+          <article class="package-card package-card--sunrise">
             <div class="package-thumb">
               <img
                 src="./assets/images/kapaa-surf-school-sunrise-surf-session.jpg"
@@ -1754,28 +2290,6 @@
         </div>
 
         <div class="schedule-wrapper">
-          <div class="schedule-times" aria-label="Weekly lesson times">
-            <div class="schedule-item">
-              <div class="schedule-label">Mon–Fri</div>
-              <div class="schedule-slot">8:00am · 11:00am · 2:00pm</div>
-            </div>
-            <div class="schedule-item">
-              <div class="schedule-label">Sat–Sun</div>
-              <div class="schedule-slot">9:00am · 1:00pm</div>
-            </div>
-            <div class="schedule-item">
-              <div class="schedule-label">Sunrise</div>
-              <div class="schedule-slot">Seasonal · 6:00–6:30am starts</div>
-            </div>
-          </div>
-          <div>
-            <p class="schedule-note">
-              Times are flexible and may shift slightly based on tides, swell, and wind. Once you send a booking request, we’ll confirm the best time for your crew by email or text, along with meeting point and parking tips.
-            </p>
-            <p class="schedule-note mt-2">
-              Want a custom time for your group or celebration? Let us know in the notes section of your booking and we’ll see what we can do.
-            </p>
-          </div>
           <div class="schedule-media" aria-label="Kauaʻi palms and coastline at sunset">
             <video
               src="./assets/video/kapaa-surf-school-kauai-location-coastline.mp4"
@@ -1786,64 +2300,30 @@
               poster="./assets/images/kapaa-surf-school-kauai-sunset-palms-schedule.jpg"
             ></video>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section id="testimonials" aria-labelledby="testimonials-heading">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-kicker">Stories</div>
-          <h2 id="testimonials-heading" class="section-title">Happy surfers</h2>
-          <p class="section-subtitle">
-            A few words from first‑timers and families who started their surf story with us here in Kapaʻa.
-          </p>
-        </div>
-
-        <div class="testimonials-banner" aria-hidden="true">
-          <img
-            src="./assets/images/kapaa-surf-school-happy-surfers-testimonials.jpg"
-            alt="Happy surfers relaxing on their boards at golden hour"
-          />
-        </div>
-
-        <div class="testimonials-grid" aria-label="Testimonials">
-          <figure class="testimonial-card">
-            <div class="testimonial-icon" aria-hidden="true">❝</div>
-            <blockquote class="testimonial-quote">
-              “I was genuinely nervous about the ocean, but they walked me through every step and never rushed me. By the end of the lesson I was laughing and actually asking for ‘one more wave.’”
-            </blockquote>
-            <figcaption class="testimonial-meta">
-              <div class="testimonial-name">Jess · Seattle</div>
-              <div>Beginner, 1st lesson</div>
-              <span class="testimonial-tag mt-1">Beginner Beach Lesson</span>
-            </figcaption>
-          </figure>
-
-          <figure class="testimonial-card">
-            <div class="testimonial-icon" aria-hidden="true">❝</div>
-            <blockquote class="testimonial-quote">
-              “Our kids are 8 and 11 and the instructors somehow kept them both engaged and safe. The shore briefing made me feel really comfortable as a parent. Favorite family memory from our trip.”
-            </blockquote>
-            <figcaption class="testimonial-meta">
-              <div class="testimonial-name">The Ramos Family</div>
-              <div>Family of 4</div>
-              <span class="testimonial-tag mt-1">Family Group Session</span>
-            </figcaption>
-          </figure>
-
-          <figure class="testimonial-card">
-            <div class="testimonial-icon" aria-hidden="true">❝</div>
-            <blockquote class="testimonial-quote">
-              “I’d surfed a handful of times before, but never really ‘got it.’ The private coaching helped me fix my stance and where I looked on the wave. Huge difference in just one morning.”
-            </blockquote>
-            <figcaption class="testimonial-meta">
-              <div class="testimonial-name">Lena · San Diego</div>
-              <div>Returning surfer</div>
-              <span class="testimonial-tag mt-1">Private Coaching</span>
-            </figcaption>
-          </figure>
+          <div class="schedule-left">
+            <div class="schedule-times" aria-label="Weekly lesson times">
+              <div class="schedule-item">
+                <div class="schedule-label">Sunrise</div>
+                <div class="schedule-slot">Seasonal · 6:00–6:30am</div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-label">Mon–Fri</div>
+                <div class="schedule-slot">8:00am · 11:00am · 2:00pm</div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-label">Sat–Sun</div>
+                <div class="schedule-slot">9:00am · 1:00pm</div>
+              </div>
+            </div>
+            <div>
+              <p class="schedule-note">
+                Times are flexible and may shift slightly based on tides, swell, and wind. Once you send a booking request, we’ll confirm the best time for your crew by email or text, along with meeting point and parking tips.
+              </p>
+              <p class="schedule-note mt-2">
+                Want a custom time for your group or celebration? Let us know in the notes section of your booking and we’ll see what we can do.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1920,7 +2400,7 @@
             </button>
             <div class="faq-answer">
               <p>
-                If conditions are unsafe (strong winds, storms, or heavy surf) we’ll contact you as early as possible to reschedule or cancel at no charge. If it’s simply smaller or a bit overcast, we’ll usually still surf—it can actually make for ideal beginner waves.
+                If conditions are unsafe (strong winds, storms, or heavy surf) we’ll contact you as early as possible to reschedule or cancel at no charge. If it’s simply smaller or a bit overcast, we’ll usually still surf - it can actually make for ideal beginner waves.
               </p>
             </div>
           </article>
@@ -1950,6 +2430,72 @@
               </p>
             </div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Stories</div>
+          <h2 id="testimonials-heading" class="section-title">Happy surfers</h2>
+          <p class="section-subtitle">
+            A few words from first‑timers and families who started their surf story with us here in Kapaʻa.
+          </p>
+        </div>
+
+        <div class="testimonials-grid" aria-label="Testimonials">
+          <article class="testimonial-card">
+            <div class="testimonial-icon" aria-hidden="true">❝</div>
+            <blockquote class="testimonial-quote">
+              “I was genuinely nervous about the ocean, but they walked me through every step and never rushed me. By the end of the lesson I was laughing and actually asking for ‘one more wave.’”
+            </blockquote>
+            <div class="testimonial-footer">
+              <div>
+                <div class="testimonial-name">Jess Chambers</div>
+                <div class="testimonial-meta">1st lesson</div>
+              </div>
+              <a href="#packages" class="testimonial-pill">Beginner Lesson</a>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-icon" aria-hidden="true">❝</div>
+            <blockquote class="testimonial-quote">
+              “Our kids are 8 and 11 and the instructors somehow kept them both engaged and safe. The shore briefing made me feel really comfortable as a parent. Favorite family memory from our trip.”
+            </blockquote>
+            <div class="testimonial-footer">
+              <div>
+                <div class="testimonial-name">The Ramos Ohana</div>
+                <div class="testimonial-meta">Family of 4</div>
+              </div>
+              <a href="#packages" class="testimonial-pill">Ohana Session</a>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-icon" aria-hidden="true">❝</div>
+            <blockquote class="testimonial-quote">
+              “I’d surfed a handful of times before, but never really ‘got it.’ The private coaching helped me fix my stance and where I looked on the wave. Huge difference in just one morning.”
+            </blockquote>
+            <div class="testimonial-footer">
+              <div>
+                <div class="testimonial-name">Lena Edwards</div>
+                <div class="testimonial-meta">Returning surfer</div>
+              </div>
+              <a href="#packages" class="testimonial-pill">Private Coaching</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="testimonials-banner" aria-hidden="true">
+          <div class="testimonials-banner-inner">
+            <img
+              src="./assets/images/kapaa-surf-school-happy-surfers-testimonials.jpeg"
+              alt="Happy surfers relaxing on their boards at golden hour"
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -2022,8 +2568,8 @@
                 <label class="form-label" for="lessonType">Lesson type<span aria-hidden="true">*</span></label>
                 <select class="form-select" id="lessonType" name="lessonType" required>
                   <option value="">Select a package</option>
-                  <option value="Beginner Beach Lesson">Beginner Beach Lesson</option>
-                  <option value="Family Group Session">Family Group Session</option>
+                  <option value="Beginner Lesson">Beginner Lesson</option>
+                  <option value="Ohana Session">Ohana Session</option>
                   <option value="Private Coaching">Private Coaching</option>
                   <option value="Sunrise Session">Sunrise Session</option>
                   <option value="Not sure yet">Not sure yet</option>
@@ -2060,26 +2606,37 @@
           </form>
 
           <aside class="booking-aside">
-            <div class="booking-badge">
-              <span aria-hidden="true">🌈</span>
-              Ocean conditions first
-            </div>
-            <p>
-              Every lesson is planned around the ocean instead of the clock. After you submit your request, our team checks tides, winds, and swell to make sure you’re surfing in the friendliest window for that day.
-            </p>
-            <ul class="booking-list">
-              <li>We’ll suggest the best time if your requested slot doesn’t line up with conditions.</li>
-              <li>Need a photographer or have a special celebration? Add it to your notes.</li>
-              <li>Questions before you book? Email us any time—we’re happy to help.</li>
-            </ul>
-            <p class="mt-2" style="font-size: 0.85rem; color: var(--text-muted);">
-              If you prefer to chat before booking, you can always call or text us using the number below.
-            </p>
             <div class="booking-photo-card" aria-hidden="true">
               <img
                 src="./assets/images/kapaa-surf-school-surfboard-alley-hawaii.jpg"
                 alt="Colorful longboards lined up in an alley leading to the ocean in Hawaii"
               />
+            </div>
+            <div class="booking-info-card">
+              <div class="booking-info-card-header">
+                <span class="booking-info-icon" aria-hidden="true">🌊</span>
+                <h3 class="booking-info-heading">We surf on the ocean’s schedule</h3>
+              </div>
+              <p class="booking-info-body">
+                Every lesson is planned around the ocean instead of the clock. After you submit your request, our team checks tides, winds, and swell to make sure you’re surfing in the friendliest window for that day.
+              </p>
+              <ul class="booking-info-list">
+                <li>
+                  <span class="booking-info-bullet" aria-hidden="true">✦</span>
+                  We’ll suggest the best time if your requested slot doesn’t line up with conditions.
+                </li>
+                <li>
+                  <span class="booking-info-bullet" aria-hidden="true">✦</span>
+                  Need a photographer or have a special celebration? Add it to your notes.
+                </li>
+                <li>
+                  <span class="booking-info-bullet" aria-hidden="true">✦</span>
+                  Questions before you book? Email us any time - we’re happy to help.
+                </li>
+              </ul>
+              <p class="booking-info-footer">
+                Prefer to chat first? Call or text us using the number below.
+              </p>
             </div>
           </aside>
         </div>
@@ -2097,55 +2654,45 @@
           </p>
         </div>
 
-        <div class="location-grid">
-          <div class="contact-details">
-            <div class="contact-group">
-              <div class="contact-label">Where we meet</div>
-              <div class="contact-value">
-                Kapaʻa Surf School<br />
-                456 Keala Beachfront Rd<br />
-                Kapaʻa, HI 96746
-              </div>
-            </div>
+        <div class="location-map-wrap">
+          <div id="map-container" class="location-map-body"></div>
+        </div>
 
-            <div class="contact-group">
-              <div class="contact-label">Hours of operation</div>
-              <div class="contact-value">
-                Daily · 7:00am – 4:00pm<br />
-                Sunrise sessions by reservation only
-              </div>
+        <div class="location-info-grid">
+          <div class="location-tile">
+            <div class="location-tile-icon" aria-hidden="true">📍</div>
+            <div class="location-tile-label">Where we meet</div>
+            <div class="location-tile-value">
+              Kapaʻa Surf School<br />
+              456 Keālia Beachfront Rd<br />
+              Kapaʻa, HI 96746
             </div>
+            <a class="location-tile-cta" href="https://maps.google.com/?q=Kapaa+Surf+School+Kauai" target="_blank" rel="noopener">Get directions ↗</a>
+          </div>
 
-            <div class="contact-group">
-              <div class="contact-label">Contact</div>
-              <div class="contact-value">
-                Email:
-                <a href="mailto:aloha@kapaasurfschool.com">aloha@kapaasurfschool.com</a><br />
-                Phone:
-                <a href="tel:+18085551234">(808) 555‑1234</a>
-              </div>
-            </div>
-
-            <div class="contact-group">
-              <div class="contact-label">Parking & meeting spot</div>
-              <div class="contact-value">
-                We’ll send detailed directions and a pin to our beach meeting spot in your confirmation email, including parking options and where to look for your instructor.
-              </div>
+          <div class="location-tile">
+            <div class="location-tile-icon" aria-hidden="true">🕐</div>
+            <div class="location-tile-label">Hours of operation</div>
+            <div class="location-tile-value">
+              Daily · 7:00am – 4:00pm<br />
+              Sunrise sessions by reservation only
             </div>
           </div>
 
-          <div class="map-card" aria-hidden="true">
-            <div class="map-inner">
-              <div class="map-header">
-                <span>East Shore, Kauaʻi</span>
-                <span class="map-pill">Map coming soon</span>
-              </div>
-              <div class="map-body">
-                Placeholder map area. A simple, embedded map will go here soon so you can preview our beach meeting spot in Kapaʻa.
-              </div>
-              <div class="map-pin">
-                <span>KS</span>
-              </div>
+          <div class="location-tile">
+            <div class="location-tile-icon" aria-hidden="true">✉️</div>
+            <div class="location-tile-label">Contact us</div>
+            <div class="location-tile-value">
+              <a href="mailto:aloha@kapaasurfschool.com">aloha@kapaasurfschool.com</a><br />
+              <a href="tel:+18085551234">(808) 555‑1234</a>
+            </div>
+          </div>
+
+          <div class="location-tile">
+            <div class="location-tile-icon" aria-hidden="true">🚗</div>
+            <div class="location-tile-label">Parking &amp; meeting spot</div>
+            <div class="location-tile-value">
+              Directions and a beach pin are included in your confirmation email after booking.
             </div>
           </div>
         </div>
@@ -2174,13 +2721,43 @@
         </div>
       </div>
 
-      <div style="color: var(--text-muted);">
-        © <span id="year"></span> Kapaʻa Surf School. All rights reserved.
+      <div style="color: var(--text-muted); display: flex; flex-direction: column; gap: 0.2rem; text-align: right;">
+        <span>© <span id="year"></span> Kapaʻa Surf School. All rights reserved.</span>
+        <span>Created by <a href="https://phx.cx" target="_blank" rel="noopener" style="color: var(--primary); font-weight: 500;">Phoenix Studios</a></span>
       </div>
     </div>
   </footer>
 
   <script>
+    // Mapbox GL JS map for Kapaʻa Surf School
+    mapboxgl.accessToken = "pk.eyJ1IjoiZGFtb25waG9lbml4IiwiYSI6ImNtbHF6eWFheTA2YXoza3BubGE2YWI1bWsifQ.n1Fw0m7XkPfejWErKdl6Tw";
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const mapEl = document.getElementById("map-container");
+      if (!mapEl || typeof mapboxgl === "undefined") return;
+
+      const KAPAA_COORDS = { lat: 22.0752, lng: -159.3190 };
+
+      const map = new mapboxgl.Map({
+        container: "map-container",
+        style: "mapbox://styles/mapbox/outdoors-v12",
+        center: [KAPAA_COORDS.lng, KAPAA_COORDS.lat],
+        zoom: 11,
+        attributionControl: false
+      });
+
+      map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
+
+      new mapboxgl.Marker({ color: "#0f766e" })
+        .setLngLat([KAPAA_COORDS.lng, KAPAA_COORDS.lat])
+        .setPopup(
+          new mapboxgl.Popup({ offset: 16 }).setHTML(
+            "<strong>Kapaʻa Surf School</strong><br/>East shore of Kauaʻi"
+          )
+        )
+        .addTo(map);
+    });
+
     (function () {
       // Utility: smooth scroll to element by id
       function smoothScrollToId(id) {
@@ -2425,6 +3002,52 @@
           successBox && successBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
         });
       }
+    })();
+
+    // Parallax helper
+    function makeParallax(wrapSelector, travel) {
+      var wrap = document.querySelector(wrapSelector);
+      var img  = wrap && wrap.querySelector("img");
+      if (!wrap || !img) return;
+      var ticking = false;
+      function update() {
+        var rect  = wrap.getBoundingClientRect();
+        var viewH = window.innerHeight;
+        if (rect.bottom < -viewH || rect.top > viewH * 2) { ticking = false; return; }
+        var progress = 1 - (rect.top + rect.height / 2) / viewH;
+        img.style.transform = "translateY(" + (progress * travel) + "px)";
+        ticking = false;
+      }
+      window.addEventListener("scroll", function () {
+        if (!ticking) { requestAnimationFrame(update); ticking = true; }
+      }, { passive: true });
+      update();
+    }
+
+    makeParallax(".testimonials-banner", 30);
+    makeParallax(".about-image-wrap",     24);
+
+    // Schedule video playback speed: normal until 85%, then 0.75x to end, reset on loop
+    (function () {
+      var vid = document.querySelector(".schedule-media video");
+      if (!vid) return;
+      var slowed = false;
+      vid.playbackRate = 1;
+      vid.addEventListener("timeupdate", function () {
+        if (!vid.duration) return;
+        var pct = vid.currentTime / vid.duration;
+        if (pct >= 0.85 && !slowed) {
+          vid.playbackRate = 0.75;
+          slowed = true;
+        }
+      });
+      vid.addEventListener("seeked", function () {
+        // Reset when video loops back to start
+        if (vid.currentTime < 1) {
+          vid.playbackRate = 1;
+          slowed = false;
+        }
+      });
     })();
   </script>
 </body>
