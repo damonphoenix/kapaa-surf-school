@@ -429,6 +429,7 @@
       margin-bottom: 0.8rem;
     }
 
+    /* Gradient on each text span only — avoids WebKit bug where one gradient + mixed child colors hides text */
     .hero-highlight {
       background: linear-gradient(120deg, #0f766e 0%, #22c55e 45%, #0ea5e9 100%);
       background-clip: text;
@@ -450,6 +451,11 @@
       position: relative;
       z-index: 1;
       letter-spacing: 0.06em;
+      background: linear-gradient(120deg, #0f766e 0%, #22c55e 45%, #0ea5e9 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
       text-shadow:
         0 0 18px rgba(20, 184, 166, 0.4),
         0 0 36px rgba(14, 165, 233, 0.18);
@@ -2697,7 +2703,7 @@
             </div>
             <h1 id="hero-heading" class="hero-heading">
               Learn to surf in<br>
-              the <span class="hero-highlight"><span class="hero-magic-wrap"><span class="hero-magic">Mag<span id="hero-magic-i">i</span>c</span><span class="hero-wisp hero-wisp-1" aria-hidden="true"></span><span class="hero-wisp hero-wisp-2" aria-hidden="true"></span><span class="hero-wisp hero-wisp-3" aria-hidden="true"></span><span class="hero-wisp hero-wisp-4" aria-hidden="true"></span></span> <span class="hero-plain">of</span> Kauaʻi</span>
+              the <span class="hero-magic-wrap"><span class="hero-magic">Mag<span id="hero-magic-i">i</span>c</span><span class="hero-wisp hero-wisp-1" aria-hidden="true"></span><span class="hero-wisp hero-wisp-2" aria-hidden="true"></span><span class="hero-wisp hero-wisp-3" aria-hidden="true"></span><span class="hero-wisp hero-wisp-4" aria-hidden="true"></span></span> <span class="hero-plain">of</span> <span class="hero-highlight">Kauaʻi</span>
             </h1>
             <p class="hero-subtitle">
               Kapaʻa Surf School is a small, local crew of patient instructors helping beginners, families, and small groups stand up for the very first time on the east shore of Kauaʻi.
