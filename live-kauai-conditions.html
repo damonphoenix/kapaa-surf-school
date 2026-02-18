@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Kauaʻi Wave Conditions – Kapaʻa Surf School</title>
+  <meta name="description" content="Real-time surf ratings for Hanalei, Tunnels, Poipu, and Kealia. NWS-powered wave height, period, wind, and hourly forecast for Kauaʻi." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-body: #f9f4ee;
+      --bg-card: #ffffff;
+      --primary: #0f766e;
+      --primary-soft: #d1faf5;
+      --primary-deep: #0b4f48;
+      --text-main: #1f2933;
+      --text-muted: #6b7280;
+      --border-subtle: #e5e7eb;
+      --shadow-soft: 0 10px 30px rgba(15, 118, 110, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --nav-height: 72px;
+      --transition-fast: 150ms ease-out;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* Header – match main site */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(249, 244, 238, 0.92), rgba(249, 244, 238, 0.8));
+      border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--nav-height);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0f766e 0%, #0d9488 45%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; }
+    .nav-link {
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .nav-link:hover { color: var(--primary); text-decoration: none; }
+    .nav-cta {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #229e93 0%, #14b8a6 50%, #22c55e 100%);
+      color: #ecfdf5;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 22px rgba(15, 118, 110, 0.35);
+    }
+    .nav-cta:hover { text-decoration: none; color: #ecfdf5; opacity: 0.95; }
+
+    /* Hero */
+    .conditions-hero {
+      padding: 2.5rem 0 3rem;
+      text-align: center;
+    }
+    .conditions-hero .section-kicker {
+      margin-bottom: 0.5rem;
+    }
+    .conditions-hero .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      margin-bottom: 0.75rem;
+    }
+    .conditions-hero .section-subtitle {
+      max-width: 36rem;
+      margin: 0 auto 0.5rem;
+    }
+    .conditions-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Section */
+    section { padding: 2.5rem 0; }
+    .section-header { margin-bottom: 1.5rem; }
+    .section-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--primary-deep);
+      margin-bottom: 0.25rem;
+    }
+    .section-title { font-size: 1.5rem; margin: 0 0 0.35rem; }
+    .section-subtitle { color: var(--text-muted); font-size: 0.95rem; margin: 0; }
+
+    /* Research expandable */
+    .conditions-research {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .conditions-research summary {
+      padding: 1.25rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+    }
+    .conditions-research summary::-webkit-details-marker { display: none; }
+    .conditions-research summary::after {
+      content: "›";
+      float: right;
+      transform: rotate(90deg);
+      transition: transform var(--transition-fast);
+    }
+    .conditions-research[open] summary::after { transform: rotate(-90deg); }
+    .conditions-research-inner {
+      padding: 0 1.5rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .conditions-research-inner p { margin: 0 0 0.75rem; }
+    .conditions-research-inner strong { color: var(--text-main); }
+
+    /* Spot cards grid */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 1.25rem;
+    }
+    @media (min-width: 600px) { .conditions-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .conditions-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .conditions-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      padding: 1.35rem;
+      transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+      cursor: pointer;
+    }
+    .conditions-card:hover {
+      box-shadow: 0 14px 36px rgba(15, 118, 110, 0.12);
+      transform: translateY(-2px);
+    }
+    .conditions-card-title { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.2rem; }
+    .conditions-card-facing { font-size: 0.75rem; color: var(--text-muted); margin: 0 0 1rem; }
+    .conditions-card-rating {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 0.5rem 0;
+    }
+    .conditions-card-rating--high { color: #059669; }
+    .conditions-card-rating--mid { color: #ca8a04; }
+    .conditions-card-rating--low { color: #ea580c; }
+    .conditions-card-meta { font-size: 0.8rem; color: var(--text-muted); margin: 0.25rem 0; }
+    .conditions-card-cta {
+      display: block;
+      margin-top: 1rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      border-radius: var(--radius-pill);
+      background: var(--primary-soft);
+      color: var(--primary-deep);
+    }
+    .conditions-card-cta:hover { text-decoration: none; background: #a7f3d0; color: var(--primary-deep); }
+    .conditions-card.loading .conditions-card-rating { font-size: 1rem; font-weight: 500; }
+    .conditions-card.loading .conditions-card-meta { font-style: italic; }
+
+    /* Detail panel */
+    .conditions-detail-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+    }
+    .conditions-detail-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .conditions-detail-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.96);
+      width: 94%;
+      max-width: 640px;
+      max-height: 88vh;
+      overflow: auto;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+      z-index: 51;
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .conditions-detail-panel.open {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+    .conditions-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.5rem 1.5rem 0;
+    }
+    .conditions-detail-title { font-size: 1.5rem; font-weight: 700; margin: 0; }
+    .conditions-detail-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+    .conditions-detail-close:hover { color: var(--text-main); }
+    .conditions-detail-body { padding: 1rem 1.5rem 1.5rem; }
+    .conditions-detail-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (min-width: 500px) { .conditions-detail-grid { grid-template-columns: 1fr 1fr; } }
+    .conditions-detail-block h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary-deep);
+      margin: 0 0 0.5rem;
+    }
+    .conditions-detail-data { font-size: 0.9rem; line-height: 1.7; color: var(--text-main); }
+    .conditions-detail-rating-big {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .conditions-detail-rating-big--high { color: #059669; }
+    .conditions-detail-rating-big--mid { color: #ca8a04; }
+    .conditions-detail-rating-big--low { color: #ea580c; }
+    .conditions-detail-breakdown { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+    .conditions-table-wrap { overflow-x: auto; margin-top: 1rem; }
+    .conditions-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .conditions-table th,
+    .conditions-table td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .conditions-table th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .conditions-table tr:hover td { background: var(--primary-soft); }
+    .conditions-table .rating-cell--high { color: #059669; font-weight: 600; }
+    .conditions-table .rating-cell--mid { color: #ca8a04; font-weight: 600; }
+    .conditions-table .rating-cell--low { color: #ea580c; font-weight: 600; }
+
+    /* Attribution */
+    .conditions-attribution {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .conditions-attribution a { color: var(--primary); }
+
+    /* Footer */
+    footer {
+      margin-top: 3rem;
+      padding: 2rem 0 1.5rem;
+      font-size: 0.85rem;
+      background: radial-gradient(circle at top center, rgba(59, 130, 246, 0.06), transparent 60%);
+    }
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    @media (min-width: 768px) {
+      .footer-inner { flex-direction: row; align-items: center; justify-content: space-between; }
+    }
+    .footer-left { display: flex; flex-direction: column; gap: 0.3rem; }
+    .footer-name { font-weight: 600; }
+    .footer-meta { color: var(--text-muted); font-size: 0.82rem; }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+    .footer-link { color: var(--text-muted); font-weight: 500; }
+    .footer-link:hover { color: var(--primary-deep); text-decoration: none; }
+    .footer-divider { height: 1px; background: rgba(15, 118, 110, 0.25); margin: 1.25rem 0 1rem; }
+    .footer-bottom { color: var(--text-muted); font-size: 0.8rem; }
+    .footer-credit-link { color: var(--primary); font-weight: 500; }
+    .footer-credit-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-inner">
+      <a href="./index.html" class="brand" aria-label="Kapaʻa Surf School home">
+        <span class="brand-name">Kapaʻa Surf School</span>
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="./index.html" class="nav-link">Home</a>
+        <a href="./index.html#weather" class="nav-link">Conditions</a>
+        <a href="./index.html#booking" class="nav-link">Book</a>
+        <a href="./live-kauai-conditions.html" class="nav-cta">Live wave ratings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="conditions-hero">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Real-time data</div>
+          <h1 class="section-title">Live Kauaʻi Wave Conditions</h1>
+          <p class="section-subtitle">
+            Surf ratings for four of Kauaʻi’s best breaks — wave height, period, swell direction, and wind from the National Weather Service. Updated continuously.
+          </p>
+          <p class="conditions-meta" id="conditions-meta">All times HST. Data: National Weather Service.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="spots-section" aria-labelledby="spots-heading">
+      <div class="container">
+        <details class="conditions-research" id="conditions-research">
+          <summary>What makes a good surf day? (Quick guide)</summary>
+          <div class="conditions-research-inner">
+            <p><strong>Swell height:</strong> 3–8 ft is ideal for most surfers and lessons. Under 2 ft is flat; over 10 ft is expert territory (north shore can handle more in winter).</p>
+            <p><strong>Swell period:</strong> Over 12 s = powerful ground swell. 8–12 s = good. Under 8 s = choppy wind swell, waves close out faster.</p>
+            <p><strong>Swell direction:</strong> Must align with each spot’s exposure. Hanalei and Tunnels want NW–N; Poipu wants S–SW; Kealia (east) wants NE.</p>
+            <p><strong>Wind:</strong> Under 10 kt is best. Offshore (from land to sea) = clean faces. Onshore = messy. We factor both speed and direction into the rating.</p>
+            <p><strong>Kauaʻi seasons:</strong> Nov–Apr = north shore on NW/N swells. May–Oct = south shore on S/SE. East shore (Kealia) gets NE trade swell year-round — our home break.</p>
+          </div>
+        </details>
+
+        <div class="section-header">
+          <h2 id="spots-heading" class="section-title">Spot ratings</h2>
+          <p class="section-subtitle">Click a spot for current conditions and a 24-hour forecast. Rating is out of 10 (swell + wind).</p>
+        </div>
+        <div class="conditions-grid" id="spots"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Detail panel (modal) -->
+  <div class="conditions-detail-backdrop" id="detail-backdrop" aria-hidden="true"></div>
+  <div class="conditions-detail-panel" id="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-panel-title" aria-hidden="true">
+    <div class="conditions-detail-header">
+      <h2 id="detail-panel-title" class="conditions-detail-title"></h2>
+      <button type="button" class="conditions-detail-close" id="detail-close" aria-label="Close">×</button>
+    </div>
+    <div class="conditions-detail-body">
+      <div class="conditions-detail-grid">
+        <div class="conditions-detail-block">
+          <h4>Current conditions (NWS)</h4>
+          <div class="conditions-detail-data" id="current-data"></div>
+        </div>
+        <div class="conditions-detail-block">
+          <h4>Surf rating</h4>
+          <div class="conditions-detail-rating-big" id="rating-big"></div>
+          <div class="conditions-detail-breakdown" id="rating-breakdown"></div>
+        </div>
+      </div>
+      <h4 style="margin: 0 0 0.5rem;">Next 24 hours (3-hour steps)</h4>
+      <div class="conditions-table-wrap">
+        <table class="conditions-table" id="hourly-table">
+          <thead>
+            <tr>
+              <th>Time (HST)</th>
+              <th>Height</th>
+              <th>Period</th>
+              <th>Swell dir</th>
+              <th>Wind</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <span class="footer-name">Kapaʻa Surf School</span>
+          <span class="footer-meta">Small, local, and stoked to share our home break with you.</span>
+        </div>
+        <div class="footer-nav">
+          <a href="./index.html" class="footer-link">Home</a>
+          <a href="./index.html#weather" class="footer-link">Conditions</a>
+          <a href="./index.html#booking" class="footer-link">Book</a>
+          <a href="./live-kauai-conditions.html" class="footer-link">Live wave ratings</a>
+        </div>
+      </div>
+      <div class="footer-divider" aria-hidden="true"></div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Kapaʻa Surf School.</span>
+        <span>Wave data: <a href="https://www.weather.gov" class="footer-credit-link" target="_blank" rel="noopener noreferrer">National Weather Service</a>.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var spots = [
+        { name: "Hanalei Bay", lat: 22.2087, lon: -159.4920, facing: "North", swellOptMin: 300, swellOptMax: 60, offshoreWindMin: 120, offshoreWindMax: 210, idealHMin: 3, idealHMax: 9, tidePref: "all" },
+        { name: "Tunnels (Makua)", lat: 22.2244, lon: -159.5603, facing: "North", swellOptMin: 310, swellOptMax: 40, offshoreWindMin: 130, offshoreWindMax: 200, idealHMin: 4, idealHMax: 10, tidePref: "mid-high" },
+        { name: "PK's / Centers (Poipu)", lat: 21.8792, lon: -159.4776, facing: "South", swellOptMin: 135, swellOptMax: 225, offshoreWindMin: 330, offshoreWindMax: 60, idealHMin: 2, idealHMax: 6, tidePref: "mid" },
+        { name: "Kealia Beach", lat: 22.0993, lon: -159.3045, facing: "East", swellOptMin: 20, swellOptMax: 100, offshoreWindMin: 220, offshoreWindMax: 300, idealHMin: 3, idealHMax: 7, tidePref: "all" }
+      ];
+
+      function angleDiff(a, b) {
+        var d = Math.abs(a - b) % 360;
+        return Math.min(d, 360 - d);
+      }
+      function swellDirScore(dir, spot) {
+        var inRange = false;
+        if (spot.swellOptMax > spot.swellOptMin) inRange = dir >= spot.swellOptMin && dir <= spot.swellOptMax;
+        else inRange = dir >= spot.swellOptMin || dir <= spot.swellOptMax;
+        if (inRange) return 10;
+        var minD = Math.min(angleDiff(dir, spot.swellOptMin), angleDiff(dir, spot.swellOptMax));
+        return Math.max(1, 10 - minD * 0.25);
+      }
+      function windScore(speedKts, dir, spot) {
+        var speedScore = Math.max(1, 10 - speedKts * 0.65);
+        var dirDelta = 999;
+        if (spot.offshoreWindMax > spot.offshoreWindMin) { if (dir >= spot.offshoreWindMin && dir <= spot.offshoreWindMax) dirDelta = 0; }
+        else { if (dir >= spot.offshoreWindMin || dir <= spot.offshoreWindMax) dirDelta = 0; }
+        if (dirDelta === 999) dirDelta = Math.min(angleDiff(dir, spot.offshoreWindMin), angleDiff(dir, spot.offshoreWindMax));
+        var dirScore = Math.max(1, 10 - dirDelta * 0.18);
+        return speedScore * 0.6 + dirScore * 0.4;
+      }
+      function heightScore(hFt, spot) {
+        if (hFt < 1) return 1;
+        if (hFt <= spot.idealHMin) return 4 + (hFt - 1) * 2;
+        if (hFt <= spot.idealHMax) return 10;
+        if (hFt <= spot.idealHMax + 4) return 10 - (hFt - spot.idealHMax) * 1.2;
+        return 3;
+      }
+      function periodScore(p) {
+        if (p < 8) return 3;
+        if (p < 10) return 6;
+        if (p < 12) return 8;
+        if (p < 14) return 9.5;
+        return 10;
+      }
+      function toFt(m) { return m ? (m * 3.28084).toFixed(1) : "0"; }
+      function toKts(ms) { return ms ? (ms * 1.94384).toFixed(0) : "0"; }
+
+      function calculateRating(data, spot) {
+        var h = toFt(data.waveHeight || data.primarySwellHeight || 0);
+        var period = data.wavePeriod || 0;
+        var swellDir = data.primarySwellDirection || data.waveDirection || 0;
+        var windSpeedKts = toKts(data.windSpeed || 0);
+        var windDir = data.windDirection || 0;
+        var hScore = heightScore(parseFloat(h), spot);
+        var pScore = periodScore(period);
+        var dScore = swellDirScore(swellDir, spot);
+        var wScore = windScore(parseFloat(windSpeedKts), windDir, spot);
+        var swellTotal = hScore * 0.35 + pScore * 0.35 + dScore * 0.30;
+        var total = Math.round(swellTotal * 0.55 + wScore * 0.35 + 5);
+        return Math.min(10, Math.max(1, total));
+      }
+
+      function fetchNWSData(spot) {
+        var ua = { "User-Agent": "KauaiSurfSchool/1.0 (aloha@kapaasurfschool.com)" };
+        return fetch("https://api.weather.gov/points/" + spot.lat + "," + spot.lon, { headers: ua })
+          .then(function (r) { return r.json(); })
+          .then(function (point) {
+            var gridUrl = "https://api.weather.gov/gridpoints/" + point.properties.gridId + "/" + point.properties.gridX + "," + point.properties.gridY;
+            return fetch(gridUrl, { headers: ua }).then(function (r) { return r.json(); });
+          });
+      }
+
+      function extractCurrentValues(grid) {
+        var p = grid.properties || {};
+        function v(obj, i) { return obj && obj.values && obj.values[i] ? obj.values[i].value : 0; }
+        return {
+          waveHeight: v(p.waveHeight, 0),
+          wavePeriod: v(p.wavePeriod, 0),
+          waveDirection: v(p.waveDirection, 0),
+          primarySwellHeight: v(p.primarySwellHeight, 0),
+          primarySwellDirection: v(p.primarySwellDirection, 0),
+          windSpeed: v(p.windSpeed, 0),
+          windDirection: v(p.windDirection, 0)
+        };
+      }
+
+      function extractHourlyRow(grid, i) {
+        var p = grid.properties || {};
+        function v(obj, idx) { return obj && obj.values && obj.values[idx] ? obj.values[idx].value : 0; }
+        return {
+          waveHeight: v(p.waveHeight, i),
+          wavePeriod: v(p.wavePeriod, i),
+          primarySwellDirection: v(p.primarySwellDirection, i) || v(p.waveDirection, i),
+          windSpeed: v(p.windSpeed, i),
+          windDirection: v(p.windDirection, i)
+        };
+      }
+
+      function ratingClass(r) {
+        return r >= 8 ? "high" : r >= 5 ? "mid" : "low";
+      }
+
+      function renderSpots() {
+        var container = document.getElementById("spots");
+        if (!container) return;
+        container.innerHTML = "";
+        spots.forEach(function (spot, i) {
+          var card = document.createElement("div");
+          card.className = "conditions-card loading";
+          card.setAttribute("role", "button");
+          card.tabIndex = 0;
+          card.innerHTML = "<h3 class=\"conditions-card-title\">" + spot.name + "</h3>" +
+            "<p class=\"conditions-card-facing\">" + spot.facing + " facing</p>" +
+            "<div class=\"conditions-card-rating conditions-card-rating--mid\">…</div>" +
+            "<p class=\"conditions-card-meta\">Loading…</p>" +
+            "<span class=\"conditions-card-cta\">See forecast</span>";
+          card.addEventListener("click", function () { loadSpot(i); });
+          card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); loadSpot(i); } });
+          container.appendChild(card);
+
+          fetchNWSData(spot)
+            .then(function (grid) {
+              var data = extractCurrentValues(grid);
+              var rating = calculateRating(data, spot);
+              var rClass = ratingClass(rating);
+              card.classList.remove("loading");
+              card.querySelector(".conditions-card-rating").textContent = rating;
+              card.querySelector(".conditions-card-rating").className = "conditions-card-rating conditions-card-rating--" + rClass;
+              card.querySelector(".conditions-card-meta").textContent = toFt(data.waveHeight) + " ft @ " + (data.wavePeriod || "—") + "s · Wind " + toKts(data.windSpeed) + " kt";
+            })
+            .catch(function () {
+              card.classList.remove("loading");
+              card.querySelector(".conditions-card-rating").textContent = "—";
+              card.querySelector(".conditions-card-meta").textContent = "Unable to load data";
+            });
+        });
+      }
+
+      function loadSpot(index) {
+        var spot = spots[index];
+        var panel = document.getElementById("detail-panel");
+        var backdrop = document.getElementById("detail-backdrop");
+        var titleEl = document.getElementById("detail-panel-title");
+        var currentEl = document.getElementById("current-data");
+        var ratingEl = document.getElementById("rating-big");
+        var breakdownEl = document.getElementById("rating-breakdown");
+        var tableBody = document.querySelector("#hourly-table tbody");
+        if (!panel || !titleEl) return;
+
+        titleEl.textContent = spot.name;
+        ratingEl.textContent = "…";
+        ratingEl.className = "conditions-detail-rating-big";
+        currentEl.innerHTML = "Loading…";
+        breakdownEl.innerHTML = "";
+        if (tableBody) tableBody.innerHTML = "";
+
+        backdrop.classList.add("open");
+        panel.classList.add("open");
+        panel.setAttribute("aria-hidden", "false");
+        backdrop.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+
+        fetchNWSData(spot)
+          .then(function (grid) {
+            var data = extractCurrentValues(grid);
+            var rating = calculateRating(data, spot);
+            var rClass = ratingClass(rating);
+
+            currentEl.innerHTML = "Wave height: <strong>" + toFt(data.waveHeight) + " ft</strong><br>Period: <strong>" + (data.wavePeriod || "—") + " s</strong><br>Swell dir: <strong>" + (data.primarySwellDirection || data.waveDirection || "—") + "°</strong><br>Wind: <strong>" + toKts(data.windSpeed) + " kt @ " + data.windDirection + "°</strong>";
+
+            ratingEl.textContent = rating;
+            ratingEl.className = "conditions-detail-rating-big conditions-detail-rating-big--" + rClass;
+
+            var swellScore = Math.round(heightScore(parseFloat(toFt(data.waveHeight)), spot) * 0.35 + periodScore(data.wavePeriod) * 0.35 + swellDirScore(data.primarySwellDirection || data.waveDirection, spot) * 0.3);
+            breakdownEl.innerHTML = "Swell: " + swellScore + "/10 · Wind: " + Math.round(windScore(parseFloat(toKts(data.windSpeed)), data.windDirection, spot)) + "/10<br><strong>Overall " + rating + "/10</strong>";
+
+            var p = grid.properties || {};
+            var len = (p.waveHeight && p.waveHeight.values) ? Math.min(8, p.waveHeight.values.length) : 0;
+            for (var i = 0; i < len; i++) {
+              var rowData = extractHourlyRow(grid, i);
+              var rowRating = calculateRating(rowData, spot);
+              var tr = document.createElement("tr");
+              tr.innerHTML = "<td>+" + (i * 3) + "h</td><td>" + toFt(rowData.waveHeight) + " ft</td><td>" + rowData.wavePeriod + " s</td><td>" + (rowData.primarySwellDirection || "—") + "°</td><td>" + toKts(rowData.windSpeed) + " kt</td><td class=\"rating-cell--" + ratingClass(rowRating) + "\">" + rowRating + "</td>";
+              tableBody.appendChild(tr);
+            }
+          })
+          .catch(function () {
+            currentEl.innerHTML = "Could not load conditions.";
+          });
+      }
+
+      function hideDetail() {
+        var panel = document.getElementById("detail-panel");
+        var backdrop = document.getElementById("detail-backdrop");
+        if (panel) { panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true"); }
+        if (backdrop) backdrop.classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      document.getElementById("detail-close").addEventListener("click", hideDetail);
+      document.getElementById("detail-backdrop").addEventListener("click", hideDetail);
+
+      var yearEl = document.getElementById("year");
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      function run() {
+        renderSpots();
+        var meta = document.getElementById("conditions-meta");
+        if (meta) meta.textContent = "All times HST. Data: National Weather Service. Last updated " + new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "Pacific/Honolulu" }) + " HST.";
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run);
+      } else {
+        run();
+      }
+    })();
+  </script>
+</body>
+</html>

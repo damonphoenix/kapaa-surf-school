@@ -1679,6 +1679,88 @@
     }
     .weather-attribution a { color: rgba(125, 211, 252, 0.45); }
 
+    /* Today's Kauai Ocean Surf Ratings (teaser) */
+    .teaser-ocean {
+      padding: 4rem 0;
+      background: #18181b;
+      color: #fafafa;
+    }
+    .teaser-ocean-inner {
+      width: 100%;
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .teaser-ocean-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .teaser-ocean-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    .teaser-ocean-link {
+      color: #34d399;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .teaser-ocean-link:hover { color: #6ee7b7; text-decoration: underline; }
+    .teaser-ocean-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .teaser-ocean-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .teaser-ocean-card {
+      background: #27272a;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .teaser-ocean-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+    }
+    .teaser-ocean-rating {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 1rem 0;
+    }
+    .teaser-ocean-rating-high { color: #34d399; }
+    .teaser-ocean-rating-mid { color: #facc15; }
+    .teaser-ocean-rating-low { color: #fb923c; }
+    .teaser-ocean-meta {
+      font-size: 0.75rem;
+      color: #a1a1aa;
+      margin: 0;
+    }
+    .teaser-ocean-cta {
+      display: block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      background: #3f3f46;
+      color: #fafafa;
+      text-align: center;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .teaser-ocean-cta:hover { background: #52525b; text-decoration: none; color: #fafafa; }
+
     /* SECTION HEADINGS */
 
     .section-header {
@@ -3079,6 +3161,136 @@
       </div>
     </section>
 
+    <!-- Today's Kauai Ocean Surf Ratings (teaser) -->
+    <section class="teaser-ocean" aria-labelledby="teaser-ocean-heading">
+      <div class="teaser-ocean-inner">
+        <div class="teaser-ocean-header">
+          <h2 id="teaser-ocean-heading" class="teaser-ocean-title">Today's Kauai Ocean Surf Ratings</h2>
+          <a href="./live-kauai-conditions.html" class="teaser-ocean-link">Full forecast &amp; hourly →</a>
+        </div>
+        <div class="teaser-ocean-grid" id="teaser-spots"></div>
+      </div>
+    </section>
+    <script>
+    (function () {
+      var spots = [
+        { name: "Hanalei Bay", lat: 22.2087, lon: -159.4920, facing: "North", swellOptMin: 300, swellOptMax: 60, offshoreWindMin: 120, offshoreWindMax: 210, idealHMin: 3, idealHMax: 9, tidePref: "all" },
+        { name: "Tunnels (Makua)", lat: 22.2244, lon: -159.5603, facing: "North", swellOptMin: 310, swellOptMax: 40, offshoreWindMin: 130, offshoreWindMax: 200, idealHMin: 4, idealHMax: 10, tidePref: "mid-high" },
+        { name: "PK's / Centers (Poipu)", lat: 21.8792, lon: -159.4776, facing: "South", swellOptMin: 135, swellOptMax: 225, offshoreWindMin: 330, offshoreWindMax: 60, idealHMin: 2, idealHMax: 6, tidePref: "mid" },
+        { name: "Kealia Beach", lat: 22.0993, lon: -159.3045, facing: "East", swellOptMin: 20, swellOptMax: 100, offshoreWindMin: 220, offshoreWindMax: 300, idealHMin: 3, idealHMax: 7, tidePref: "all" }
+      ];
+
+      function angleDiff(a, b) {
+        var diff = Math.abs(a - b) % 360;
+        return Math.min(diff, 360 - diff);
+      }
+      function swellDirScore(dir, spot) {
+        var inRange = false;
+        if (spot.swellOptMax > spot.swellOptMin) inRange = dir >= spot.swellOptMin && dir <= spot.swellOptMax;
+        else inRange = dir >= spot.swellOptMin || dir <= spot.swellOptMax;
+        if (inRange) return 10;
+        var minDelta = Math.min(angleDiff(dir, spot.swellOptMin), angleDiff(dir, spot.swellOptMax));
+        return Math.max(1, 10 - minDelta * 0.25);
+      }
+      function windScore(speedKts, dir, spot) {
+        var speedScore = Math.max(1, 10 - speedKts * 0.65);
+        var dirDelta = 999;
+        if (spot.offshoreWindMax > spot.offshoreWindMin) { if (dir >= spot.offshoreWindMin && dir <= spot.offshoreWindMax) dirDelta = 0; }
+        else { if (dir >= spot.offshoreWindMin || dir <= spot.offshoreWindMax) dirDelta = 0; }
+        if (dirDelta === 999) dirDelta = Math.min(angleDiff(dir, spot.offshoreWindMin), angleDiff(dir, spot.offshoreWindMax));
+        var dirScore = Math.max(1, 10 - dirDelta * 0.18);
+        return speedScore * 0.6 + dirScore * 0.4;
+      }
+      function heightScore(hFt, spot) {
+        if (hFt < 1) return 1;
+        if (hFt <= spot.idealHMin) return 4 + (hFt - 1) * 2;
+        if (hFt <= spot.idealHMax) return 10;
+        if (hFt <= spot.idealHMax + 4) return 10 - (hFt - spot.idealHMax) * 1.2;
+        return 3;
+      }
+      function periodScore(p) {
+        if (p < 8) return 3;
+        if (p < 10) return 6;
+        if (p < 12) return 8;
+        if (p < 14) return 9.5;
+        return 10;
+      }
+      function toFt(m) { return m ? (m * 3.28084).toFixed(1) : "0"; }
+      function toKts(ms) { return ms ? (ms * 1.94384).toFixed(0) : "0"; }
+
+      function calculateRating(data, spot) {
+        var h = toFt(data.waveHeight || data.primarySwellHeight || 0);
+        var period = data.wavePeriod || 0;
+        var swellDir = data.primarySwellDirection || data.waveDirection || 0;
+        var windSpeedKts = toKts(data.windSpeed || 0);
+        var windDir = data.windDirection || 0;
+        var hScore = heightScore(parseFloat(h), spot);
+        var pScore = periodScore(period);
+        var dScore = swellDirScore(swellDir, spot);
+        var wScore = windScore(parseFloat(windSpeedKts), windDir, spot);
+        var swellTotal = hScore * 0.35 + pScore * 0.35 + dScore * 0.30;
+        var total = Math.round(swellTotal * 0.55 + wScore * 0.35 + 5);
+        return Math.min(10, Math.max(1, total));
+      }
+
+      function fetchNWSData(spot) {
+        var ua = { "User-Agent": "KauaiSurfSchoolTool/1.0 (aloha@kapaasurfschool.com)" };
+        return fetch("https://api.weather.gov/points/" + spot.lat + "," + spot.lon, { headers: ua })
+          .then(function (r) { return r.json(); })
+          .then(function (point) {
+            var gridUrl = "https://api.weather.gov/gridpoints/" + point.properties.gridId + "/" + point.properties.gridX + "," + point.properties.gridY;
+            return fetch(gridUrl, { headers: ua }).then(function (r) { return r.json(); });
+          });
+      }
+
+      function extractCurrentValues(grid) {
+        var props = grid.properties || {};
+        return {
+          waveHeight: (props.waveHeight && props.waveHeight.values && props.waveHeight.values[0]) ? props.waveHeight.values[0].value : 0,
+          wavePeriod: (props.wavePeriod && props.wavePeriod.values && props.wavePeriod.values[0]) ? props.wavePeriod.values[0].value : 0,
+          waveDirection: (props.waveDirection && props.waveDirection.values && props.waveDirection.values[0]) ? props.waveDirection.values[0].value : 0,
+          primarySwellHeight: (props.primarySwellHeight && props.primarySwellHeight.values && props.primarySwellHeight.values[0]) ? props.primarySwellHeight.values[0].value : 0,
+          primarySwellDirection: (props.primarySwellDirection && props.primarySwellDirection.values && props.primarySwellDirection.values[0]) ? props.primarySwellDirection.values[0].value : 0,
+          windSpeed: (props.windSpeed && props.windSpeed.values && props.windSpeed.values[0]) ? props.windSpeed.values[0].value : 0,
+          windDirection: (props.windDirection && props.windDirection.values && props.windDirection.values[0]) ? props.windDirection.values[0].value : 0
+        };
+      }
+
+      function renderTeaser() {
+        var container = document.getElementById("teaser-spots");
+        if (!container) return;
+        container.innerHTML = "";
+        spots.forEach(function (spot) {
+          fetchNWSData(spot)
+            .then(function (grid) {
+              var data = extractCurrentValues(grid);
+              var rating = calculateRating(data, spot);
+              var ratingClass = rating >= 8 ? "teaser-ocean-rating-high" : rating >= 5 ? "teaser-ocean-rating-mid" : "teaser-ocean-rating-low";
+              var card = document.createElement("div");
+              card.className = "teaser-ocean-card";
+              card.innerHTML = "<h3 class=\"teaser-ocean-card-title\">" + spot.name + "</h3>" +
+                "<div class=\"teaser-ocean-rating " + ratingClass + "\">" + rating + "</div>" +
+                "<p class=\"teaser-ocean-meta\">" + toFt(data.waveHeight) + " ft @ " + (data.wavePeriod || "—") + "s</p>" +
+                "<a href=\"./live-kauai-conditions.html\" class=\"teaser-ocean-cta\">See details</a>";
+              container.appendChild(card);
+            })
+            .catch(function () {
+              var card = document.createElement("div");
+              card.className = "teaser-ocean-card";
+              card.innerHTML = "<h3 class=\"teaser-ocean-card-title\">" + spot.name + "</h3><p class=\"teaser-ocean-meta\">Unable to load</p><a href=\"./live-kauai-conditions.html\" class=\"teaser-ocean-cta\">See details</a>";
+              container.appendChild(card);
+            });
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", renderTeaser);
+      } else {
+        renderTeaser();
+      }
+    })();
+    </script>
+
     <!-- About -->
     <section id="about" aria-labelledby="about-heading">
       <div class="container">
@@ -3762,6 +3974,7 @@
             <a class="footer-link" href="#weather">Conditions</a>
             <a class="footer-link" href="#booking">Book</a>
             <a class="footer-link" href="#location">Location</a>
+            <a href="/live-kauai-conditions.html" class="nav-link">🌊 Live Kauai Surf Ratings</a>
           </div>
           <div class="footer-social" aria-label="Social links">
             <a href="#" class="footer-link" rel="noopener noreferrer">Instagram</a>
