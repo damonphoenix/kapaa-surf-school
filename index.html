@@ -6,6 +6,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Kapaʻa Surf School offers beginner lessons, family sessions, and private coaching in Kapaʻa, Kauaʻi. Small groups, local instructors, and a focus on safety and fun." />
 
+  <!-- Schema.org: LocalBusiness + SportsActivityLocation -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "SportsActivityLocation"],
+    "name": "Kapaʻa Surf School",
+    "description": "Small, local surf school on Kauaʻi's east shore offering beginner lessons, family sessions, and private coaching.",
+    "url": "https://kapaasurfschool.com",
+    "telephone": "+18085551234",
+    "email": "aloha@kapaasurfschool.com",
+    "foundingDate": "2012",
+    "priceRange": "$$",
+    "image": "./assets/images/kapaa-surf-school-kauai-surf-lesson-hero.jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "456 Keālia Beachfront Rd",
+      "addressLocality": "Kapaʻa",
+      "addressRegion": "HI",
+      "postalCode": "96746",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 22.0752,
+      "longitude": -159.3190
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      "opens": "07:00",
+      "closes": "16:00"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Surf Lessons",
+      "itemListElement": [
+        { "@type": "Offer", "name": "Beginner Lesson", "price": "110", "priceCurrency": "USD" },
+        { "@type": "Offer", "name": "Ohana Session", "price": "360", "priceCurrency": "USD" },
+        { "@type": "Offer", "name": "Private Coaching", "price": "185", "priceCurrency": "USD" },
+        { "@type": "Offer", "name": "Sunrise Session", "price": "145", "priceCurrency": "USD" }
+      ]
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "3"
+    }
+  }
+  </script>
+
+  <!-- Open Graph / Twitter cards -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Kapaʻa Surf School – Learn to Surf in Kauaʻi" />
+  <meta property="og:description" content="Small groups, local instructors, and beginner-friendly waves on the east shore of Kauaʻi." />
+  <meta property="og:image" content="./assets/images/kapaa-surf-school-kauai-surf-lesson-hero.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <!-- Optional Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -367,6 +424,66 @@
         gap: 1.8rem;
       }
     }
+
+    /* Sticky booking bar (mobile only) */
+    .sticky-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: rgba(249, 244, 238, 0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(15, 118, 110, 0.25);
+      padding: 0.7rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transform: translateY(100%);
+      transition: transform 320ms cubic-bezier(0.34, 1.1, 0.64, 1);
+      box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.1);
+    }
+    .sticky-bar.visible { transform: translateY(0); }
+    .sticky-bar-text { font-size: 0.88rem; font-weight: 500; color: var(--text-main); }
+    .sticky-bar-text span { color: var(--primary); font-weight: 600; }
+    .sticky-bar-cta {
+      flex-shrink: 0;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #229e93, #14b8a6 50%, #22c55e);
+      color: #ecfdf5;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 8px 20px rgba(15, 118, 110, 0.35);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+    .sticky-bar-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(15, 118, 110, 0.45); text-decoration: none; }
+    .sticky-bar-dismiss {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.3rem;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+      border-radius: 50%;
+      transition: color 150ms;
+    }
+    .sticky-bar-dismiss:hover { color: var(--text-main); }
+    @media (max-width: 480px) {
+      .sticky-bar-text { display: none; }
+      .sticky-bar { justify-content: flex-end; }
+    }
+    @media (min-width: 768px) { .sticky-bar { display: none; } }
 
     /* HERO */
 
@@ -1395,6 +1512,173 @@
       }
     }
 
+    /* Live surf conditions (weather widget) */
+    #weather {
+      padding: 2.5rem 0;
+    }
+
+    .weather-bar {
+      background:
+        radial-gradient(ellipse at 10% 50%, rgba(14, 165, 233, 0.15) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 30%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+        linear-gradient(135deg, #0b1f3a 0%, #0c2d3f 50%, #0b2530 100%);
+      border-radius: 1.6rem;
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(56, 189, 248, 0.12);
+      padding: 1.5rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .weather-bar::before {
+      content: "";
+      position: absolute;
+      top: -60%;
+      right: -10%;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .weather-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 768px) {
+      .weather-inner {
+        grid-template-columns: auto 1fr auto;
+        gap: 2rem;
+      }
+    }
+
+    .weather-current {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .weather-icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.4));
+    }
+
+    .weather-now { display: flex; flex-direction: column; }
+    .weather-temp { font-size: 2rem; font-weight: 700; color: #f0f9ff; letter-spacing: -0.03em; line-height: 1; }
+    .weather-condition { font-size: 0.78rem; color: #7dd3fc; margin-top: 0.2rem; font-weight: 500; }
+    .weather-location { font-size: 0.7rem; color: rgba(125, 211, 252, 0.65); margin-top: 0.1rem; }
+
+    .weather-middle { display: flex; flex-direction: column; gap: 0.75rem; }
+    .weather-surf-bar { display: flex; align-items: center; gap: 0.6rem; }
+    .weather-surf-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(125, 211, 252, 0.7);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .weather-surf-track {
+      flex: 1;
+      height: 5px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .weather-surf-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #22c55e, #14b8a6);
+      transition: width 800ms cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+    .weather-surf-rating { font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+
+    .weather-details { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    .weather-detail-item { display: flex; flex-direction: column; gap: 0.1rem; }
+    .weather-detail-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(125, 211, 252, 0.55);
+      font-weight: 500;
+    }
+    .weather-detail-value { font-size: 0.82rem; color: #e0f2fe; font-weight: 500; }
+
+    .weather-forecast { display: none; }
+    @media (min-width: 768px) {
+      .weather-forecast {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        flex-shrink: 0;
+        min-width: 180px;
+      }
+    }
+    .weather-forecast-title {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(125, 211, 252, 0.55);
+      font-weight: 500;
+      margin-bottom: 0.1rem;
+    }
+    .weather-forecast-days { display: flex; gap: 0.5rem; }
+    .weather-forecast-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(56, 189, 248, 0.1);
+      border-radius: 0.7rem;
+      padding: 0.4rem 0.5rem;
+      min-width: 44px;
+    }
+    .weather-forecast-dow { font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(125, 211, 252, 0.7); }
+    .weather-forecast-icon { font-size: 1rem; line-height: 1; }
+    .weather-forecast-hi { font-size: 0.72rem; font-weight: 600; color: #e0f2fe; }
+    .weather-forecast-rain { font-size: 0.62rem; color: rgba(56, 189, 248, 0.65); }
+
+    .weather-loading {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: rgba(125, 211, 252, 0.7);
+      font-size: 0.85rem;
+    }
+    @keyframes weather-spin { to { transform: rotate(360deg); } }
+    .weather-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(56, 189, 248, 0.2);
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: weather-spin 700ms linear infinite;
+      flex-shrink: 0;
+    }
+    .weather-error {
+      color: rgba(251, 191, 36, 0.8);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .weather-attribution {
+      font-size: 0.62rem;
+      color: rgba(125, 211, 252, 0.35);
+      margin-top: 0.9rem;
+      text-align: right;
+    }
+    .weather-attribution a { color: rgba(125, 211, 252, 0.45); }
+
     /* SECTION HEADINGS */
 
     .section-header {
@@ -2226,6 +2510,12 @@
       display: none;
     }
 
+    .form-char-count {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .form-char-count.near-limit { color: #d97706; }
+
     .form-field.error .form-input,
     .form-field.error .form-select,
     .form-field.error .form-textarea {
@@ -2634,19 +2924,29 @@
         display: none;
       }
     }
+
+    @media print {
+      header,
+      .sticky-bar,
+      .hero-media,
+      .testimonials-banner,
+      .location-map-wrap {
+        display: none;
+      }
+    }
   </style>
   <link
     href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css"
     rel="stylesheet"
   />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js" defer></script>
 </head>
 <body>
   <!-- Navigation -->
   <header>
     <div class="container nav-inner">
         <a href="#hero" class="brand" aria-label="Back to top">
-        <img class="brand-mark" src="./assets/images/kapaa-surf-school-logo-wave.png" alt="Kapaʻa Surf School logo" />
+        <img class="brand-mark" src="./assets/images/kapaa-surf-school-logo-wave.png" alt="Kapaʻa Surf School logo" loading="lazy" />
         <div class="brand-text">
           <span class="brand-name">Kapaʻa Surf School</span>
           <span class="brand-sub">Kauaʻi · Since 2012</span>
@@ -2657,6 +2957,7 @@
         <a class="nav-link" href="#about">About</a>
         <a class="nav-link" href="#packages">Packages</a>
         <a class="nav-link" href="#schedule">Schedule</a>
+        <a class="nav-link" href="#weather">Conditions</a>
         <a class="nav-link" href="#testimonials">Testimonials</a>
         <a class="nav-link" href="#faq">FAQ</a>
         <a class="nav-link" href="#location">Location</a>
@@ -2678,6 +2979,7 @@
         <a class="nav-mobile-link" href="#about">About</a>
         <a class="nav-mobile-link" href="#packages">Lesson Packages</a>
         <a class="nav-mobile-link" href="#schedule">When We Surf</a>
+        <a class="nav-mobile-link" href="#weather">Conditions</a>
         <a class="nav-mobile-link" href="#testimonials">Happy Surfers</a>
         <a class="nav-mobile-link" href="#faq">FAQ</a>
         <a class="nav-mobile-link" href="#location">Location & Contact</a>
@@ -2688,6 +2990,16 @@
       </div>
     </nav>
   </header>
+
+  <!-- Sticky bottom booking bar (mobile only) -->
+  <div class="sticky-bar" id="sticky-bar" role="complementary" aria-label="Quick booking">
+    <span class="sticky-bar-text">Ready to catch a wave? <span>Book in 60 seconds.</span></span>
+    <a href="#booking" class="sticky-bar-cta">
+      <span class="nav-cta-dot" aria-hidden="true"></span>
+      Book a Lesson
+    </a>
+    <button class="sticky-bar-dismiss" id="sticky-dismiss" aria-label="Dismiss booking prompt" type="button">×</button>
+  </div>
 
   <main id="hero">
     <!-- Hero -->
@@ -2786,6 +3098,7 @@
                   class="about-image-card"
                   src="./assets/images/kapaa-surf-school-kauai-coastline-about.jpg"
                   alt="Sunlit Kauaʻi coastline with tropical plants and ocean near Kapaʻa"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -2865,6 +3178,7 @@
               <img
                 src="./assets/images/kapaa-surf-school-beginner-surf-lesson.jpg"
                 alt="Beginner surfers catching a small wave on a Kauaʻi beach"
+                loading="lazy"
                 style="object-position: center 38%;"
               />
             </div>
@@ -2895,6 +3209,7 @@
               <img
                 src="./assets/images/kapaa-surf-school-family-surf-lesson-kauai.jpg"
                 alt="Family enjoying a surf lesson together on a sunny Kauaʻi beach"
+                loading="lazy"
               />
             </div>
             <h3 class="package-title">Ohana Session</h3>
@@ -2923,6 +3238,7 @@
               <img
                 src="./assets/images/kapaa-surf-school-private-surf-coaching.jpg"
                 alt="Surf coach guiding a student paddling on a longboard in calm water"
+                loading="lazy"
               />
             </div>
             <h3 class="package-title">Private Coaching</h3>
@@ -2951,6 +3267,7 @@
               <img
                 src="./assets/images/kapaa-surf-school-sunrise-surf-session.jpg"
                 alt="Surfer paddling into a turquoise wave at sunrise"
+                loading="lazy"
               />
             </div>
             <h3 class="package-title">Sunrise Session</h3>
@@ -3022,6 +3339,30 @@
               </p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live surf conditions -->
+    <section id="weather" aria-labelledby="weather-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-kicker">Conditions</div>
+          <h2 id="weather-heading" class="section-title">Live surf conditions</h2>
+          <p class="section-subtitle">Real-time weather in Kapaʻa, Kauaʻi — updated every time the page loads so you know what to expect before you paddle out.</p>
+        </div>
+        <div class="weather-bar" role="region" aria-label="Live weather conditions in Kapaʻa, Kauaʻi" aria-live="polite">
+          <div id="weather-loading" class="weather-loading">
+            <span class="weather-spinner" aria-hidden="true"></span>
+            Fetching live conditions for Kapaʻa…
+          </div>
+          <div id="weather-content" class="weather-inner" hidden></div>
+          <div id="weather-error" class="weather-error" hidden>
+            <span aria-hidden="true">⚠</span> Couldn't load conditions — please try refreshing.
+          </div>
+          <p class="weather-attribution" id="weather-attr" hidden>
+            Weather data: <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (free, open-source). Surf suitability derived from wind speed.
+          </p>
         </div>
       </div>
     </section>
@@ -3192,6 +3533,7 @@
             <img
               src="./assets/images/kapaa-surf-school-happy-surfers-testimonials.jpeg"
               alt="Happy surfers relaxing on their boards at golden hour"
+              loading="lazy"
             />
           </div>
         </div>
@@ -3214,14 +3556,14 @@
             <div class="form-row form-row--two">
               <div class="form-field" data-field="name">
                 <label class="form-label" for="name">Name<span aria-hidden="true">*</span></label>
-                <input class="form-input" type="text" id="name" name="name" autocomplete="name" required />
-                <div class="form-error hidden" aria-live="polite"></div>
+                <input class="form-input" type="text" id="name" name="name" autocomplete="name" required aria-required="true" />
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
 
               <div class="form-field" data-field="email">
                 <label class="form-label" for="email">Email<span aria-hidden="true">*</span></label>
-                <input class="form-input" type="email" id="email" name="email" autocomplete="email" required />
-                <div class="form-error hidden" aria-live="polite"></div>
+                <input class="form-input" type="email" id="email" name="email" autocomplete="email" required aria-required="true" />
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
             </div>
 
@@ -3229,21 +3571,21 @@
               <div class="form-field" data-field="phone">
                 <label class="form-label" for="phone">Phone (optional)</label>
                 <input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel" />
-                <div class="form-error hidden" aria-live="polite"></div>
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
 
               <div class="form-field" data-field="groupSize">
                 <label class="form-label" for="groupSize">Group size<span aria-hidden="true">*</span></label>
-                <input class="form-input" type="number" id="groupSize" name="groupSize" min="1" max="12" required />
-                <div class="form-error hidden" aria-live="polite"></div>
+                <input class="form-input" type="number" id="groupSize" name="groupSize" min="1" max="12" required aria-required="true" />
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
             </div>
 
             <div class="form-row form-row--two mt-2">
               <div class="form-field" data-field="date">
                 <label class="form-label" for="date">Preferred date<span aria-hidden="true">*</span></label>
-                <input class="form-input" type="date" id="date" name="date" required />
-                <div class="form-error hidden" aria-live="polite"></div>
+                <input class="form-input" type="date" id="date" name="date" required aria-required="true" />
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
 
               <div class="form-field" data-field="time">
@@ -3257,14 +3599,14 @@
                   <option value="2:00pm">Afternoon · 2:00pm</option>
                   <option value="Sunrise">Sunrise session</option>
                 </select>
-                <div class="form-error hidden" aria-live="polite"></div>
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
             </div>
 
             <div class="form-row mt-2">
               <div class="form-field" data-field="lessonType">
                 <label class="form-label" for="lessonType">Lesson type<span aria-hidden="true">*</span></label>
-                <select class="form-select" id="lessonType" name="lessonType" required>
+                <select class="form-select" id="lessonType" name="lessonType" required aria-required="true">
                   <option value="">Select a package</option>
                   <option value="Beginner Lesson">Beginner Lesson</option>
                   <option value="Ohana Session">Ohana Session</option>
@@ -3272,15 +3614,18 @@
                   <option value="Sunrise Session">Sunrise Session</option>
                   <option value="Not sure yet">Not sure yet</option>
                 </select>
-                <div class="form-error hidden" aria-live="polite"></div>
+                <div class="form-error hidden" aria-live="polite" role="alert"></div>
               </div>
             </div>
 
             <div class="form-row mt-2">
               <div class="form-field" data-field="message">
                 <label class="form-label" for="message">Message / notes</label>
-                <textarea class="form-textarea" id="message" name="message" placeholder="Tell us about your group, ocean comfort level, and anything we should know (ages, celebration, etc.)."></textarea>
-                <div class="form-error hidden" aria-live="polite"></div>
+                <textarea class="form-textarea" id="message" name="message" maxlength="600" placeholder="Tell us about your group, ocean comfort level, and anything we should know (ages, celebration, etc.)."></textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <div class="form-error hidden" aria-live="polite" role="alert"></div>
+                  <span class="form-char-count" id="msg-count" aria-live="polite">0 / 600</span>
+                </div>
               </div>
             </div>
 
@@ -3310,6 +3655,7 @@
               <img
                 src="./assets/images/kapaa-surf-school-surfboard-alley-hawaii.jpg"
                 alt="Colorful longboards lined up in an alley leading to the ocean in Hawaii"
+                loading="lazy"
               />
             </div>
             <div class="booking-info-card">
@@ -3367,7 +3713,7 @@
               456 Keālia Beachfront Rd<br />
               Kapaʻa, HI 96746
             </div>
-            <a class="location-tile-cta" href="https://maps.google.com/?q=Kapaa+Surf+School+Kauai" target="_blank" rel="noopener">Get directions ↗</a>
+            <a class="location-tile-cta" href="https://maps.google.com/?q=Kapaa+Surf+School+Kauai" target="_blank" rel="noopener noreferrer">Get directions ↗</a>
           </div>
 
           <div class="location-tile">
@@ -3413,12 +3759,13 @@
           <div class="footer-links" aria-label="Quick links">
             <a class="footer-link" href="#about">About</a>
             <a class="footer-link" href="#packages">Packages</a>
+            <a class="footer-link" href="#weather">Conditions</a>
             <a class="footer-link" href="#booking">Book</a>
             <a class="footer-link" href="#location">Location</a>
           </div>
           <div class="footer-social" aria-label="Social links">
-            <a href="#" class="footer-link">Instagram</a>
-            <a href="#" class="footer-link">Facebook</a>
+            <a href="#" class="footer-link" rel="noopener noreferrer">Instagram</a>
+            <a href="#" class="footer-link" rel="noopener noreferrer">Facebook</a>
           </div>
         </div>
       </div>
@@ -3427,7 +3774,7 @@
 
       <div class="footer-bottom">
         <span class="footer-copyright">© <span id="year"></span> Kapaʻa Surf School. All rights reserved.</span>
-        <span class="footer-credit">Created by <a href="https://phx.cx" target="_blank" rel="noopener" class="footer-credit-link">Phoenix Studios</a></span>
+        <span class="footer-credit">Created by <a href="https://phx.cx" target="_blank" rel="noopener noreferrer" class="footer-credit-link">Phoenix Studios</a></span>
       </div>
     </div>
   </footer>
@@ -3463,6 +3810,159 @@
         .addTo(map);
     });
 
+    /* Live weather widget — Open-Meteo (free, no API key) */
+    (function () {
+      var LAT = 22.0752, LNG = -159.3190;
+      var WMO_ICONS = {
+        0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
+        45: "🌫️", 48: "🌫️",
+        51: "🌦️", 53: "🌦️", 55: "🌧️",
+        61: "🌧️", 63: "🌧️", 65: "🌧️",
+        71: "🌨️", 73: "🌨️", 75: "❄️",
+        80: "🌦️", 81: "🌧️", 82: "⛈️",
+        95: "⛈️", 96: "⛈️", 99: "⛈️"
+      };
+      var WMO_TEXT = {
+        0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+        45: "Foggy", 48: "Foggy",
+        51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
+        61: "Light rain", 63: "Rain", 65: "Heavy rain",
+        71: "Light snow", 73: "Snow", 75: "Heavy snow",
+        80: "Rain showers", 81: "Rain showers", 82: "Heavy showers",
+        95: "Thunderstorm", 96: "Thunderstorm", 99: "Severe thunderstorm"
+      };
+      var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      function windToSurf(kph) {
+        var mph = kph * 0.621371;
+        if (mph < 8)  return { pct: 95, label: "Excellent 🤙", color: "#22c55e" };
+        if (mph < 14) return { pct: 78, label: "Good 👍", color: "#86efac" };
+        if (mph < 20) return { pct: 55, label: "Fair 🌊", color: "#fbbf24" };
+        if (mph < 28) return { pct: 32, label: "Choppy 🌬️", color: "#fb923c" };
+        return { pct: 12, label: "Rough ⚠️", color: "#ef4444" };
+      }
+
+      function degToCompass(deg) {
+        var dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+        return dirs[Math.round(deg / 45) % 8];
+      }
+
+      function renderWeather(data) {
+        var cur = data.current;
+        var daily = data.daily;
+        var code = cur.weather_code;
+        var tempF = Math.round(cur.temperature_2m);
+        var windKph = cur.wind_speed_10m;
+        var windMph = Math.round(windKph * 0.621371);
+        var windDir = degToCompass(cur.wind_direction_10m);
+        var surf = windToSurf(windKph);
+
+        var forecastHTML = "";
+        for (var i = 1; i <= 4; i++) {
+          if (!daily.time[i]) continue;
+          var d = new Date(daily.time[i] + "T12:00:00");
+          var dow = DAYS[d.getDay()];
+          var hi = Math.round(daily.temperature_2m_max[i]);
+          var rainPct = daily.precipitation_probability_max[i] || 0;
+          var dCode = daily.weather_code[i];
+          forecastHTML += '<div class="weather-forecast-day">' +
+            '<span class="weather-forecast-dow">' + dow + '</span>' +
+            '<span class="weather-forecast-icon">' + (WMO_ICONS[dCode] || "🌤️") + '</span>' +
+            '<span class="weather-forecast-hi">' + hi + '°F</span>' +
+            '<span class="weather-forecast-rain">💧' + rainPct + '%</span>' +
+          '</div>';
+        }
+
+        var content = document.getElementById("weather-content");
+        content.innerHTML =
+          '<div class="weather-current">' +
+            '<span class="weather-icon" aria-hidden="true">' + (WMO_ICONS[code] || "🌤️") + '</span>' +
+            '<div class="weather-now">' +
+              '<span class="weather-temp">' + tempF + '°F</span>' +
+              '<span class="weather-condition">' + (WMO_TEXT[code] || "Partly cloudy") + '</span>' +
+              '<span class="weather-location">Kapaʻa, Kauaʻi · Live</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="weather-middle">' +
+            '<div class="weather-surf-bar">' +
+              '<span class="weather-surf-label">Surf suitability</span>' +
+              '<div class="weather-surf-track"><div class="weather-surf-fill" id="surf-fill" style="width:0;background:linear-gradient(90deg,' + surf.color + ',#14b8a6)"></div></div>' +
+              '<span class="weather-surf-rating" style="color:' + surf.color + '">' + surf.label + '</span>' +
+            '</div>' +
+            '<div class="weather-details">' +
+              '<div class="weather-detail-item"><span class="weather-detail-label">Wind</span><span class="weather-detail-value">' + windMph + ' mph ' + windDir + '</span></div>' +
+              '<div class="weather-detail-item"><span class="weather-detail-label">Humidity</span><span class="weather-detail-value">' + (cur.relative_humidity_2m != null ? cur.relative_humidity_2m + '%' : '—') + '</span></div>' +
+              '<div class="weather-detail-item"><span class="weather-detail-label">UV Index</span><span class="weather-detail-value">' + (cur.uv_index != null ? cur.uv_index : '—') + '</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="weather-forecast">' +
+            '<div class="weather-forecast-title">5-day outlook</div>' +
+            '<div class="weather-forecast-days">' + forecastHTML + '</div>' +
+          '</div>';
+
+        document.getElementById("weather-loading").hidden = true;
+        content.hidden = false;
+        document.getElementById("weather-attr").hidden = false;
+
+        setTimeout(function () {
+          var fill = document.getElementById("surf-fill");
+          if (fill) fill.style.width = surf.pct + "%";
+        }, 200);
+      }
+
+      function fetchWeather() {
+        var url = "https://api.open-meteo.com/v1/forecast" +
+          "?latitude=" + LAT +
+          "&longitude=" + LNG +
+          "&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m,uv_index" +
+          "&daily=weather_code,temperature_2m_max,precipitation_probability_max" +
+          "&temperature_unit=fahrenheit" +
+          "&wind_speed_unit=kmh" +
+          "&timezone=Pacific%2FHonolulu" +
+          "&forecast_days=5";
+
+        fetch(url)
+          .then(function (r) { if (!r.ok) throw new Error("Network error"); return r.json(); })
+          .then(function (data) { renderWeather(data); })
+          .catch(function () {
+            document.getElementById("weather-loading").hidden = true;
+            document.getElementById("weather-error").hidden = false;
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", fetchWeather);
+    })();
+
+    /* Sticky booking bar: show after hero, hide when booking in view */
+    (function () {
+      var bar = document.getElementById("sticky-bar");
+      var dismiss = document.getElementById("sticky-dismiss");
+      var dismissed = false;
+      var bookingSection = document.getElementById("booking");
+
+      function updateBar() {
+        if (!bar || dismissed) return;
+        var scrollY = window.scrollY || window.pageYOffset;
+        var heroEl = document.querySelector(".hero");
+        var heroH = heroEl ? heroEl.offsetHeight : 300;
+        var bookingTop = bookingSection ? bookingSection.getBoundingClientRect().top + scrollY : Infinity;
+
+        var pastHero = scrollY > heroH * 0.7;
+        var nearBooking = (scrollY + window.innerHeight) > (bookingTop - 100);
+        bar.classList.toggle("visible", pastHero && !nearBooking);
+      }
+
+      if (dismiss) {
+        dismiss.addEventListener("click", function () {
+          dismissed = true;
+          bar.classList.remove("visible");
+        });
+      }
+
+      window.addEventListener("scroll", updateBar, { passive: true });
+      updateBar();
+    })();
+
     (function () {
       // Utility: smooth scroll to element by id
       function smoothScrollToId(id) {
@@ -3475,6 +3975,28 @@
       var yearSpan = document.getElementById("year");
       if (yearSpan) {
         yearSpan.textContent = new Date().getFullYear();
+      }
+
+      // Date picker: minimum today
+      var dateInput = document.getElementById("date");
+      if (dateInput) {
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, "0");
+        var dd = String(today.getDate()).padStart(2, "0");
+        dateInput.min = yyyy + "-" + mm + "-" + dd;
+      }
+
+      // Textarea character counter (0 / 600, amber near limit)
+      var msgArea = document.getElementById("message");
+      var msgCount = document.getElementById("msg-count");
+      if (msgArea && msgCount) {
+        msgArea.addEventListener("input", function () {
+          var len = msgArea.value.length;
+          var max = parseInt(msgArea.getAttribute("maxlength") || "600", 10);
+          msgCount.textContent = len + " / " + max;
+          msgCount.classList.toggle("near-limit", len > max * 0.85);
+        });
       }
 
       // Yellow fairy wisp: position from "i" in Magic to Book a Lesson (any viewport)
