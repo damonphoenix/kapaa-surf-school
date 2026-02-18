@@ -776,13 +776,270 @@
       );
     }
 
-    @media (max-width: 600px) {
+    /* Mobile & tablet only (desktop 900px+ unchanged) */
+    @media (max-width: 767px) {
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      section {
+        padding: 2.75rem 0;
+      }
+
       .hero {
+        padding-top: 2rem;
         padding-bottom: 3rem;
       }
 
+      .hero-grid {
+        gap: 2rem;
+      }
+
+      .hero-heading {
+        font-size: clamp(1.95rem, 6vw, 2.6rem);
+      }
+
+      .hero-subtitle {
+        font-size: 0.98rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-actions {
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        padding: 0.72rem 1.2rem;
+        font-size: 0.9rem;
+      }
+
+      .hero-meta {
+        gap: 0.65rem;
+        font-size: 0.78rem;
+      }
+
+      .hero-meta-item {
+        padding: 0.35rem 0.6rem;
+      }
+
       .hero-card {
+        padding: 1.85rem 1.6rem;
+      }
+
+      .hero-card-title {
+        font-size: 1.05rem;
+      }
+
+      .hero-card-badge {
+        top: 0.9rem;
+        right: 1rem;
+        padding: 0.3rem 0.55rem;
+        font-size: 0.75rem;
+      }
+
+      .hero-media {
+        height: 380px;
+        margin-top: 2rem;
+        border-radius: 1.4rem;
+      }
+
+      .section-header {
+        margin-bottom: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .section-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .about-grid {
+        gap: 1.5rem;
+      }
+
+      .about-card,
+      .about-story-card {
+        padding: 1.2rem 1.25rem;
+        font-size: 0.88rem;
+      }
+
+      .package-card {
+        padding: 1.2rem 1.25rem 1.15rem;
+      }
+
+      .package-thumb {
+        height: 160px;
+      }
+
+      .package-title {
+        font-size: 0.98rem;
+      }
+
+      .schedule-wrapper {
+        padding: 1.2rem;
+      }
+
+      .schedule-item {
+        padding: 0.5rem 0.65rem;
+        font-size: 0.85rem;
+      }
+
+      .testimonials-grid {
+        gap: 1rem;
+      }
+
+      .testimonial-card {
+        padding: 1.15rem 1.3rem;
+      }
+
+      .testimonial-quote {
+        font-size: 0.88rem;
+      }
+
+      .faq-question {
+        padding: 1rem 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .form-card {
+        padding: 1.4rem 1.25rem 1.35rem;
+      }
+
+      .booking-info-card {
+        padding: 1.2rem 1.25rem 1.15rem;
+      }
+
+      .location-tile {
+        padding: 1rem 1.1rem;
+      }
+
+      footer {
+        margin-top: 2.5rem;
+        padding: 1.5rem 0 1.75rem;
+        font-size: 0.82rem;
+      }
+
+      .footer-inner {
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 599px) {
+      .container {
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
+      }
+
+      section {
+        padding: 2.25rem 0;
+      }
+
+      .hero {
+        padding-bottom: 2.75rem;
+      }
+
+      .hero-heading {
+        font-size: clamp(1.75rem, 7vw, 2.35rem);
+      }
+
+      .hero-subtitle {
+        font-size: 0.94rem;
+        margin-bottom: 1.35rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 1.75rem;
+      }
+
+      .hero-actions .btn {
+        justify-content: center;
+      }
+
+      .hero-card {
+        padding: 1.6rem 1.35rem;
         margin-bottom: 0.5rem;
+      }
+
+      .hero-card-title {
+        font-size: 1rem;
+      }
+
+      .hero-card-sub,
+      .hero-stats {
+        font-size: 0.78rem;
+      }
+
+      .hero-wave {
+        padding: 0.65rem 1rem;
+        font-size: 0.75rem;
+      }
+
+      .hero-media {
+        height: 340px;
+        margin-top: 1.75rem;
+        border-radius: 1.2rem;
+      }
+
+      .section-title {
+        font-size: 1.38rem;
+      }
+
+      .section-kicker {
+        font-size: 0.72rem;
+      }
+
+      .package-card {
+        padding: 1.1rem 1.15rem 1.05rem;
+      }
+
+      .package-thumb {
+        height: 150px;
+      }
+
+      .form-card {
+        padding: 1.25rem 1.1rem 1.2rem;
+      }
+
+      .form-row {
+        gap: 0.85rem;
+      }
+
+      .footer-links,
+      .footer-social {
+        gap: 0.7rem;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 899px) {
+      .hero-grid {
+        gap: 2.5rem;
+      }
+
+      .hero-media {
+        max-height: 420px;
+        height: 420px;
+      }
+
+      .section-header {
+        margin-bottom: 1.75rem;
+      }
+
+      .cards-grid {
+        gap: 1.25rem;
+      }
+
+      .schedule-wrapper {
+        padding: 1.4rem;
+      }
+
+      .testimonials-grid {
+        gap: 1.4rem;
       }
     }
 
