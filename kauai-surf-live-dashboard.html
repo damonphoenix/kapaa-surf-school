@@ -12,158 +12,214 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
     :root { --primary: #0f766e; }
-    body { font-family: 'Inter', system-ui, sans-serif; }
+    body { font-family: 'Inter', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
     .title-font { font-family: 'Space Grotesk', sans-serif; }
-    .glass { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); }
-    .dark .glass { background: rgba(15,23,42,0.92); border-color: rgba(255,255,255,0.06); }
+
+    /* Light mode */
     html:not(.dark) body { background: #f4f4f5; color: #18181b; }
     html:not(.dark) .text-zinc-500 { color: #71717a; }
     html:not(.dark) .text-zinc-400 { color: #a1a1aa; }
+    .glass { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); }
+    html:not(.dark) .glass { background: rgba(255,255,255,0.95); }
+
+    /* Dark mode — fixed contrast and depth */
+    .dark body { background: #0a0a0b; color: #fafafa; }
+    .dark .glass { background: rgba(24,24,27,0.95); border: 1px solid rgba(63,63,70,0.8); backdrop-filter: blur(20px); }
+    .dark .text-zinc-500 { color: #a1a1aa; }
+    .dark .text-zinc-400 { color: #71717a; }
+    .dark .text-zinc-600 { color: #a1a1aa; }
+    .dark .border-zinc-200 { border-color: rgba(63,63,70,0.6); }
+    .dark .border-zinc-700 { border-color: rgba(63,63,70,0.8); }
+    .dark .border-zinc-800 { border-color: rgba(39,39,42,0.9); }
+    .dark #theme-toggle { background: #27272a !important; border-color: rgba(63,63,70,0.9); }
+    .dark #theme-toggle:hover { background: #3f3f46 !important; }
+
+    /* Ocean gradient — shared by logo and site name */
+    :root {
+      --ocean-gradient: linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #06b6d4 60%, #0284c7 100%);
+      --ocean-gradient-dark: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 40%, #38bdf8 70%, #0ea5e9 100%);
+    }
+    /* Header logo: gradient-filled SVG (mask), no gray background in light mode */
+    .header-logo-wrap { background: transparent; }
+    .header-logo-gradient {
+      width: 100%;
+      height: 100%;
+      background: var(--ocean-gradient);
+      -webkit-mask-image: url("./assets/svg/kapaa-surf-school-logo-wave.svg");
+      mask-image: url("./assets/svg/kapaa-surf-school-logo-wave.svg");
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+    }
+    .dark .header-logo-gradient { background: var(--ocean-gradient-dark); }
+    .site-name-gradient {
+      background: var(--ocean-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .dark .site-name-gradient {
+      background: var(--ocean-gradient-dark);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     .wave-canvas { filter: drop-shadow(0 15px 25px rgba(34,211,238,0.35)); }
     .leaflet-popup-content-wrapper { background: #0f172a; color: #e2e8f0; border: 1px solid #22d3ee; border-radius: 16px; }
+
+    /* Mobile: prevent zoom on focus, safe area */
+    @media (max-width: 767px) {
+      input, select, textarea, button { font-size: 16px; }
+    }
   </style>
 </head>
 <body class="min-h-screen bg-zinc-100 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 pb-20 transition-colors duration-300">
   <header class="sticky top-0 z-50 glass border-b border-zinc-200 dark:border-zinc-800">
-    <div class="max-w-screen-2xl mx-auto px-6 py-5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="./assets/images/kapaa-surf-school-logo-wave.png" alt="" class="w-10 h-10 object-contain" aria-hidden="true" />
-        <div>
-          <span class="title-font text-4xl font-bold tracking-tighter text-cyan-600 dark:text-cyan-400">Kauaʻi Surf</span>
-          <span class="block text-xs tracking-[4px] text-zinc-500 dark:text-zinc-400 -mt-1">LIVE DASHBOARD</span>
+    <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 sm:py-5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <!-- Logo: gradient via SVG mask — mobile 393px first: 52px, then tablet, desktop -->
+        <div class="header-logo-wrap flex items-center justify-center flex-shrink-0 w-[52px] h-[52px] sm:w-14 sm:h-14 md:w-16 md:h-16 overflow-visible" aria-hidden="true">
+          <div class="header-logo-gradient w-full h-full"></div>
+        </div>
+        <div class="min-w-0">
+          <span class="site-name-gradient title-font text-[1.5rem] sm:text-3xl md:text-4xl font-bold tracking-tighter block truncate">Kauaʻi Surf</span>
+          <span class="block text-[10px] sm:text-xs tracking-[3px] sm:tracking-[4px] text-zinc-500 dark:text-zinc-400 -mt-0.5 sm:-mt-1">LIVE DASHBOARD</span>
         </div>
       </div>
-      <div class="flex items-center gap-8 text-sm">
-        <div id="live-time" class="font-mono text-lg text-cyan-600 dark:text-cyan-400"></div>
-        <button id="theme-toggle" type="button" class="w-12 h-12 flex items-center justify-center text-2xl rounded-2xl border border-zinc-300 dark:border-zinc-600 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition" aria-label="Toggle dark mode">☀️</button>
-        <button onclick="refreshAllData()" class="flex items-center gap-3 px-7 py-3.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-3xl font-semibold transition active:scale-95">⟳ Refresh All Data</button>
+      <div class="flex items-center gap-3 sm:gap-6 text-sm flex-shrink-0">
+        <div id="live-time" class="font-mono text-sm sm:text-lg text-cyan-600 dark:text-cyan-400 hidden sm:block"></div>
+        <button id="theme-toggle" type="button" class="w-11 h-11 sm:w-12 sm:h-12 min-w-[44px] min-h-[44px] flex items-center justify-center text-xl sm:text-2xl rounded-2xl border border-zinc-300 dark:border-zinc-600 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 active:scale-95 transition" aria-label="Toggle dark mode">☀️</button>
+        <button onclick="refreshAllData()" class="flex items-center gap-2 sm:gap-3 px-4 sm:px-7 py-3 sm:py-3.5 min-h-[44px] bg-cyan-600 hover:bg-cyan-700 text-white rounded-2xl sm:rounded-3xl text-sm sm:text-base font-semibold transition active:scale-95">⟳ Refresh</button>
       </div>
     </div>
   </header>
 
-  <div class="max-w-screen-2xl mx-auto px-6 pt-10">
-    <!-- Color scale legend (from 1.3) -->
-    <div class="flex items-center justify-center gap-6 mb-8 text-xs text-zinc-600 dark:text-zinc-400">
-      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-red-500"></div><span>1–3 Poor</span></div>
-      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-orange-500"></div><span>4–5 Fair</span></div>
-      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-yellow-400"></div><span>6–7 Good</span></div>
-      <div class="flex items-center gap-1.5"><div class="w-6 h-2.5 rounded bg-emerald-500"></div><span>8–10 Epic</span></div>
-    </div>
-
-    <!-- Hero -->
-    <div class="glass rounded-3xl p-10 mb-12">
-      <div class="flex flex-col lg:flex-row gap-10 items-center">
-        <div class="flex-1">
-          <div class="inline-flex items-center gap-2 px-5 py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-3xl text-sm font-medium mb-4">V1 SURF RATING • PER-SPOT SWELL & WIND</div>
-          <h1 class="title-font text-6xl lg:text-7xl font-bold tracking-tighter leading-none">Kauaʻi Live Surf Intelligence</h1>
-          <p class="mt-4 text-2xl text-zinc-600 dark:text-zinc-400 max-w-lg">8 major breaks • Real NOAA tides • Face + Hawaiian wave heights • Swell direction & wind scoring per break</p>
+  <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 pt-4 sm:pt-10 pb-6">
+    <!-- Hero (Kauaʻi Surf • AI Dashboard) -->
+    <div class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-10 mb-8 sm:mb-12">
+      <div class="flex flex-col lg:flex-row gap-6 sm:gap-10 items-center">
+        <div class="flex-1 w-full min-w-0">
+          <div class="inline-flex items-center gap-2 px-3 sm:px-5 py-1.5 sm:py-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl sm:rounded-3xl text-xs sm:text-sm font-medium mb-3 sm:mb-4">REAL-TIME • 8 BREAKS • NOAA POWERED</div>
+          <h1 class="title-font text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tighter leading-tight">Kauaʻi Surf • AI Dashboard</h1>
+          <p class="mt-3 sm:mt-4 text-base sm:text-xl lg:text-2xl text-zinc-600 dark:text-zinc-400 max-w-lg">8 major breaks • Real NOAA tides • Face + Hawaiian wave heights • Swell direction & wind scoring per break</p>
         </div>
-        <div class="grid grid-cols-3 gap-6 flex-shrink-0">
-          <div class="glass rounded-3xl p-6 text-center">
-            <div class="text-xs text-zinc-500">WATER TEMP</div>
-            <div id="water-temp" class="text-5xl font-bold text-cyan-500">76°F</div>
+        <div class="grid grid-cols-3 gap-2 sm:gap-6 w-full lg:w-auto flex-shrink-0 min-w-0">
+          <div class="glass rounded-2xl sm:rounded-3xl p-3 sm:p-6 text-center min-w-0 overflow-visible">
+            <div class="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">WATER TEMP</div>
+            <div id="water-temp" class="text-base sm:text-2xl lg:text-5xl font-bold text-cyan-500 dark:text-cyan-400 break-words">76°F</div>
           </div>
-          <div class="glass rounded-3xl p-6 text-center">
-            <div class="text-xs text-zinc-500">ISLAND TIDE</div>
-            <div id="current-tide" class="text-5xl font-bold">+1.4 ft</div>
+          <div class="glass rounded-2xl sm:rounded-3xl p-3 sm:p-6 text-center min-w-0 overflow-visible">
+            <div class="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">ISLAND TIDE</div>
+            <div id="current-tide" class="text-base sm:text-2xl lg:text-5xl font-bold break-words">+1.4 ft</div>
           </div>
-          <div class="glass rounded-3xl p-6 text-center">
-            <div class="text-xs text-zinc-500">DOMINANT WIND</div>
-            <div id="overall-wind" class="text-5xl font-bold">ENE 11 kt</div>
+          <div class="glass rounded-2xl sm:rounded-3xl p-3 sm:p-6 text-center min-w-0 overflow-visible">
+            <div class="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">WIND</div>
+            <div id="overall-wind" class="text-base sm:text-2xl lg:text-5xl font-bold break-words">ENE 11 kt</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Spots grid first -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-16" id="spots-grid"></div>
+    <!-- Color scale legend: above cards, below main info card -->
+    <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-6 sm:mb-8 text-xs text-zinc-600 dark:text-zinc-400">
+      <div class="flex items-center gap-1.5"><div class="w-5 h-2 sm:w-6 sm:h-2.5 rounded bg-red-500"></div><span>1–3 Poor</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-5 h-2 sm:w-6 sm:h-2.5 rounded bg-orange-500"></div><span>4–5 Fair</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-5 h-2 sm:w-6 sm:h-2.5 rounded bg-yellow-400"></div><span>6–7 Good</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-5 h-2 sm:w-6 sm:h-2.5 rounded bg-emerald-500"></div><span>8–10 Epic</span></div>
+    </div>
+
+    <!-- Spots grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-10 sm:mb-16" id="spots-grid"></div>
 
     <!-- Map beneath cards -->
-    <div class="mb-16">
-      <div class="flex justify-between items-end mb-4">
-        <div class="title-font text-4xl font-semibold">Live Island Map • 8 Spots</div>
-        <div class="text-zinc-500">Click any marker or card for full analysis</div>
+    <div class="mb-10 sm:mb-16">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2 mb-3 sm:mb-4">
+        <div class="title-font text-2xl sm:text-4xl font-semibold">Live Island Map • 8 Spots</div>
+        <div class="text-sm text-zinc-500 dark:text-zinc-400">Tap marker or card for details</div>
       </div>
-      <div id="kauai-map" class="w-full h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800"></div>
+      <div id="kauai-map" class="w-full h-[280px] sm:h-[380px] md:h-[480px] lg:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-700"></div>
     </div>
   </div>
 
-  <!-- Detail Modal -->
-  <div id="detail-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-black/80">
-    <div class="glass w-full max-w-7xl rounded-3xl max-h-[95vh] overflow-hidden flex flex-col">
-      <div class="px-8 py-7 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between bg-white/70 dark:bg-zinc-900/70">
-        <div class="flex items-center gap-6">
-          <div id="modal-icon" class="text-6xl"></div>
-          <div>
-            <div id="modal-name" class="title-font text-4xl font-bold"></div>
-            <div id="modal-facing" class="text-lg text-zinc-500"></div>
+  <!-- Detail Modal: full-screen on mobile, padded on desktop -->
+  <div id="detail-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-0 sm:p-4 md:p-6 bg-black/80 overflow-hidden">
+    <div class="glass w-full h-full sm:h-auto sm:max-h-[95vh] sm:max-w-7xl sm:rounded-3xl overflow-hidden flex flex-col">
+      <div class="px-4 sm:px-8 py-4 sm:py-7 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between flex-shrink-0 bg-white/90 dark:bg-zinc-900/95">
+        <div class="flex items-center gap-3 sm:gap-6 min-w-0">
+          <div id="modal-icon" class="text-4xl sm:text-6xl flex-shrink-0"></div>
+          <div class="min-w-0">
+            <div id="modal-name" class="title-font text-2xl sm:text-4xl font-bold truncate"></div>
+            <div id="modal-facing" class="text-sm sm:text-lg text-zinc-500 dark:text-zinc-400 truncate"></div>
           </div>
         </div>
-        <button onclick="closeModal()" class="text-5xl text-zinc-400 hover:text-black dark:hover:text-white">×</button>
+        <button type="button" onclick="closeModal()" class="flex-shrink-0 w-12 h-12 min-w-[48px] min-h-[48px] flex items-center justify-center text-4xl sm:text-5xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white active:scale-95 transition" aria-label="Close">×</button>
       </div>
 
-      <div class="flex-1 overflow-auto p-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <div class="lg:col-span-7 space-y-12">
-          <div class="grid grid-cols-2 gap-4">
-            <div id="modal-height-card" class="glass rounded-3xl p-8"></div>
-            <div id="modal-wind-card" class="glass rounded-3xl p-8"></div>
+      <div class="flex-1 overflow-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10">
+        <div class="lg:col-span-7 space-y-8 sm:space-y-12">
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div id="modal-height-card" class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8"></div>
+            <div id="modal-wind-card" class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8"></div>
           </div>
 
           <div>
-            <div class="flex items-baseline justify-between mb-4">
-              <div class="text-xl font-semibold">Wave Cross-Section Profile</div>
-              <div id="modal-wave-desc" class="text-sm text-emerald-600 dark:text-emerald-400 font-medium"></div>
+            <div class="flex flex-wrap items-baseline justify-between gap-2 mb-3 sm:mb-4">
+              <div class="text-base sm:text-xl font-semibold">Wave Cross-Section</div>
+              <div id="modal-wave-desc" class="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium"></div>
             </div>
-            <canvas id="wave-canvas" width="820" height="280" class="wave-canvas bg-gradient-to-b from-sky-950 to-slate-900 rounded-3xl w-full"></canvas>
+            <canvas id="wave-canvas" width="820" height="280" class="wave-canvas bg-gradient-to-b from-sky-950 to-slate-900 rounded-2xl sm:rounded-3xl w-full max-w-full"></canvas>
           </div>
 
-          <!-- Swell compass (from V1) -->
           <div>
-            <div class="text-xl font-semibold mb-4">Swell Direction</div>
+            <div class="text-base sm:text-xl font-semibold mb-3 sm:mb-4">Swell Direction</div>
             <div class="flex justify-center">
-              <svg id="swell-compass" width="160" height="160" class="text-cyan-500"></svg>
+              <svg id="swell-compass" width="160" height="160" class="text-cyan-500 dark:text-cyan-400" viewBox="0 0 160 160"></svg>
             </div>
           </div>
 
           <div>
-            <div class="flex justify-between mb-4">
-              <div class="text-xl font-semibold">Bathymetry Elevation Profile</div>
-              <div class="text-xs text-zinc-500">NOAA Chart 19381 + NCEI DEM</div>
+            <div class="flex flex-wrap justify-between gap-2 mb-3 sm:mb-4">
+              <div class="text-base sm:text-xl font-semibold">Bathymetry Profile</div>
+              <div class="text-xs text-zinc-500 dark:text-zinc-400">NOAA Chart 19381</div>
             </div>
-            <canvas id="bathy-canvas" width="820" height="220" class="bg-slate-950 rounded-3xl w-full"></canvas>
-            <div id="modal-bathy-caption" class="mt-3 text-xs text-zinc-500"></div>
+            <canvas id="bathy-canvas" width="820" height="220" class="bg-slate-950 dark:bg-zinc-900 rounded-2xl sm:rounded-3xl w-full max-w-full"></canvas>
+            <div id="modal-bathy-caption" class="mt-2 sm:mt-3 text-xs text-zinc-500 dark:text-zinc-400"></div>
           </div>
         </div>
 
-        <div class="lg:col-span-5 space-y-10">
-          <div class="glass rounded-3xl p-9 text-center">
-            <div class="uppercase text-xs tracking-widest text-zinc-500 mb-1">Surf Rating</div>
-            <div id="modal-rating" class="text-9xl font-black title-font tracking-tighter leading-none"></div>
-            <div id="modal-rating-label" class="text-3xl font-medium"></div>
-            <div class="mt-8 flex justify-center gap-12 text-sm">
-              <div class="text-center"><div class="text-emerald-400 text-xs">SWELL</div><div id="modal-swell-score" class="text-5xl font-bold"></div></div>
-              <div class="text-center"><div class="text-amber-400 text-xs">WIND</div><div id="modal-wind-score" class="text-5xl font-bold"></div></div>
-              <div class="text-center"><div class="text-cyan-400 text-xs">TOTAL</div><div id="modal-total" class="text-5xl font-bold"></div></div>
+        <div class="lg:col-span-5 space-y-6 sm:space-y-10">
+          <div class="glass rounded-2xl sm:rounded-3xl p-6 sm:p-9 text-center">
+            <div class="uppercase text-xs tracking-widest text-zinc-500 dark:text-zinc-400 mb-1">Surf Rating</div>
+            <div id="modal-rating" class="text-6xl sm:text-8xl lg:text-9xl font-black title-font tracking-tighter leading-none"></div>
+            <div id="modal-rating-label" class="text-xl sm:text-3xl font-medium mt-1"></div>
+            <div class="mt-6 sm:mt-8 flex justify-center gap-6 sm:gap-12 text-sm">
+              <div class="text-center"><div class="text-emerald-500 dark:text-emerald-400 text-xs">SWELL</div><div id="modal-swell-score" class="text-3xl sm:text-5xl font-bold"></div></div>
+              <div class="text-center"><div class="text-amber-500 dark:text-amber-400 text-xs">WIND</div><div id="modal-wind-score" class="text-3xl sm:text-5xl font-bold"></div></div>
+              <div class="text-center"><div class="text-cyan-500 dark:text-cyan-400 text-xs">TOTAL</div><div id="modal-total" class="text-3xl sm:text-5xl font-bold"></div></div>
             </div>
           </div>
 
-          <div class="glass rounded-3xl p-7">
-            <div class="font-semibold mb-4">Detailed Scoring Breakdown (V1)</div>
-            <div id="advanced-metrics" class="space-y-4 text-sm"></div>
+          <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-7">
+            <div class="font-semibold mb-3 sm:mb-4">Detailed Scoring (V1)</div>
+            <div id="advanced-metrics" class="space-y-3 sm:space-y-4 text-sm"></div>
           </div>
 
-          <div class="glass rounded-3xl p-7">
-            <div class="font-semibold mb-4">Local Tide (NOAA Real-Time)</div>
+          <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-7">
+            <div class="font-semibold mb-3 sm:mb-4">Local Tide (NOAA)</div>
             <div id="modal-tide-info" class="space-y-2 text-sm"></div>
           </div>
 
-          <div id="modal-insight" class="glass rounded-3xl p-7 text-sm leading-relaxed"></div>
+          <div id="modal-insight" class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-7 text-sm leading-relaxed"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <footer class="max-w-screen-2xl mx-auto px-6 py-12 text-xs border-t border-zinc-200 dark:border-zinc-800 text-zinc-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+  <footer class="max-w-screen-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 text-xs border-t border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-2 text-center sm:text-left">
     © 2026 Phoenix Studios • Data: National Weather Service • NOAA Tides • Bathymetry (Chart 19381, NCEI DEM) • Made for the love of Kauaʻi ❤️‍🔥
     <a href="https://damonphoenix.github.io" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors" aria-label="GitHub">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="inline-block"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -302,6 +358,45 @@
       } catch (e) { return null; }
     }
 
+    function getCurrentTideFromData(tideData) {
+      if (!tideData || tideData.length === 0) return null;
+      const now = new Date();
+      const parse = (d) => d ? new Date(d.t || d.dateTime).getTime() : NaN;
+      const getV = (d) => parseFloat(d.v);
+      const sorted = tideData.slice().filter(d => !isNaN(parse(d))).sort((a, b) => parse(a) - parse(b));
+      if (sorted.length === 0) return null;
+      if (sorted.length === 1) return getV(sorted[0]);
+      const tNow = now.getTime();
+      let i = 0;
+      while (i < sorted.length && parse(sorted[i]) < tNow) i++;
+      if (i === 0) return getV(sorted[0]);
+      if (i >= sorted.length) return getV(sorted[sorted.length - 1]);
+      const t0 = parse(sorted[i - 1]), t1 = parse(sorted[i]);
+      const v0 = getV(sorted[i - 1]), v1 = getV(sorted[i]);
+      const frac = (tNow - t0) / (t1 - t0);
+      return v0 + frac * (v1 - v0);
+    }
+
+    async function fetchWaterTemp(station) {
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&begin_date=${today}&end_date=${today}&station=${station}&time_zone=lst&units=english&format=json`;
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        const data = json.data || [];
+        if (data.length === 0) return null;
+        const latest = data[data.length - 1];
+        return parseFloat(latest.v);
+      } catch (e) { return null; }
+    }
+
+    function windDirToCompass(deg) {
+      if (deg == null || isNaN(deg)) return "—";
+      const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+      const i = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
+      return dirs[i];
+    }
+
     function hawaiianScale(faceFt) {
       return Math.round(parseFloat(faceFt) * 0.6);
     }
@@ -409,23 +504,23 @@
       const r = ratingInfo ? ratingInfo.total : "—";
       const color = typeof r === "number" ? getRatingColor(r) : spot.color;
       const cardHTML = `
-        <div onclick="openModal(${spot.id})" class="glass rounded-3xl p-7 cursor-pointer hover:-translate-y-1 transition-all">
-          <div class="flex justify-between">
-            <div>
-              <div class="font-semibold text-2xl">${spot.name}</div>
-              <div class="text-xs text-zinc-400">${spot.facing} facing</div>
+        <div onclick="openModal(${spot.id})" data-spot-id="${spot.id}" class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-7 cursor-pointer hover:-translate-y-1 active:scale-[0.99] transition-all min-h-[120px] touch-manipulation" role="button" tabindex="0">
+          <div class="flex justify-between items-start gap-2">
+            <div class="min-w-0">
+              <div class="font-semibold text-lg sm:text-2xl truncate">${spot.name}</div>
+              <div class="text-xs text-zinc-500 dark:text-zinc-400">${spot.facing} facing</div>
             </div>
-            <div class="text-right">
-              <div class="text-6xl font-black" style="color:${color}">${r}</div>
-              <div class="text-xs -mt-1 text-zinc-400">/10</div>
+            <div class="text-right flex-shrink-0">
+              <div class="text-5xl sm:text-6xl font-black leading-none" style="color:${color}">${r}</div>
+              <div class="text-xs -mt-0.5 text-zinc-500 dark:text-zinc-400">/10</div>
             </div>
           </div>
-          <div class="my-6 h-14">
-            <canvas id="mini-${spot.id}" width="260" height="56" class="wave-canvas"></canvas>
+          <div class="my-4 sm:my-6 h-12 sm:h-14">
+            <canvas id="mini-${spot.id}" width="260" height="56" class="wave-canvas w-full max-w-full h-full object-contain"></canvas>
           </div>
-          <div class="flex justify-between text-sm">
-            <div><span class="text-zinc-400">Face:</span> <span class="font-medium">${face} ft</span></div>
-            <div><span class="text-zinc-400">Hawaiian:</span> <span class="font-medium">${hawaiian} ft</span></div>
+          <div class="flex justify-between text-xs sm:text-sm">
+            <div><span class="text-zinc-500 dark:text-zinc-400">Face:</span> <span class="font-medium">${face} ft</span></div>
+            <div><span class="text-zinc-500 dark:text-zinc-400">Hawaiian:</span> <span class="font-medium">${hawaiian} ft</span></div>
           </div>
         </div>`;
       const div = document.createElement("div");
@@ -458,6 +553,9 @@
       const modal = document.getElementById("detail-modal");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+      const onEscape = (e) => { if (e.key === "Escape") { closeModal(); document.removeEventListener("keydown", onEscape); } };
+      document.addEventListener("keydown", onEscape);
 
       document.getElementById("modal-name").textContent = spot.name;
       document.getElementById("modal-facing").textContent = `${spot.facing} facing • ${(spot.bathyCaption || "").split('.')[0]}`;
@@ -530,6 +628,7 @@
     function closeModal() {
       document.getElementById("detail-modal").classList.add("hidden");
       document.getElementById("detail-modal").classList.remove("flex");
+      document.body.style.overflow = "";
     }
 
     async function renderAllCards() {
@@ -572,10 +671,35 @@
       }
     }
 
+    const HERO_TIDE_STATION = "1611400";
+    const HERO_WATER_TEMP_STATION = "1611400";
+
+    async function updateHeroFromLiveData() {
+      const wtEl = document.getElementById("water-temp");
+      const ctEl = document.getElementById("current-tide");
+      const owEl = document.getElementById("overall-wind");
+      if (owEl && allSpotData.length > 0 && allSpotData[0].data) {
+        const d = allSpotData[0].data;
+        const kts = (d.windSpeed * 1.94384).toFixed(0);
+        const compass = windDirToCompass(d.windDirection);
+        owEl.textContent = `${compass} ${kts} kt`;
+      } else if (owEl) owEl.textContent = "—";
+      try {
+        const tideData = await fetchTide(HERO_TIDE_STATION);
+        const currentFt = getCurrentTideFromData(tideData);
+        if (ctEl) ctEl.textContent = currentFt != null ? `${currentFt >= 0 ? "+" : ""}${currentFt.toFixed(1)} ft` : "—";
+      } catch (e) { if (ctEl) ctEl.textContent = "—"; }
+      try {
+        const tempF = await fetchWaterTemp(HERO_WATER_TEMP_STATION);
+        if (wtEl) wtEl.textContent = tempF != null ? `${Math.round(tempF)}°F` : "—";
+      } catch (e) { if (wtEl) wtEl.textContent = "—"; }
+    }
+
     async function refreshAllData() {
       const grid = document.getElementById("spots-grid");
       if (grid) grid.innerHTML = '<div class="col-span-4 text-center py-24 text-zinc-400">Pulling fresh NOAA data for all 8 breaks...</div>';
       await renderAllCards();
+      await updateHeroFromLiveData();
     }
 
     function updateThemeButton() {
@@ -589,18 +713,21 @@
       updateThemeButton();
     });
 
+    document.getElementById("spots-grid").addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const card = e.target.closest("[data-spot-id]");
+      if (!card) return;
+      e.preventDefault();
+      openModal(parseInt(card.getAttribute("data-spot-id"), 10));
+    });
+
     async function initializeDashboard() {
       updateThemeButton();
       updateLiveTime();
       initMap();
       await renderAllCards();
+      await updateHeroFromLiveData();
       setInterval(refreshAllData, 900000);
-      const wt = document.getElementById("water-temp");
-      const ct = document.getElementById("current-tide");
-      const ow = document.getElementById("overall-wind");
-      if (wt) wt.textContent = "76°F";
-      if (ct) ct.textContent = "+1.4 ft";
-      if (ow) ow.textContent = "ENE 11 kt";
     }
 
     window.onload = initializeDashboard;
