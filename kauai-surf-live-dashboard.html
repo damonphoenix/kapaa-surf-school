@@ -347,47 +347,70 @@
       } catch (e) { return null; }
     }
 
+    function parseNoaaTime(t) {
+      if (!t) return NaN;
+      const s = String(t).trim();
+      const m = s.match(/^(\d{4})-?(\d{2})-?(\d{2})\s*(\d{1,2}):?(\d{2})/);
+      if (m) {
+        const y = +m[1], mo = +m[2] - 1, d = +m[3], h = +m[4], min = +m[5];
+        return Date.UTC(y, mo, d, h + 10, min, 0, 0);
+      }
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? NaN : d.getTime();
+    }
+
+    async function fetchNoaaJson(url) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(res.statusText);
+        return await res.json();
+      } catch (e) {
+        try {
+          const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+          const res = await fetch(proxy);
+          if (!res.ok) return null;
+          const text = await res.text();
+          return text ? JSON.parse(text) : null;
+        } catch (e2) { return null; }
+      }
+    }
+
     async function fetchTide(station) {
       const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_level&begin_date=${today}&end_date=${today}&datum=MLLW&station=${station}&time_zone=lst&units=english&format=json`;
-      try {
-        const res = await fetch(url);
-        const json = await res.json();
-        const data = json.data || [];
-        return data.slice(0, 8);
-      } catch (e) { return null; }
+      const json = await fetchNoaaJson(url);
+      if (!json || json.error) return null;
+      return json.data || [];
     }
 
     function getCurrentTideFromData(tideData) {
       if (!tideData || tideData.length === 0) return null;
-      const now = new Date();
-      const parse = (d) => d ? new Date(d.t || d.dateTime).getTime() : NaN;
+      const now = new Date().getTime();
+      const parse = (d) => parseNoaaTime(d.t || d.dateTime);
       const getV = (d) => parseFloat(d.v);
       const sorted = tideData.slice().filter(d => !isNaN(parse(d))).sort((a, b) => parse(a) - parse(b));
       if (sorted.length === 0) return null;
       if (sorted.length === 1) return getV(sorted[0]);
-      const tNow = now.getTime();
       let i = 0;
-      while (i < sorted.length && parse(sorted[i]) < tNow) i++;
+      while (i < sorted.length && parse(sorted[i]) < now) i++;
       if (i === 0) return getV(sorted[0]);
       if (i >= sorted.length) return getV(sorted[sorted.length - 1]);
       const t0 = parse(sorted[i - 1]), t1 = parse(sorted[i]);
       const v0 = getV(sorted[i - 1]), v1 = getV(sorted[i]);
-      const frac = (tNow - t0) / (t1 - t0);
+      const frac = (now - t0) / (t1 - t0);
       return v0 + frac * (v1 - v0);
     }
 
     async function fetchWaterTemp(station) {
       const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&begin_date=${today}&end_date=${today}&station=${station}&time_zone=lst&units=english&format=json`;
-      try {
-        const res = await fetch(url);
-        const json = await res.json();
-        const data = json.data || [];
-        if (data.length === 0) return null;
-        const latest = data[data.length - 1];
-        return parseFloat(latest.v);
-      } catch (e) { return null; }
+      const json = await fetchNoaaJson(url);
+      if (!json || json.error) return null;
+      const data = json.data || [];
+      if (data.length === 0) return null;
+      const latest = data[data.length - 1];
+      const v = parseFloat(latest.v);
+      return isNaN(v) ? null : v;
     }
 
     function windDirToCompass(deg) {
@@ -614,7 +637,8 @@
       const tideData = await fetchTide(spot.tideStation);
       const tideEl = document.getElementById("modal-tide-info");
       if (tideData && tideData.length) {
-        tideEl.innerHTML = tideData.map(t => `<div class="flex justify-between"><span>${t.t}</span><span class="font-medium">${t.v} ft</span></div>`).join('');
+        const next8 = tideData.slice(0, 8);
+        tideEl.innerHTML = next8.map(t => `<div class="flex justify-between"><span>${t.t}</span><span class="font-medium">${t.v} ft</span></div>`).join('');
       } else {
         tideEl.innerHTML = '<div class="text-amber-500">Tide data unavailable</div>';
       }
@@ -678,19 +702,22 @@
       const wtEl = document.getElementById("water-temp");
       const ctEl = document.getElementById("current-tide");
       const owEl = document.getElementById("overall-wind");
-      if (owEl && allSpotData.length > 0 && allSpotData[0].data) {
-        const d = allSpotData[0].data;
-        const kts = (d.windSpeed * 1.94384).toFixed(0);
-        const compass = windDirToCompass(d.windDirection);
-        owEl.textContent = `${compass} ${kts} kt`;
-      } else if (owEl) owEl.textContent = "—";
+      const windData = spots.length ? await fetchSpotData(spots[0]) : null;
+      if (owEl) {
+        if (windData) {
+          const kts = (windData.windSpeed * 1.94384).toFixed(0);
+          const compass = windDirToCompass(windData.windDirection);
+          owEl.textContent = `${compass} ${kts} kt`;
+        } else owEl.textContent = "—";
+      }
       try {
         const tideData = await fetchTide(HERO_TIDE_STATION);
         const currentFt = getCurrentTideFromData(tideData);
         if (ctEl) ctEl.textContent = currentFt != null ? `${currentFt >= 0 ? "+" : ""}${currentFt.toFixed(1)} ft` : "—";
       } catch (e) { if (ctEl) ctEl.textContent = "—"; }
       try {
-        const tempF = await fetchWaterTemp(HERO_WATER_TEMP_STATION);
+        let tempF = await fetchWaterTemp(HERO_WATER_TEMP_STATION);
+        if (tempF == null && HERO_WATER_TEMP_STATION !== "1611683") tempF = await fetchWaterTemp("1611683");
         if (wtEl) wtEl.textContent = tempF != null ? `${Math.round(tempF)}°F` : "—";
       } catch (e) { if (wtEl) wtEl.textContent = "—"; }
     }
@@ -728,6 +755,7 @@
       await renderAllCards();
       await updateHeroFromLiveData();
       setInterval(refreshAllData, 900000);
+      setInterval(updateHeroFromLiveData, 60000);
     }
 
     window.onload = initializeDashboard;
