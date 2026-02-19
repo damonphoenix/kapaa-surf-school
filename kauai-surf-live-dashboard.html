@@ -347,10 +347,14 @@
       } catch (e) { return null; }
     }
 
+    function getTodayHawaii() {
+      return new Date().toLocaleDateString('en-CA', { timeZone: 'Pacific/Honolulu' }).replace(/-/g, '');
+    }
+
     function parseNoaaTime(t) {
       if (!t) return NaN;
       const s = String(t).trim();
-      const m = s.match(/^(\d{4})-?(\d{2})-?(\d{2})\s*(\d{1,2}):?(\d{2})/);
+      const m = s.match(/^(\d{4})-?(\d{2})-?(\d{2})[\sT]+(\d{1,2}):?(\d{2})/);
       if (m) {
         const y = +m[1], mo = +m[2] - 1, d = +m[3], h = +m[4], min = +m[5];
         return Date.UTC(y, mo, d, h + 10, min, 0, 0);
@@ -376,20 +380,24 @@
     }
 
     async function fetchTide(station) {
-      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const today = getTodayHawaii();
       const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_level&begin_date=${today}&end_date=${today}&datum=MLLW&station=${station}&time_zone=lst&units=english&format=json`;
       const json = await fetchNoaaJson(url);
       if (!json || json.error) return null;
-      return json.data || [];
+      const data = json.data || [];
+      return Array.isArray(data) ? data : [];
     }
 
     function getCurrentTideFromData(tideData) {
-      if (!tideData || tideData.length === 0) return null;
+      if (!tideData || !Array.isArray(tideData) || tideData.length === 0) return null;
       const now = new Date().getTime();
       const parse = (d) => parseNoaaTime(d.t || d.dateTime);
       const getV = (d) => parseFloat(d.v);
       const sorted = tideData.slice().filter(d => !isNaN(parse(d))).sort((a, b) => parse(a) - parse(b));
-      if (sorted.length === 0) return null;
+      if (sorted.length === 0) {
+        const last = tideData[tideData.length - 1];
+        return last && last.v != null ? getV(last) : null;
+      }
       if (sorted.length === 1) return getV(sorted[0]);
       let i = 0;
       while (i < sorted.length && parse(sorted[i]) < now) i++;
@@ -397,17 +405,17 @@
       if (i >= sorted.length) return getV(sorted[sorted.length - 1]);
       const t0 = parse(sorted[i - 1]), t1 = parse(sorted[i]);
       const v0 = getV(sorted[i - 1]), v1 = getV(sorted[i]);
-      const frac = (now - t0) / (t1 - t0);
+      const frac = (t1 - t0) ? (now - t0) / (t1 - t0) : 0;
       return v0 + frac * (v1 - v0);
     }
 
     async function fetchWaterTemp(station) {
-      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const today = getTodayHawaii();
       const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_temperature&begin_date=${today}&end_date=${today}&station=${station}&time_zone=lst&units=english&format=json`;
       const json = await fetchNoaaJson(url);
       if (!json || json.error) return null;
       const data = json.data || [];
-      if (data.length === 0) return null;
+      if (!Array.isArray(data) || data.length === 0) return null;
       const latest = data[data.length - 1];
       const v = parseFloat(latest.v);
       return isNaN(v) ? null : v;
