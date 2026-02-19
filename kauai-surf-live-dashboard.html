@@ -118,7 +118,7 @@
           </div>
           <div class="glass rounded-2xl sm:rounded-3xl p-3 sm:p-6 text-center min-w-0 overflow-visible">
             <div class="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">WIND</div>
-            <div id="overall-wind" class="text-base sm:text-2xl lg:text-5xl font-bold break-words">ENE 11 kt</div>
+            <div id="overall-wind" class="text-base sm:text-2xl lg:text-5xl font-bold break-words">— mph</div>
           </div>
         </div>
       </div>
@@ -176,9 +176,11 @@
 
           <div>
             <div class="text-base sm:text-xl font-semibold mb-3 sm:mb-4">Swell Direction</div>
-            <div class="flex justify-center">
-              <svg id="swell-compass" width="160" height="160" class="text-cyan-500 dark:text-cyan-400" viewBox="0 0 160 160"></svg>
+            <div class="relative w-full min-h-[14rem] sm:min-h-[18rem] h-56 sm:h-72 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-700 bg-slate-900" style="min-height: 224px;">
+              <div id="modal-swell-map" class="absolute inset-0 z-0 w-full h-full" style="min-height: 224px;"></div>
+              <canvas id="modal-swell-flow" class="absolute inset-0 pointer-events-none w-full h-full" style="min-height: 224px; z-index: 650;"></canvas>
             </div>
+            <div id="modal-swell-from" class="mt-2 text-sm text-zinc-500 dark:text-zinc-400"></div>
           </div>
 
           <div>
@@ -272,13 +274,28 @@
     ];
 
     let map, allSpotData = [];
+    let modalSwellMap = null;
+    let modalSwellFlowAnimId = null;
+
+    // One NWS grid point per coast so all north (or east/south) breaks share the same swell
+    const coastPoints = {
+      North: { lat: 22.2244, lon: -159.5603 },
+      East:  { lat: 22.148,  lon: -159.305 },
+      South: { lat: 21.8792, lon: -159.4776 }
+    };
 
     // --- V1 RATING (decision-maker for good waves or not) ---
     function angleDiff(a, b) { const d = Math.abs(a - b) % 360; return Math.min(d, 360 - d); }
+    function swellDirFrom(apiDir) {
+      if (apiDir == null || isNaN(apiDir)) return null;
+      return ((apiDir + 180) % 360);
+    }
     function swellDirScore(dir, spot) {
-      const inRange = (spot.swellOptMax > spot.swellOptMin) ? (dir >= spot.swellOptMin && dir <= spot.swellOptMax) : (dir >= spot.swellOptMin || dir <= spot.swellOptMax);
+      const from = swellDirFrom(dir);
+      if (from == null) return 5;
+      const inRange = (spot.swellOptMax > spot.swellOptMin) ? (from >= spot.swellOptMin && from <= spot.swellOptMax) : (from >= spot.swellOptMin || from <= spot.swellOptMax);
       if (inRange) return 10;
-      const minD = Math.min(angleDiff(dir, spot.swellOptMin), angleDiff(dir, spot.swellOptMax));
+      const minD = Math.min(angleDiff(from, spot.swellOptMin), angleDiff(from, spot.swellOptMax));
       return Math.max(1, 10 - minD * 0.25);
     }
     function windScore(speedKts, dir, spot) {
@@ -291,16 +308,31 @@
       return speedScore * 0.6 + dirScore * 0.4;
     }
     function heightScore(hFt, spot) {
-      if (hFt < 1) return 1;
+      if (hFt < 0.5) return 1;
+      if (hFt < 1) return 2;
       if (hFt <= spot.idealHMin) return 4 + (hFt - 1) * 2;
-      if (hFt <= spot.idealHMax) return 10;
+      if (hFt <= spot.idealHMax) {
+        const range = spot.idealHMax - spot.idealHMin;
+        if (range <= 0) return 10;
+        const mid = spot.idealHMin + range * 0.5;
+        if (hFt <= mid) return 6 + 4 * (hFt - spot.idealHMin) / (mid - spot.idealHMin);
+        return 10 - 2 * (hFt - mid) / (spot.idealHMax - mid);
+      }
       if (hFt <= spot.idealHMax + 4) return 10 - (hFt - spot.idealHMax) * 1.2;
       return 3;
+    }
+
+    function maxRatingForHeight(hFt) {
+      if (hFt < 0.5) return 1;
+      if (hFt < 1) return 2;
+      if (hFt < 1.5) return 4;
+      if (hFt < 2) return 6;
+      return 10;
     }
     function periodScore(p) {
       if (p < 8) return 3;
       if (p < 10) return 6;
-      if (p < 12) return 8;
+      if (p < 12) return 9;
       if (p < 14) return 9.5;
       return 10;
     }
@@ -310,41 +342,77 @@
     function calculateRating(data, spot) {
       const h = parseFloat(toFt(data.waveHeight || data.primarySwellHeight || 0));
       const period = data.wavePeriod || 0;
-      const swellDir = data.primarySwellDirection || data.waveDirection || 0;
-      const windSpeedKts = parseFloat(toKts(data.windSpeed || 0));
+      const swellDirApi = data.primarySwellDirection ?? data.waveDirection ?? 0;
+      const windSpeedKts = parseFloat(data.windSpeed) || 0;
       const windDir = data.windDirection || 0;
       const hScore = heightScore(h, spot);
       const pScore = periodScore(period);
-      const dScore = swellDirScore(swellDir, spot);
+      const dScore = swellDirScore(swellDirApi, spot);
       const wScore = windScore(windSpeedKts, windDir, spot);
       const swellTotal = hScore * 0.35 + pScore * 0.35 + dScore * 0.30;
-      const total = Math.min(10, Math.max(1, Math.round(swellTotal * 0.55 + wScore * 0.35 + 5)));
+      const rawTotal = swellTotal * 0.55 + wScore * 0.35;
+      const cap = maxRatingForHeight(h);
+      const total = Math.min(cap, Math.min(10, Math.max(1, Math.round(rawTotal))));
       return {
-        total,
+        total: Math.max(1, total),
         swellScore: Math.round(swellTotal),
         windScore: Math.round(wScore),
         hFt: (data.waveHeight != null ? (data.waveHeight * 3.28084).toFixed(1) : "—")
       };
     }
 
-    // NWS fetch (forecastGridData — full dashboard style)
-    async function fetchSpotData(spot) {
+    // NWS fetch (forecastGridData) — one point per coast so Hanalei/Tunnels etc. share same swell
+    function valueForNow(arr) {
+      if (!arr?.values?.length) return null;
+      const now = Date.now();
+      for (const item of arr.values) {
+        const vt = item.validTime || "";
+        const m = vt.match(/^([^/]+)\/(PT\d+H)?(PT\d+M)?$/);
+        if (!m) continue;
+        const start = new Date(m[1].trim()).getTime();
+        if (isNaN(start)) continue;
+        const hours = (m[2] && parseInt(m[2].replace(/\D/g, ""), 10)) || 0;
+        const mins = (m[3] && parseInt(m[3].replace(/\D/g, ""), 10)) || 0;
+        const end = start + (hours * 60 + mins) * 60 * 1000;
+        if (now >= start && now < end) return item.value;
+      }
+      return arr.values[0]?.value ?? null;
+    }
+
+    function rawWindToKt(raw, uom) {
+      if (raw == null || isNaN(raw)) return 0;
+      const u = String(uom || "").toLowerCase();
+      if (u.includes("km") || u.includes("km_h")) return raw / 1.852;
+      if (u.includes("m_s") || u.includes("m/s")) return raw * 1.94384;
+      const asMs = raw * 1.94384;
+      if (asMs > 50) return raw / 1.852;
+      return asMs;
+    }
+
+    async function fetchCoastData(lat, lon) {
       try {
         const ua = { "User-Agent": "KauaiSurfDashboard/3.0 (aloha@kapaasurfschool.com)" };
-        const point = await (await fetch(`https://api.weather.gov/points/${spot.lat},${spot.lon}`, { headers: ua })).json();
+        const point = await (await fetch(`https://api.weather.gov/points/${lat},${lon}`, { headers: ua })).json();
         const grid = await (await fetch(point.properties.forecastGridData, { headers: ua })).json();
         const p = grid.properties || {};
-        const v = (arr, i = 0) => arr?.values?.[i]?.value ?? 0;
+        const v = (arr) => (valueForNow(arr) ?? 0);
+        const rawWind = valueForNow(p.windSpeed);
+        const windSpeedKts = rawWindToKt(rawWind, p.windSpeed?.uom);
         return {
           waveHeight: v(p.waveHeight),
           wavePeriod: v(p.wavePeriod),
           waveDirection: v(p.waveDirection),
           primarySwellHeight: v(p.primarySwellHeight),
           primarySwellDirection: v(p.primarySwellDirection),
-          windSpeed: v(p.windSpeed),
+          windSpeed: windSpeedKts,
           windDirection: v(p.windDirection)
         };
       } catch (e) { return null; }
+    }
+
+    async function fetchSpotData(spot) {
+      const coast = coastPoints[spot.facing];
+      return coast ? fetchCoastData(coast.lat, coast.lon) : null;
     }
 
     function getTodayHawaii() {
@@ -454,8 +522,8 @@
       `;
       const line = svg.querySelector('line');
       const poly = svg.querySelector('polygon');
-      if (line) line.setAttribute('transform', `rotate(${dir - 90} 80 80)`);
-      if (poly) poly.setAttribute('transform', `rotate(${dir - 90} 80 80)`);
+      if (line) line.setAttribute('transform', `rotate(${dir} 80 80)`);
+      if (poly) poly.setAttribute('transform', `rotate(${dir} 80 80)`);
     }
 
     function drawWaveCrossSection(canvas, heightFt, period, swellScore) {
@@ -601,11 +669,11 @@
         <div class="text-xl text-emerald-400">${hawaiian} ft Hawaiian scale</div>
       `;
 
-      const windKts = data ? (data.windSpeed * 1.94384).toFixed(0) : "—";
+      const windMph = data ? Math.round(data.windSpeed * 1.15078) : "—";
       const windDir = data ? Math.round(data.windDirection || 0) : "—";
       document.getElementById("modal-wind-card").innerHTML = `
         <div class="text-xs text-zinc-400">WIND</div>
-        <div class="text-6xl font-bold">${windKts} kt</div>
+        <div class="text-6xl font-bold">${windMph} mph</div>
         <div class="text-sm">${windDir}°</div>
       `;
 
@@ -627,13 +695,21 @@
       }
       document.getElementById("modal-bathy-caption").textContent = spot.bathyCaption || "";
 
+      const swellFrom = data ? swellDirFrom(data.primarySwellDirection ?? data.waveDirection ?? 0) : null;
+      const swellFromVal = swellFrom != null ? swellFrom : 0;
+      const swellFromEl = document.getElementById("modal-swell-from");
+      if (swellFromEl) swellFromEl.textContent = data ? `${Math.round(swellFromVal)}° (${windDirToCompass(swellFromVal)})` : "—";
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTimeout(() => initModalSwellMap(spot, swellFromVal), 80);
+        });
+      });
       if (data) {
-        drawSwellCompass(data.primarySwellDirection || data.waveDirection || 0);
         const h = parseFloat((data.waveHeight * 3.28084).toFixed(1));
         const hSc = heightScore(h, spot);
         const pSc = periodScore(data.wavePeriod || 0);
-        const dSc = swellDirScore(data.primarySwellDirection || data.waveDirection || 0, spot);
-        const wSc = windScore(parseFloat(toKts(data.windSpeed || 0)), data.windDirection || 0, spot);
+        const dSc = swellDirScore(data.primarySwellDirection ?? data.waveDirection ?? 0, spot);
+        const wSc = windScore(parseFloat(data.windSpeed) || 0, data.windDirection || 0, spot);
         document.getElementById("advanced-metrics").innerHTML = `
           <div class="flex justify-between"><span>Height score</span><span class="font-semibold">${Math.round(hSc)}/10</span></div>
           <div class="flex justify-between"><span>Period score</span><span class="font-semibold">${Math.round(pSc)}/10</span></div>
@@ -658,6 +734,7 @@
     }
 
     function closeModal() {
+      teardownModalSwellMap();
       document.getElementById("detail-modal").classList.add("hidden");
       document.getElementById("detail-modal").classList.remove("flex");
       document.body.style.overflow = "";
@@ -668,8 +745,13 @@
       if (!grid) return;
       grid.innerHTML = "";
       allSpotData = [];
+      const coastData = {};
+      for (const facing of ["North", "East", "South"]) {
+        const coast = coastPoints[facing];
+        if (coast) coastData[facing] = await fetchCoastData(coast.lat, coast.lon);
+      }
       for (const spot of spots) {
-        const data = await fetchSpotData(spot);
+        const data = coastData[spot.facing] || null;
         const ratingInfo = data ? calculateRating(data, spot) : { total: "—", swellScore: "—", windScore: "—", hFt: "—" };
         allSpotData.push({ spot, data, ratingInfo });
         renderCard(spot, data, ratingInfo);
@@ -690,6 +772,185 @@
           .bindPopup(`<b>${s.name}</b><br>${s.facing} facing`)
           .on('click', () => openModal(s.id));
       });
+    }
+
+    // Kauai land polygon [lat, lon] — coastline so ocean (outside) fills the view
+    const KAUAI_LAND_POLYGON = [
+      [22.23, -159.96], [22.23, -159.55], [22.22, -159.38], [22.20, -159.35], [22.18, -159.32], [22.0, -159.28],
+      [21.87, -159.42], [21.86, -159.72], [21.90, -159.92], [22.06, -159.98], [22.20, -159.95]
+    ];
+    function pointInPolygon(lat, lon, polygon) {
+      let inside = false;
+      const n = polygon.length;
+      for (let i = 0, j = n - 1; i < n; j = i++) {
+        const yi = polygon[i][0], xi = polygon[i][1];
+        const yj = polygon[j][0], xj = polygon[j][1];
+        if (((yi > lat) !== (yj > lat)) && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+      }
+      return inside;
+    }
+
+    function startModalSwellFlow(canvas, swellFromDeg, map) {
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const toward = (swellFromDeg + 180) % 360;
+      const rad = toward * Math.PI / 180;
+      const dx = Math.sin(rad);
+      const dy = -Math.cos(rad);
+      const speed = 0.6;
+      const count = 80;
+      const crestHalfLen = 6;
+      const refracRadius = 0.018;  // degrees — distance from coast where refraction blends in
+      let particles = [];
+      let lastW = 400, lastH = 224;
+      const resize = () => {
+        const dpr = window.devicePixelRatio || 1;
+        let w = canvas.clientWidth || canvas.offsetWidth;
+        let h = canvas.clientHeight || canvas.offsetHeight;
+        if (w < 10 || h < 10) {
+          w = lastW;
+          h = lastH;
+        }
+        lastW = w;
+        lastH = h;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        particles = [];
+        for (let i = 0; i < count; i++) {
+          particles.push({ x: Math.random() * w, y: Math.random() * h });
+        }
+      };
+      resize();
+      const animate = () => {
+        let w = canvas.clientWidth || canvas.offsetWidth || lastW;
+        let h = canvas.clientHeight || canvas.offsetHeight || lastH;
+        if (w < 10 || h < 10) { w = lastW; h = lastH; }
+        const dpr = window.devicePixelRatio || 1;
+        if (canvas.width !== w * dpr || canvas.height !== h * dpr) resize();
+        ctx.clearRect(0, 0, w, h);
+        const isDark = document.documentElement.classList.contains("dark");
+        for (const p of particles) {
+          let ldx = dx, ldy = dy;
+          let overLand = false;
+          if (map) {
+            const mapContainer = map.getContainer();
+            const mapW = mapContainer.offsetWidth || w;
+            const mapH = mapContainer.offsetHeight || h;
+            const px = (mapW !== w) ? (p.x * mapW / w) : p.x;
+            const py = (mapH !== h) ? (p.y * mapH / h) : p.y;
+            const ll = map.containerPointToLatLng(L.point(px, py));
+            overLand = pointInPolygon(ll.lat, ll.lng, KAUAI_LAND_POLYGON);
+            if (!overLand) {
+              const coast = nearestCoastEdge(ll.lat, ll.lng, KAUAI_LAND_POLYGON, map);
+              const blend = Math.max(0, 1 - coast.dist / refracRadius);
+              if (blend > 0.01) {
+                const tx = coast.tx, ty = coast.ty;
+                const perp1x = -ty, perp1y = tx;
+                const perp2x = ty, perp2y = -tx;
+                // Refraction bends wave TOWARD the coast (shallower water). Pick perpendicular that points toward coast.
+                let towardCoastX = coast.coastX - px, towardCoastY = coast.coastY - py;
+                const tcLen = Math.sqrt(towardCoastX * towardCoastX + towardCoastY * towardCoastY) || 1e-9;
+                towardCoastX /= tcLen;
+                towardCoastY /= tcLen;
+                const dot1 = towardCoastX * perp1x + towardCoastY * perp1y;
+                const perpx = dot1 >= 0 ? perp1x : perp2x;
+                const perpy = dot1 >= 0 ? perp1y : perp2y;
+                ldx = dx * (1 - blend) + perpx * blend;
+                ldy = dy * (1 - blend) + perpy * blend;
+                const len = Math.sqrt(ldx * ldx + ldy * ldy) || 1e-9;
+                ldx /= len;
+                ldy /= len;
+              }
+            }
+          }
+          p.x += ldx * speed;
+          p.y += ldy * speed;
+          if (p.x < -crestHalfLen) p.x += w + crestHalfLen * 2;
+          if (p.x > w + crestHalfLen) p.x -= w + crestHalfLen * 2;
+          if (p.y < -crestHalfLen) p.y += h + crestHalfLen * 2;
+          if (p.y > h + crestHalfLen) p.y -= h + crestHalfLen * 2;
+          if (overLand) continue;
+          ctx.strokeStyle = isDark ? "rgba(34, 211, 238, 0.9)" : "rgba(6, 182, 212, 0.85)";
+          ctx.lineWidth = 2.5;
+          ctx.lineCap = "round";
+          ctx.shadowColor = isDark ? "#22d3ee" : "#06b6d4";
+          ctx.shadowBlur = 6;
+          ctx.beginPath();
+          ctx.moveTo(p.x - ldy * crestHalfLen, p.y + ldx * crestHalfLen);
+          ctx.lineTo(p.x + ldy * crestHalfLen, p.y - ldx * crestHalfLen);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+        modalSwellFlowAnimId = requestAnimationFrame(animate);
+      };
+      animate();
+    }
+
+    function initModalSwellMap(spot, swellFromDeg) {
+      if (modalSwellMap) {
+        modalSwellMap.remove();
+        modalSwellMap = null;
+      }
+      if (modalSwellFlowAnimId) {
+        cancelAnimationFrame(modalSwellFlowAnimId);
+        modalSwellFlowAnimId = null;
+      }
+      const container = document.getElementById("modal-swell-map");
+      const canvas = document.getElementById("modal-swell-flow");
+      if (!container) return;
+      const wrapper = container.parentElement;
+      if (wrapper) {
+        const w = wrapper.offsetWidth || wrapper.clientWidth || 400;
+        const h = wrapper.offsetHeight || wrapper.clientHeight || 224;
+        container.style.width = w + "px";
+        container.style.height = h + "px";
+      }
+      modalSwellMap = L.map(container, {
+        center: [spot.lat, spot.lon],
+        zoom: 12,
+        zoomControl: false,
+        dragging: false,
+        touchZoom: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        attributionControl: false
+      });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(modalSwellMap);
+      L.circleMarker([spot.lat, spot.lon], {
+        radius: 10,
+        fillColor: spot.color || "#22d3ee",
+        color: "#fff",
+        weight: 2,
+        fillOpacity: 0.95
+      }).addTo(modalSwellMap);
+      modalSwellMap.invalidateSize();
+      setTimeout(() => {
+        if (modalSwellMap) modalSwellMap.invalidateSize();
+      }, 200);
+      if (canvas && wrapper) {
+        const cw = wrapper.offsetWidth || 400;
+        const ch = wrapper.offsetHeight || 224;
+        canvas.style.width = cw + "px";
+        canvas.style.height = ch + "px";
+        startModalSwellFlow(canvas, swellFromDeg != null ? swellFromDeg : 0, modalSwellMap);
+      }
+    }
+
+    function teardownModalSwellMap() {
+      if (modalSwellFlowAnimId) {
+        cancelAnimationFrame(modalSwellFlowAnimId);
+        modalSwellFlowAnimId = null;
+      }
+      if (modalSwellMap) {
+        modalSwellMap.remove();
+        modalSwellMap = null;
+      }
     }
 
     function updateLiveTime() {
@@ -713,9 +974,9 @@
       const windData = spots.length ? await fetchSpotData(spots[0]) : null;
       if (owEl) {
         if (windData) {
-          const kts = (windData.windSpeed * 1.94384).toFixed(0);
+          const mph = Math.round(windData.windSpeed * 1.15078);
           const compass = windDirToCompass(windData.windDirection);
-          owEl.textContent = `${compass} ${kts} kt`;
+          owEl.textContent = `${compass} ${mph} mph`;
         } else owEl.textContent = "—";
       }
       try {
