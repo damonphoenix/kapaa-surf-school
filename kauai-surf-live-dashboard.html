@@ -22,7 +22,7 @@
     .glass { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); }
     html:not(.dark) .glass { background: rgba(255,255,255,0.95); }
 
-    /* Dark mode — fixed contrast and depth */
+    /* Dark mode - fixed contrast and depth */
     .dark body { background: #0a0a0b; color: #fafafa; }
     .dark .glass { background: rgba(24,24,27,0.95); border: 1px solid rgba(63,63,70,0.8); backdrop-filter: blur(20px); }
     .dark .text-zinc-500 { color: #a1a1aa; }
@@ -34,7 +34,7 @@
     .dark #theme-toggle { background: #27272a !important; border-color: rgba(63,63,70,0.9); }
     .dark #theme-toggle:hover { background: #3f3f46 !important; }
 
-    /* Ocean gradient — shared by logo and site name */
+    /* Ocean gradient - shared by logo and site name */
     :root {
       --ocean-gradient: linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #06b6d4 60%, #0284c7 100%);
       --ocean-gradient-dark: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 40%, #38bdf8 70%, #0ea5e9 100%);
@@ -81,7 +81,7 @@
   <header class="sticky top-0 z-50 glass border-b border-zinc-200 dark:border-zinc-800">
     <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 sm:py-5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3 min-w-0">
-        <!-- Logo: gradient via SVG mask — mobile 393px first: 52px, then tablet, desktop -->
+        <!-- Logo: gradient via SVG mask - mobile 393px first: 52px, then tablet, desktop -->
         <div class="header-logo-wrap flex items-center justify-center flex-shrink-0 w-[52px] h-[52px] sm:w-14 sm:h-14 md:w-16 md:h-16 overflow-visible" aria-hidden="true">
           <div class="header-logo-gradient w-full h-full"></div>
         </div>
@@ -118,7 +118,7 @@
           </div>
           <div class="glass rounded-2xl sm:rounded-3xl p-3 sm:p-6 text-center min-w-0 overflow-visible">
             <div class="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">WIND</div>
-            <div id="overall-wind" class="text-base sm:text-2xl lg:text-5xl font-bold break-words">— mph</div>
+            <div id="overall-wind" class="text-base sm:text-2xl lg:text-5xl font-bold break-words">- mph</div>
           </div>
         </div>
       </div>
@@ -229,7 +229,7 @@
   </footer>
 
   <script>
-    // === 8 SPOTS — V1 schema (swellOpt, offshoreWind, tideStation) + bathy from full dashboard ===
+    // === 8 SPOTS - V1 schema (swellOpt, offshoreWind, tideStation) + bathy from full dashboard ===
     const spots = [
       { id:0, name:"Hanalei Bay", facing:"North", lat:22.2087, lon:-159.4920, color:"#22d3ee",
         idealHMin:3, idealHMax:9, swellOptMin:300, swellOptMax:60, offshoreWindMin:120, offshoreWindMax:210, tideStation:"1611683",
@@ -357,11 +357,11 @@
         total: Math.max(1, total),
         swellScore: Math.round(swellTotal),
         windScore: Math.round(wScore),
-        hFt: (data.waveHeight != null ? (data.waveHeight * 3.28084).toFixed(1) : "—")
+        hFt: (data.waveHeight != null ? (data.waveHeight * 3.28084).toFixed(1) : "-")
       };
     }
 
-    // NWS fetch (forecastGridData) — one point per coast so Hanalei/Tunnels etc. share same swell
+    // NWS fetch (forecastGridData) - one point per coast so Hanalei/Tunnels etc. share same swell
     function valueForNow(arr) {
       if (!arr?.values?.length) return null;
       const now = Date.now();
@@ -490,7 +490,7 @@
     }
 
     function windDirToCompass(deg) {
-      if (deg == null || isNaN(deg)) return "—";
+      if (deg == null || isNaN(deg)) return "-";
       const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
       const i = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
       return dirs[i];
@@ -598,9 +598,9 @@
     function renderCard(spot, data, ratingInfo) {
       const container = document.getElementById("spots-grid");
       if (!container) return;
-      const face = data ? ratingInfo.hFt : "—";
-      const hawaiian = data ? hawaiianScale(face) : "—";
-      const r = ratingInfo ? ratingInfo.total : "—";
+      const face = data ? ratingInfo.hFt : "-";
+      const hawaiian = data ? hawaiianScale(face) : "-";
+      const r = ratingInfo ? ratingInfo.total : "-";
       const color = typeof r === "number" ? getRatingColor(r) : spot.color;
       const cardHTML = `
         <div onclick="openModal(${spot.id})" data-spot-id="${spot.id}" class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-7 cursor-pointer hover:-translate-y-1 active:scale-[0.99] transition-all min-h-[120px] touch-manipulation" role="button" tabindex="0">
@@ -669,8 +669,8 @@
         <div class="text-xl text-emerald-400">${hawaiian} ft Hawaiian scale</div>
       `;
 
-      const windMph = data ? Math.round(data.windSpeed * 1.15078) : "—";
-      const windDir = data ? Math.round(data.windDirection || 0) : "—";
+      const windMph = data ? Math.round(data.windSpeed * 1.15078) : "-";
+      const windDir = data ? Math.round(data.windDirection || 0) : "-";
       document.getElementById("modal-wind-card").innerHTML = `
         <div class="text-xs text-zinc-400">WIND</div>
         <div class="text-6xl font-bold">${windMph} mph</div>
@@ -687,7 +687,7 @@
       document.getElementById("modal-wind-score").textContent = ratingInfo.windScore;
       document.getElementById("modal-total").textContent = r;
 
-      document.getElementById("modal-wave-desc").textContent = `${face} ft @ ${data ? (data.wavePeriod || "—") : "—"}s`;
+      document.getElementById("modal-wave-desc").textContent = `${face} ft @ ${data ? (data.wavePeriod || "-") : "-"}s`;
       drawWaveCrossSection(document.getElementById("wave-canvas"), parseFloat(face) || 2, data ? data.wavePeriod : 8, ratingInfo.swellScore);
 
       if (spot.profileData) {
@@ -698,7 +698,7 @@
       const swellFrom = data ? swellDirFrom(data.primarySwellDirection ?? data.waveDirection ?? 0) : null;
       const swellFromVal = swellFrom != null ? swellFrom : 0;
       const swellFromEl = document.getElementById("modal-swell-from");
-      if (swellFromEl) swellFromEl.textContent = data ? `${Math.round(swellFromVal)}° (${windDirToCompass(swellFromVal)})` : "—";
+      if (swellFromEl) swellFromEl.textContent = data ? `${Math.round(swellFromVal)}° (${windDirToCompass(swellFromVal)})` : "-";
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setTimeout(() => initModalSwellMap(spot, swellFromVal), 80);
@@ -752,7 +752,7 @@
       }
       for (const spot of spots) {
         const data = coastData[spot.facing] || null;
-        const ratingInfo = data ? calculateRating(data, spot) : { total: "—", swellScore: "—", windScore: "—", hFt: "—" };
+        const ratingInfo = data ? calculateRating(data, spot) : { total: "-", swellScore: "-", windScore: "-", hFt: "-" };
         allSpotData.push({ spot, data, ratingInfo });
         renderCard(spot, data, ratingInfo);
       }
@@ -774,7 +774,7 @@
       });
     }
 
-    // Kauai land polygon [lat, lon] — coastline so ocean (outside) fills the view
+    // Kauai land polygon [lat, lon] - coastline so ocean (outside) fills the view
     const KAUAI_LAND_POLYGON = [
       [22.23, -159.96], [22.23, -159.55], [22.22, -159.38], [22.20, -159.35], [22.18, -159.32], [22.0, -159.28],
       [21.87, -159.42], [21.86, -159.72], [21.90, -159.92], [22.06, -159.98], [22.20, -159.95]
@@ -800,7 +800,7 @@
       const speed = 0.6;
       const count = 80;
       const crestHalfLen = 6;
-      const refracRadius = 0.018;  // degrees — distance from coast where refraction blends in
+      const refracRadius = 0.018;  // degrees - distance from coast where refraction blends in
       let particles = [];
       let lastW = 400, lastH = 224;
       const resize = () => {
@@ -977,18 +977,18 @@
           const mph = Math.round(windData.windSpeed * 1.15078);
           const compass = windDirToCompass(windData.windDirection);
           owEl.textContent = `${compass} ${mph} mph`;
-        } else owEl.textContent = "—";
+        } else owEl.textContent = "-";
       }
       try {
         const tideData = await fetchTide(HERO_TIDE_STATION);
         const currentFt = getCurrentTideFromData(tideData);
-        if (ctEl) ctEl.textContent = currentFt != null ? `${currentFt >= 0 ? "+" : ""}${currentFt.toFixed(1)} ft` : "—";
-      } catch (e) { if (ctEl) ctEl.textContent = "—"; }
+        if (ctEl) ctEl.textContent = currentFt != null ? `${currentFt >= 0 ? "+" : ""}${currentFt.toFixed(1)} ft` : "-";
+      } catch (e) { if (ctEl) ctEl.textContent = "-"; }
       try {
         let tempF = await fetchWaterTemp(HERO_WATER_TEMP_STATION);
         if (tempF == null && HERO_WATER_TEMP_STATION !== "1611683") tempF = await fetchWaterTemp("1611683");
-        if (wtEl) wtEl.textContent = tempF != null ? `${Math.round(tempF)}°F` : "—";
-      } catch (e) { if (wtEl) wtEl.textContent = "—"; }
+        if (wtEl) wtEl.textContent = tempF != null ? `${Math.round(tempF)}°F` : "-";
+      } catch (e) { if (wtEl) wtEl.textContent = "-"; }
     }
 
     async function refreshAllData() {

@@ -422,7 +422,7 @@
       width: fit-content;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 834px) {
       .hamburger,
       .nav-mobile {
         display: none;
@@ -432,6 +432,12 @@
         display: flex;
         align-items: center;
         gap: 1.8rem;
+      }
+    }
+
+    @media (min-width: 834px) and (max-width: 876px) {
+      .nav-desktop .nav-link--testimonials {
+        display: none;
       }
     }
 
@@ -449,17 +455,18 @@
       padding: 0.7rem 1.25rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 1rem;
       transform: translateY(100%);
       transition: transform 320ms cubic-bezier(0.34, 1.1, 0.64, 1);
       box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.1);
     }
     .sticky-bar.visible { transform: translateY(0); }
-    .sticky-bar-text { font-size: 0.88rem; font-weight: 500; color: var(--text-main); }
+    .sticky-bar-text { font-size: 0.88rem; font-weight: 500; color: var(--text-main); display: inline-block; min-width: 0; }
     .sticky-bar-text span { color: var(--primary); font-weight: 600; }
     .sticky-bar-cta {
       flex-shrink: 0;
+      margin-left: auto;
       padding: 0.55rem 1.25rem;
       border-radius: var(--radius-pill);
       background: linear-gradient(135deg, #229e93, #14b8a6 50%, #22c55e);
@@ -490,10 +497,9 @@
     }
     .sticky-bar-dismiss:hover { color: var(--text-main); }
     @media (max-width: 480px) {
-      .sticky-bar-text { display: none; }
-      .sticky-bar { justify-content: flex-end; }
+      .sticky-bar-text { font-size: 0.8rem; text-align: left; width: 100%; display: block; }
+      .sticky-bar { flex-wrap: wrap; justify-content: flex-start; gap: 0.5rem; padding: 0.5rem 1rem; }
     }
-    @media (min-width: 768px) { .sticky-bar { display: none; } }
 
     /* HERO */
 
@@ -556,7 +562,7 @@
       margin-bottom: 0.8rem;
     }
 
-    /* Gradient on each text span only — avoids WebKit bug where one gradient + mixed child colors hides text */
+    /* Gradient on each text span only - avoids WebKit bug where one gradient + mixed child colors hides text */
     .hero-highlight {
       background: linear-gradient(120deg, #0f766e 0%, #22c55e 45%, #0ea5e9 100%);
       background-clip: text;
@@ -692,7 +698,15 @@
     }
 
     @keyframes hero-cta-wisp-travel {
-      0%, 2% {
+      0% {
+        transform: translate(0, 0);
+        opacity: 0;
+      }
+      2% {
+        transform: translate(0, 0);
+        opacity: 0.4;
+      }
+      5% {
         transform: translate(0, 0);
         opacity: 1;
       }
@@ -792,7 +806,9 @@
     }
 
     @keyframes hero-cta-wisp-travel-tab {
-      0%, 2% { transform: translate(0, 0); opacity: 1; }
+      0% { transform: translate(0, 0); opacity: 0; }
+      2% { transform: translate(0, 0); opacity: 0.4; }
+      5% { transform: translate(0, 0); opacity: 1; }
       15% { transform: translate(6px, 20px); opacity: 1; }
       28% { transform: translate(-10px, 44px); opacity: 1; }
       42% { transform: translate(4px, 72px); opacity: 1; }
@@ -828,7 +844,9 @@
     }
 
     @keyframes hero-cta-wisp-travel-mob {
-      0%, 2% { transform: translate(0, 0); opacity: 1; }
+      0% { transform: translate(0, 0); opacity: 0; }
+      2% { transform: translate(0, 0); opacity: 0.4; }
+      5% { transform: translate(0, 0); opacity: 1; }
       15% { transform: translate(5px, 20px); opacity: 1; }
       28% { transform: translate(-8px, 42px); opacity: 1; }
       42% { transform: translate(4px, 68px); opacity: 1; }
@@ -864,7 +882,9 @@
     }
 
     @keyframes hero-cta-wisp-travel-sm {
-      0%, 2% { transform: translate(0, 0); opacity: 1; }
+      0% { transform: translate(0, 0); opacity: 0; }
+      2% { transform: translate(0, 0); opacity: 0.4; }
+      5% { transform: translate(0, 0); opacity: 1; }
       15% { transform: translate(4px, 18px); opacity: 1; }
       28% { transform: translate(-7px, 38px); opacity: 1; }
       42% { transform: translate(3px, 60px); opacity: 1; }
@@ -1719,7 +1739,7 @@
     }
     .weather-attribution a { color: rgba(125, 211, 252, 0.45); }
 
-    /* Today's Kauai Ocean Surf Ratings (teaser) — redesigned */
+    /* Today's Kauai Ocean Surf Ratings (teaser) - redesigned */
     .teaser-ocean {
       padding: 4.5rem 0;
       background: linear-gradient(165deg, #e8f6f4 0%, #f0f9ff 35%, #fdf8f2 100%);
@@ -1882,13 +1902,17 @@
 
     @media (min-width: 768px) {
       .about-grid {
-        grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
-        gap: 5rem;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: 2rem;
         align-items: start;
       }
 
       .about-grid > aside {
         margin-top: 0;
+      }
+
+      .about-grid aside .about-image-wrap + .about-story-card {
+        margin-top: 0.5rem;
       }
 
       .about-image-wrap {
@@ -2058,12 +2082,16 @@
     }
 
     .about-chip-row {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      align-items: flex-start;
-      gap: 0.4rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
       margin-top: 0.9rem;
+    }
+
+    @media (max-width: 400px) {
+      .about-chip-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     .about-chip {
@@ -2874,42 +2902,77 @@
     }
 
     .dashboard-widget-stat-card {
+      position: relative;
       background: var(--bg-card);
-      border-radius: var(--radius-lg);
+      border-radius: 1rem;
       border: 1px solid var(--border-subtle);
-      padding: 1.25rem 1rem;
-      box-shadow: var(--shadow-soft);
+      padding: 1.35rem 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
       text-align: center;
-      transition: box-shadow var(--transition-fast);
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 200ms ease;
+      overflow: hidden;
+    }
+
+    .dashboard-widget-stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(135deg, #229e93 0%, #14b8a6 50%, #22c55e 100%);
+      border-radius: 1rem 1rem 0 0;
     }
 
     .dashboard-widget-stat-card:hover {
-      box-shadow: 0 12px 28px rgba(15, 118, 110, 0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-widget-stat-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      margin: 0 auto 0.5rem;
+    }
+
+    .dashboard-widget-stat-icon svg {
+      width: 100%;
+      height: 100%;
     }
 
     .dashboard-widget-stat-label {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.11em;
       color: var(--text-muted);
-      font-weight: 500;
-      margin: 0 0 0.35rem 0;
+      font-weight: 600;
+      margin: 0 0 0.4rem 0;
     }
 
     .dashboard-widget-stat-value {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--primary);
       margin: 0;
       letter-spacing: -0.02em;
+      line-height: 1.2;
     }
 
     @media (min-width: 640px) {
       .dashboard-widget-stat-card {
-        padding: 1.5rem 1.25rem;
+        padding: 1.6rem 1.25rem;
+      }
+      .dashboard-widget-stat-icon {
+        width: 2.25rem;
+        height: 2.25rem;
+        margin-bottom: 0.55rem;
       }
       .dashboard-widget-stat-value {
-        font-size: 1.6rem;
+        font-size: 1.75rem;
       }
     }
 
@@ -3071,18 +3134,6 @@
       font-size: 10px;
     }
 
-    .leaflet-pin-emoji {
-      background: none !important;
-      border: none !important;
-    }
-
-    .leaflet-pin-emoji span {
-      display: block;
-      font-size: 2rem;
-      line-height: 1;
-      pointer-events: none;
-    }
-
     /* FOOTER */
 
     footer {
@@ -3163,9 +3214,11 @@
 
     .footer-bottom {
       display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      align-items: flex-start;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
       text-align: left;
       color: var(--text-muted);
       font-size: 0.8rem;
@@ -3177,6 +3230,8 @@
 
     .footer-credit {
       color: var(--text-muted);
+      margin-left: auto;
+      text-align: right;
     }
 
     .footer-credit-link {
@@ -3237,8 +3292,8 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" defer></script>
 </head>
 <body>
   <!-- Navigation -->
@@ -3261,7 +3316,7 @@
         </span>
         <div class="brand-text">
           <span class="brand-name">Kapaʻa Surf School</span>
-          <span class="brand-sub">Kauaʻi · Since 2012</span>
+          <span class="brand-sub">Kauaʻi, Hawaiʻi · Since 2012</span>
         </div>
       </a>
 
@@ -3269,7 +3324,7 @@
         <a class="nav-link" href="#about">About</a>
         <a class="nav-link" href="#packages">Packages</a>
         <a class="nav-link" href="#schedule">Schedule</a>
-        <a class="nav-link" href="#testimonials">Testimonials</a>
+        <a class="nav-link nav-link--testimonials" href="#testimonials">Testimonials</a>
         <a class="nav-link" href="#faq">FAQ</a>
         <a href="#booking" class="nav-cta">
           <span class="nav-cta-dot" aria-hidden="true"></span>
@@ -3301,7 +3356,7 @@
 
   <!-- Sticky bottom booking bar (mobile only) -->
   <div class="sticky-bar" id="sticky-bar" role="complementary" aria-label="Quick booking">
-    <span class="sticky-bar-text">Ready to catch a wave? <span>Book in 60 seconds.</span></span>
+    <span class="sticky-bar-text">Are you ready to surf your first wave? <span>Book in 60 seconds.</span></span>
     <a href="#booking" class="sticky-bar-cta">
       <span class="nav-cta-dot" aria-hidden="true"></span>
       Book a Lesson
@@ -3397,7 +3452,7 @@
             <div class="section-kicker">Live data</div>
             <h2 id="dashboard-widget-heading" class="section-title">Kauai Surf • AI Dashboard</h2>
             <p class="section-subtitle">
-              Real-time ratings for 8 major breaks, NOAA tides, swell direction, and wind — so you know what to expect before you paddle out.
+              Real-time ratings for 8 major breaks, NOAA tides, swell direction, and wind - so you know what to expect before you paddle out.
             </p>
           </div>
           <a href="./kauai-surf-live-dashboard.html" class="dashboard-widget-cta">
@@ -3405,20 +3460,25 @@
             Open Dashboard
           </a>
         </div>
+        <svg aria-hidden="true" class="dashboard-widget-card-gradient-defs" style="position:absolute;width:0;height:0;pointer-events:none"><defs><linearGradient id="widget-card-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#229e93"/><stop offset="50%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs></svg>
         <div class="dashboard-widget-cards">
           <a href="./kauai-surf-live-dashboard.html" class="dashboard-widget-stat-card" aria-label="Water temperature on dashboard">
+            <span class="dashboard-widget-stat-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#widget-card-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></span>
             <div class="dashboard-widget-stat-label">Water temp</div>
-            <div class="dashboard-widget-stat-value" id="widget-water-temp">—</div>
+            <div class="dashboard-widget-stat-value" id="widget-water-temp">-</div>
           </a>
           <a href="./kauai-surf-live-dashboard.html" class="dashboard-widget-stat-card" aria-label="Island tide on dashboard">
+            <span class="dashboard-widget-stat-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#widget-card-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg></span>
             <div class="dashboard-widget-stat-label">Island tide</div>
-            <div class="dashboard-widget-stat-value" id="widget-tide">—</div>
+            <div class="dashboard-widget-stat-value" id="widget-tide">-</div>
           </a>
           <a href="./kauai-surf-live-dashboard.html" class="dashboard-widget-stat-card" aria-label="Wind on dashboard">
+            <span class="dashboard-widget-stat-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#widget-card-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg></span>
             <div class="dashboard-widget-stat-label">Wind</div>
-            <div class="dashboard-widget-stat-value" id="widget-wind">—</div>
+            <div class="dashboard-widget-stat-value" id="widget-wind">-</div>
           </a>
           <a href="./kauai-surf-live-dashboard.html" class="dashboard-widget-stat-card" aria-label="8 breaks on dashboard">
+            <span class="dashboard-widget-stat-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#widget-card-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
             <div class="dashboard-widget-stat-label">Live breaks</div>
             <div class="dashboard-widget-stat-value">8</div>
           </a>
@@ -3827,7 +3887,7 @@
       }
 
       function windDirToCompass(deg) {
-        if (deg == null || isNaN(deg)) return "—";
+        if (deg == null || isNaN(deg)) return "-";
         var dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
         var i = Math.round((((deg % 360) + 360) % 360) / 22.5) % 16;
         return dirs[i];
@@ -3851,22 +3911,22 @@
               var compass = windDirToCompass(windData.windDirection);
               windEl.textContent = compass + " " + mph + " mph";
             } else {
-              windEl.textContent = "—";
+              windEl.textContent = "-";
             }
           }
-        }).catch(function () { if (windEl) windEl.textContent = "—"; });
+        }).catch(function () { if (windEl) windEl.textContent = "-"; });
 
         fetchTide(HERO_TIDE_STATION).then(function (tideData) {
           var currentFt = getCurrentTideFromData(tideData);
-          if (tideEl) tideEl.textContent = currentFt != null ? (currentFt >= 0 ? "+" : "") + currentFt.toFixed(1) + " ft" : "—";
-        }).catch(function () { if (tideEl) tideEl.textContent = "—"; });
+          if (tideEl) tideEl.textContent = currentFt != null ? (currentFt >= 0 ? "+" : "") + currentFt.toFixed(1) + " ft" : "-";
+        }).catch(function () { if (tideEl) tideEl.textContent = "-"; });
 
         fetchWaterTemp(HERO_WATER_TEMP_STATION).then(function (tempF) {
           if (tempF == null) return fetchWaterTemp("1611683");
           return tempF;
         }).then(function (tempF) {
-          if (wtEl) wtEl.textContent = tempF != null ? Math.round(tempF) + "°F" : "—";
-        }).catch(function () { if (wtEl) wtEl.textContent = "—"; });
+          if (wtEl) wtEl.textContent = tempF != null ? Math.round(tempF) + "°F" : "-";
+        }).catch(function () { if (wtEl) wtEl.textContent = "-"; });
       }
 
       if (document.readyState === "loading") {
@@ -4276,6 +4336,7 @@
           <div class="footer-social" aria-label="Social links">
             <a href="#" class="footer-link" rel="noopener noreferrer">Instagram</a>
             <a href="#" class="footer-link" rel="noopener noreferrer">Facebook</a>
+            <a href="https://damonphoenix.github.io" target="_blank" rel="noopener noreferrer" class="footer-link footer-github" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
           </div>
         </div>
       </div>
@@ -4283,49 +4344,62 @@
       <div class="footer-divider" aria-hidden="true"></div>
 
       <div class="footer-bottom">
-        <span class="footer-copyright">© 2026 Phoenix Studios</span>
-        <span class="footer-credit">Made for the love of Kauaʻi ❤️‍🔥 <a href="https://damonphoenix.github.io" target="_blank" rel="noopener noreferrer" class="footer-credit-link footer-github" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a></span>
+        <span class="footer-copyright"><a href="https://phx.cx" target="_blank" rel="noopener noreferrer" class="footer-credit-link">© 2026 Phoenix Studios</a></span>
+        <span class="footer-credit">Made for the love of Kauaʻi ❤️‍🔥</span>
       </div>
     </div>
   </footer>
 
   <script>
-    // Leaflet map — Kealia Beach, Kauaʻi
+    // Leaflet map - Kealia Beach, Kauaʻi (lazy init when container is visible)
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof L === "undefined") return;
       var mapEl = document.getElementById("map-container");
       if (!mapEl) return;
 
-      var KEALIA_BEACH = [22.0993, -159.3045];
+      var KEALIA_BEACH = [22.099439398309354, -159.30422128195082];
+      var map = null;
 
-      var map = L.map("map-container", {
-        center: KEALIA_BEACH,
-        zoom: 14,
-        scrollWheelZoom: true
-      });
+      function initMap() {
+        if (map) return;
+        map = L.map("map-container", {
+          center: KEALIA_BEACH,
+          zoom: 14,
+          scrollWheelZoom: true,
+          attributionControl: false
+        });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
-      }).addTo(map);
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
+        }).addTo(map);
 
-      var pinIcon = L.divIcon({
-        className: "leaflet-pin-emoji",
-        html: "<span role=\"img\" aria-hidden=\"true\">📍</span>",
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -36]
-      });
+        // Marker with custom PNG icon - Leaflet L.icon (iconSize + iconAnchor keep marker fixed on zoom)
+        var icon = L.icon({
+          iconUrl: "assets/images/kauai-surf-leaflet-pin.png",
+          iconSize: [40, 58],
+          iconAnchor: [20, 58],
+          popupAnchor: [-3, -54]
+        });
+        L.marker(KEALIA_BEACH, { icon: icon })
+          .addTo(map)
+          .bindPopup("<strong>Kapaʻa Surf School</strong><br/>Kealia Beach · East shore of Kauaʻi");
+      }
 
-      L.marker(KEALIA_BEACH, {
-        icon: pinIcon,
-        alt: "Kealia Beach — Kapaʻa Surf School"
-      })
-        .addTo(map)
-        .bindPopup("<strong>Kapaʻa Surf School</strong><br/>Kealia Beach · East shore of Kauaʻi");
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) initMap();
+          });
+        },
+        { rootMargin: "100px", threshold: 0.01 }
+      );
+      observer.observe(mapEl);
+
+      if (typeof IntersectionObserver === "undefined") initMap();
     });
 
-    /* Live weather widget — Open-Meteo (free, no API key) */
+    /* Live weather widget - Open-Meteo (free, no API key) */
     (function () {
       var LAT = 22.0752, LNG = -159.3190;
       var WMO_ICONS = {
@@ -4367,7 +4441,7 @@
           var errEl = document.getElementById("weather-error");
           var loadEl = document.getElementById("weather-loading");
           if (loadEl) loadEl.hidden = true;
-          if (errEl) { errEl.hidden = false; errEl.innerHTML = "<span aria-hidden=\"true\">⚠</span> " + ((data && data.reason) ? data.reason : "Couldn't load conditions — please try refreshing."); }
+          if (errEl) { errEl.hidden = false; errEl.innerHTML = "<span aria-hidden=\"true\">⚠</span> " + ((data && data.reason) ? data.reason : "Couldn't load conditions - please try refreshing."); }
           return;
         }
         var cur = data.current;
@@ -4384,7 +4458,7 @@
         if (data.daily && data.daily.uv_index_max && data.daily.uv_index_max[0] != null) {
           uvIndex = Math.round(data.daily.uv_index_max[0] * 10) / 10;
         }
-        var uvDisplay = uvIndex != null ? String(uvIndex) : '—';
+        var uvDisplay = uvIndex != null ? String(uvIndex) : '-';
 
         var forecastHTML = "";
         for (var i = 1; i <= 4; i++) {
@@ -4421,7 +4495,7 @@
             '</div>' +
             '<div class="weather-details">' +
               '<div class="weather-detail-item"><span class="weather-detail-label">Wind</span><span class="weather-detail-value">' + windMph + ' mph ' + windDir + '</span></div>' +
-              '<div class="weather-detail-item"><span class="weather-detail-label">Humidity</span><span class="weather-detail-value">' + (cur.relative_humidity_2m != null ? cur.relative_humidity_2m + '%' : '—') + '</span></div>' +
+              '<div class="weather-detail-item"><span class="weather-detail-label">Humidity</span><span class="weather-detail-value">' + (cur.relative_humidity_2m != null ? cur.relative_humidity_2m + '%' : '-') + '</span></div>' +
               '<div class="weather-detail-item"><span class="weather-detail-label">UV Index</span><span class="weather-detail-value">' + uvDisplay + '</span></div>' +
             '</div>' +
           '</div>' +
@@ -4465,7 +4539,7 @@
             var loadEl = document.getElementById("weather-loading");
             var errEl = document.getElementById("weather-error");
             if (loadEl) loadEl.hidden = true;
-            if (errEl) { errEl.hidden = false; errEl.innerHTML = "<span aria-hidden=\"true\">⚠</span> Couldn't load conditions. If you're opening this file from your computer (file://), try using a local server or hosting the site online — browsers block cross-origin requests from file://."; }
+            if (errEl) { errEl.hidden = false; errEl.innerHTML = "<span aria-hidden=\"true\">⚠</span> Couldn't load conditions. If you're opening this file from your computer (file://), try using a local server or hosting the site online - browsers block cross-origin requests from file://."; }
           });
       }
 
@@ -4495,11 +4569,11 @@
         if (!bar || dismissed) return;
         var scrollY = window.scrollY || window.pageYOffset;
         var heroEl = document.querySelector(".hero");
-        var heroH = heroEl ? heroEl.offsetHeight : 300;
-        var bookingTop = bookingSection ? bookingSection.getBoundingClientRect().top + scrollY : Infinity;
+        var heroH = heroEl ? heroEl.offsetHeight : 400;
+        var bookingTop = bookingSection ? (bookingSection.getBoundingClientRect().top + scrollY) : Infinity;
 
-        var pastHero = scrollY > heroH * 0.7;
-        var nearBooking = (scrollY + window.innerHeight) > (bookingTop - 100);
+        var pastHero = scrollY > heroH * 0.4;
+        var nearBooking = (scrollY + window.innerHeight) > (bookingTop - 80);
         bar.classList.toggle("visible", pastHero && !nearBooking);
       }
 
@@ -4511,7 +4585,9 @@
       }
 
       window.addEventListener("scroll", updateBar, { passive: true });
+      window.addEventListener("load", updateBar);
       updateBar();
+      setTimeout(updateBar, 350);
     })();
 
     (function () {
@@ -4584,9 +4660,10 @@
         landed.style.top = startY + "px";
         landed.style.right = "auto";
 
-        // Bigger excited loop (0–14%), then dashes; after second dash, slow arrival at button (~1–2s longer)
+        // Bigger excited loop (0–14%), then dashes; after second dash, slow arrival at button (~1–2s longer). Start with fade-in.
         var kf = [
-          [0, 0, 0, 1],
+          [0, 0, 0, 0],
+          [2, 0, 0, 0.4],
           [3, 6, -6, 1],
           [6, -4, 5, 1],
           [9, 8, -4, 1],
@@ -4883,6 +4960,7 @@
 
     makeParallax(".testimonials-banner", 30);
     makeParallax(".about-image-wrap",     24);
+    makeParallax(".booking-photo-card",  24);
 
     // Schedule video playback speed: normal until 85%, then 0.75x to end, reset on loop
     (function () {

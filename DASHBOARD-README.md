@@ -1,4 +1,4 @@
-# Kauaʻi Surf Dashboard — Canonical Version
+# Kauaʻi Surf Dashboard - Canonical Version
 
 ## Canonical file
 
@@ -16,10 +16,10 @@
 
 ## Other dashboard files
 
-- `kauai-surf-report-live-dashboard-V1.html` — Original 4-spot dashboard with V1 rating; logic merged into canonical.
-- `kauai-surf-report-live-dashboard.html` — 4-spot report variant; superseded by canonical.
-- `kauai-surf-live-dashboard-1.3.html` — Skeleton / UI ideas only; not runnable as-is.
-- `live-kauai-conditions.html` — 4-spot conditions page (different layout); links to canonical dashboard for “Full 8-break dashboard.”
+- `kauai-surf-report-live-dashboard-V1.html` - Original 4-spot dashboard with V1 rating; logic merged into canonical.
+- `kauai-surf-report-live-dashboard.html` - 4-spot report variant; superseded by canonical.
+- `kauai-surf-live-dashboard-1.3.html` - Skeleton / UI ideas only; not runnable as-is.
+- `live-kauai-conditions.html` - 4-spot conditions page (different layout); links to canonical dashboard for “Full 8-break dashboard.”
 
 ## Links
 
