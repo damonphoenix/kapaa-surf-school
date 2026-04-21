@@ -4,7 +4,7 @@
   "scripts": {
     "start": "serve . -l 3000",
     "dev": "serve . -l 3000",
-    "build": "npm run build:css",
+    "build": "npm run build:css && rm -rf out && mkdir -p out && cp *.html out/ && cp -r assets out/",
     "build:css": "tailwindcss -i src/input.css -o assets/css/tailwind.css --minify"
   },
   "devDependencies": {
