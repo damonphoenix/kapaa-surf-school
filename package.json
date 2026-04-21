@@ -4,6 +4,7 @@
   "scripts": {
     "start": "serve . -l 3000",
     "dev": "serve . -l 3000",
+    "build": "npm run build:css",
     "build:css": "tailwindcss -i src/input.css -o assets/css/tailwind.css --minify"
   },
   "devDependencies": {
